@@ -1,0 +1,12 @@
+# Normalize line endings for all text files.
+* text=auto
+
+# Shell scripts must stay LF even on Windows.
+*.sh text eol=lf
+
+# Binary files stay as-is.
+*.png binary
+*.jpg binary
+*.webp binary
+*.keystore binary
+*.jks binary

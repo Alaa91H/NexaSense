@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Compass needle outline, single color for themed icons. -->
+    <group
+        android:rotation="-45"
+        android:pivotX="54"
+        android:pivotY="54">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M54,30 L61,54 L54,47 L47,54 Z" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M54,78 L61,54 L54,61 L47,54 Z" />
+    </group>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M52,52 L56,52 L56,56 L52,56 Z" />
+</vector>
