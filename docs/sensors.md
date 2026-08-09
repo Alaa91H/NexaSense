@@ -28,6 +28,19 @@ Dynamic sensors (plugged-in USB sensors, etc.) are included in the list; the
 - a missing sensor or failed registration completes the flow silently;
 - the framework's non-wake-up instance of the kind is preferred for streaming.
 
+## Battery
+
+Streaming prefers **non-wake-up sensors**, so the SoC is not woken for every
+sample while the screen is on. All streams are scoped to the screen that owns
+them and are unregistered when it closes (`awaitClose`) — there is no
+background collection. The current consumers (compass, level, sensor detail)
+need fresh data and therefore register with zero report latency; if a future
+feature collects a slow-changing sensor continuously (e.g. a pressure-based
+altitude readout), it can request FIFO **batching** by extending
+`SensorEventStream.stream` with a `maxReportLatencyMicros` parameter — the
+`SensorManagerGateway` already threads that value into
+`registerListener(listener, sensor, delay, maxReportLatency)`.
+
 ## Accuracy
 
 Framework status codes map to `AccuracyLevel`:

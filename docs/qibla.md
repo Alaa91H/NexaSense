@@ -26,27 +26,43 @@ the coordinates are compiled into the app.
 
 ## The algorithm
 
-### 1. Initial great-circle bearing (true north reference)
+### 1. WGS84 geodesic initial bearing (true north reference)
 
-The bearing from the user's location to the Kaaba uses the spherical
-initial-bearing formula (not a simple `Δlon / Δlat` ratio):
+The bearing from the user's location to the Kaaba is computed with the
+**Vincenty inverse formula on the WGS84 ellipsoid** — the reference algorithm
+of professional geodesy. It iteratively solves the geodesic on the ellipsoid
+(a = 6 378 137 m, f = 1/298.257223563) rather than assuming a sphere:
 
 ```
-φ1, φ2  = latitudes in radians
-Δλ      = (toLon − fromLon) in radians
+U1, U2  = reduced latitudes: atan((1 − f) · tan(φ))
+λ       = Δλ, refined until |Δλ| converges (< 1e−12 rad)
 
-y = sin(Δλ) · cos(φ2)
-x = cos(φ1) · sin(φ2) − sin(φ1) · cos(φ2) · cos(Δλ)
-bearing = atan2(y, x)  →  normalized to [0, 360)
+sin σ = √( (cos U2 · sin λ)² + (cos U1 · sin U2 − sin U1 · cos U2 · cos λ)² )
+cos σ = sin U1 · sin U2 + cos U1 · cos U2 · cos λ
+σ     = atan2(sin σ, cos σ)
+
+initial azimuth α1 = atan2(cos U2 · sin λ,
+                           cos U1 · sin U2 − sin U1 · cos U2 · cos λ)
+bearing = α1  →  normalized to [0, 360)
 ```
 
 `atan2` handles all quadrants, negative longitudes, the International Date
-Line (|Δλ| up to 180°), high latitudes and both poles. A zero-distance pair
-(already at the Kaaba) returns `0°`.
+Line, high latitudes and both poles. A zero-distance pair (already at the
+Kaaba) returns `0°`. When Vincenty cannot converge (nearly antipodal points),
+the calculation falls back to the spherical great-circle formula, so every
+input still yields a valid bearing.
 
-### 2. Great-circle distance
+**Why the ellipsoid?** The Earth is not a sphere. Over the longest Qibla paths
+(e.g. Sydney, New York) the spherical approximation is off by up to ~0.2° of
+bearing and tens of kilometres of distance. The geodesic result is the
+correct one; the spherical formulas remain available as the fast closed-form
+approximation (`initialBearing` / `greatCircleDistance`) and as the fallback.
 
-The optional distance to the Kaaba uses the haversine formula:
+### 2. Geodesic distance
+
+The optional distance to the Kaaba comes from the same Vincenty inverse
+(result in meters, converted to km), falling back to the haversine formula on
+non-convergence. The haversine formula:
 
 ```
 a = sin²(Δφ/2) + cos(φ1)·cos(φ2)·sin²(Δλ/2)
@@ -161,9 +177,12 @@ there is no combined "Qibla accuracy" status.
 
 The math is pure Kotlin and fully unit-tested (no hardware):
 
-- bearings from known cities (Berlin, London, New York, Jakarta, Sydney),
-  distances (Istanbul, New York, Berlin), high-latitude cities (Reykjavik,
-  Helsinki, Anchorage), both poles, ±179° longitudes, user-at-Kaaba.
+- geodesic (WGS84/Vincenty) bearings and distances from known cities —
+  Berlin, London, New York, Tokyo, Sydney, Jakarta, Reykjavik, Casablanca,
+  near the North Pole and across ±179° — validated against independently
+  computed reference values; antipodal fallback and user-at-Kaaba.
+- spherical bearings and distances (Berlin, London, New York, Jakarta,
+  Sydney, Istanbul), high-latitude cities, both poles, ±179° longitudes.
 - relative angle including the 350°/10° wrap, alignment thresholds, magnetic
   ↔ true conversions, effective north reference resolution, declination cache
   behavior (freshness, movement, staleness, clear).

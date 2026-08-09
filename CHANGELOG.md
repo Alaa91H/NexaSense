@@ -89,6 +89,23 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ## [Unreleased]
 
-- Planned: complementary/Kalman/Madgwick/Mahony fusion options, relative
-  altitude via pressure, estimated-pressure module (clearly separated from the
-  hardware barometer).
+### Added
+
+- **WGS84 geodesic Qibla calculation** — the bearing and distance to the Kaaba
+  now use the Vincenty inverse formula on the WGS84 ellipsoid (the reference
+  geodesy algorithm), removing the spherical approximation error (up to
+  ~0.2° bearing / tens of km on the longest paths) with an automatic spherical
+  fallback for nearly antipodal points. Validated against independently
+  computed reference values for Berlin, London, New York, Tokyo, Sydney,
+  Jakarta, Reykjavik, Casablanca, ±179° longitudes and near the North Pole.
+- **Release performance**: R8 minification + resource shrinking for the
+  release APK (smaller, obfuscated) with readable stack traces kept
+  (`SourceFile`/`LineNumberTable`), and a startup **baseline profile**
+  (bundled via `androidx.profileinstaller`) that pre-compiles the cold-start
+  hot path on Android 13+.
+
+### Planned
+
+- Complementary/Kalman/Madgwick/Mahony fusion options, relative altitude via
+  pressure, estimated-pressure module (clearly separated from the hardware
+  barometer), sensor FIFO batching for future continuous low-rate streams.
