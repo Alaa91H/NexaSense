@@ -5,7 +5,7 @@
 ### Highlights
 
 - 🧭 **Compass** with 360° dial, smooth wrap-around heading, adaptive magnetic-interference detection and in-app magnetometer calibration (hard/soft iron).
-- 🕋 **Qibla Direction** — fully local great-circle bearing to the Kaaba, live marker on the dial, turn guidance with a ±2° alignment threshold, optional distance and haptics. Disabled by default; location is requested only while enabled and never leaves the device.
+- 🕋 **Qibla Direction** — fully local WGS84 geodesic bearing to the Kaaba (Vincenty inverse formula on the WGS84 ellipsoid, spherical fallback), live marker on the dial, turn guidance with a ±2° alignment threshold, optional distance and haptics. Disabled by default; location is requested only while enabled and never leaves the device.
 - 🧭 **North Reference** — Automatic / True North / Magnetic North with effective-reference resolution always shown (e.g. *Automatic · True North*).
 - 📏 **Level** — bubble level from the accelerometer alone, display-rotation aware, zero-point calibration.
 - 📡 **Sensor discovery & diagnostics** — every sensor the HAL exposes, with full metadata, live raw values, measured sampling rate and a shareable diagnostic report (no personal data).
@@ -16,7 +16,8 @@
 - Magnetic declination via `GeomagneticField`, cached by location/time — never per sensor event.
 - Adaptive interference thresholds, no single worldwide constant.
 - Settings: theme (System/Light/Dark + dynamic color), language (25 languages), North Reference, Qibla options, smoothing, sensor rate, haptics, keep-screen-on, developer mode.
-- Sensors registered only while a screen is visible — no background collection.
+- Sensors registered only while a screen is visible — no background collection; non-wake-up sensors preferred.
+- 148 unit tests (math, geodesy, engines, calibration, robustness), lint-clean; instrumented UI tests run on a device.
 
 ### Compatibility
 
@@ -40,8 +41,8 @@ Offline-first. No internet, analytics, tracking, ads or telemetry. The only runt
 
 ### Known limitations
 
-- The first release APK is signed with the **debug key** until a production keystore is configured (see `docs/development.md`); install it by enabling *Install unknown apps* on the device.
-- R8/minification is disabled in this release; it will be enabled in a follow-up after full validation.
+- The first release APK is signed with the **debug key** until a production keystore is configured via GitHub Secrets (`NEXASENSE_KEYSTORE_*`; see `docs/development.md`); install it by enabling *Install unknown apps* on the device.
+- The release APK is minified with R8 (~3 MB) and bundles a startup **baseline profile** for faster cold start on Android 13+.
 - True North / Qibla require a location fix; without one they show a clear "Location required" state.
 - Instrumented UI tests require a connected device/emulator (`./gradlew connectedDebugAndroidTest`).
 
