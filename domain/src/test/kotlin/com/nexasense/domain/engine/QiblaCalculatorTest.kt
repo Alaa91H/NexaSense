@@ -72,6 +72,109 @@ class QiblaCalculatorTest {
         assertEquals(toKaaba, fromKaaba, 1e-6)
     }
 
+    // --- WGS84 geodesic (Vincenty inverse): reference values ---------------------
+    // Reference values below were computed independently with a Python
+    // Vincenty-inverse implementation on the WGS84 ellipsoid (a = 6378137 m,
+    // f = 1/298.257223563), using the fixed Kaaba coordinates.
+
+    @Test
+    fun `geodesic bearing and distance from Berlin`() {
+        assertEquals(136.5774f, QiblaCalculator.geodesicBearing(52.52, 13.405, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(4127.57, QiblaCalculator.geodesicDistance(52.52, 13.405, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing and distance from London`() {
+        assertEquals(118.8684f, QiblaCalculator.geodesicBearing(51.5074, -0.1278, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(4794.76, QiblaCalculator.geodesicDistance(51.5074, -0.1278, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing and distance from New York`() {
+        assertEquals(58.3960f, QiblaCalculator.geodesicBearing(40.7128, -74.006, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(10323.92, QiblaCalculator.geodesicDistance(40.7128, -74.006, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing and distance from Tokyo`() {
+        assertEquals(293.0720f, QiblaCalculator.geodesicBearing(35.6762, 139.6503, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(9487.88, QiblaCalculator.geodesicDistance(35.6762, 139.6503, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing and distance from Sydney in the southern hemisphere`() {
+        assertEquals(277.3188f, QiblaCalculator.geodesicBearing(-33.8688, 151.2093, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(13236.95, QiblaCalculator.geodesicDistance(-33.8688, 151.2093, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing and distance from Reykjavik at high latitude`() {
+        assertEquals(106.0275f, QiblaCalculator.geodesicBearing(64.1466, -21.9426, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(6522.78, QiblaCalculator.geodesicDistance(64.1466, -21.9426, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing and distance from Jakarta`() {
+        assertEquals(295.0247f, QiblaCalculator.geodesicBearing(-6.2088, 106.8456, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(7922.24, QiblaCalculator.geodesicDistance(-6.2088, 106.8456, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing and distance from Casablanca`() {
+        assertEquals(93.5936f, QiblaCalculator.geodesicBearing(33.5731, -7.5898, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(4830.48, QiblaCalculator.geodesicDistance(33.5731, -7.5898, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing and distance across the international date line`() {
+        assertEquals(301.0842f, QiblaCalculator.geodesicBearing(0.0, 179.0, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(15001.49, QiblaCalculator.geodesicDistance(0.0, 179.0, kaabaLat, kaabaLon), 0.3)
+        assertEquals(302.1702f, QiblaCalculator.geodesicBearing(0.0, -179.0, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(15191.08, QiblaCalculator.geodesicDistance(0.0, -179.0, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic bearing near the north pole`() {
+        assertEquals(140.0454f, QiblaCalculator.geodesicBearing(89.5, 0.0, kaabaLat, kaabaLon), 0.02f)
+        assertEquals(7589.26, QiblaCalculator.geodesicDistance(89.5, 0.0, kaabaLat, kaabaLon), 0.3)
+    }
+
+    @Test
+    fun `geodesic at the Kaaba is zero distance and zero bearing`() {
+        assertEquals(0.0, QiblaCalculator.geodesicDistance(kaabaLat, kaabaLon, kaabaLat, kaabaLon), 1e-6)
+        assertEquals(0f, QiblaCalculator.geodesicBearing(kaabaLat, kaabaLon, kaabaLat, kaabaLon), 1e-3f)
+    }
+
+    @Test
+    fun `geodesic falls back to spherical for nearly antipodal points`() {
+        // Antipode of the Kaaba: Vincenty does not converge there.
+        val antipodalLat = -kaabaLat
+        val antipodalLon = kaabaLon - 180.0
+        val bearing = QiblaCalculator.geodesicBearing(antipodalLat, antipodalLon, kaabaLat, kaabaLon)
+        val distance = QiblaCalculator.geodesicDistance(antipodalLat, antipodalLon, kaabaLat, kaabaLon)
+        assertTrue(!bearing.isNaN() && bearing >= 0f && bearing < 360f)
+        assertTrue(!distance.isNaN() && distance > 0.0)
+    }
+
+    @Test
+    fun `geodesic is more accurate than spherical on long paths`() {
+        // The WGS84 geodesic distance is within ~0.1 % of the haversine value
+        // and the bearing within a fraction of a degree — but the geodesic is
+        // the reference result, so assert it is close to (and slightly
+        // different from) the spherical approximation.
+        val spherical = QiblaCalculator.greatCircleDistance(40.7128, -74.006, kaabaLat, kaabaLon)
+        val geodesic = QiblaCalculator.geodesicDistance(40.7128, -74.006, kaabaLat, kaabaLon)
+        assertTrue(kotlin.math.abs(spherical - geodesic) < 50.0)
+        assertTrue(spherical != geodesic)
+    }
+
+    @Test
+    fun `bearing to Kaaba uses the geodesic WGS84 calculation`() {
+        val bearing = QiblaCalculator.bearingToKaaba(40.7128, -74.006)
+        assertEquals(58.3960f, bearing.bearingDegrees, 0.02f)
+        assertEquals(10323.92, bearing.distanceKm, 0.3)
+    }
+
     // --- Edge cases ------------------------------------------------------------
 
     @Test
