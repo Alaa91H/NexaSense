@@ -6,8 +6,9 @@ Real magnetometers read distorted fields: **hard-iron** errors are constant
 per-axis offsets (nearby metal, magnets in the device), **soft-iron** errors
 are direction-dependent gain differences.
 
-NexaSense implements the classic **min/max ellipsoid fit**
-(`MagneticCalibrationMath`):
+NexaSense implements a **two-tier** calibration (`MagneticCalibrationMath`):
+
+**Tier 1 — min/max (axis-aligned):**
 
 1. While the compass is active, raw magnetometer samples are collected.
    Invalid (NaN/∞/zero) samples are rejected.
@@ -18,14 +19,30 @@ NexaSense implements the classic **min/max ellipsoid fit**
 4. **Coverage** = `minHalf / maxHalf` (0..1) — how much of orientation space
    has been sampled. Calibration is considered complete with ≥ 60 samples and
    coverage ≥ 0.35 (both configurable).
-5. Calibration is applied before the tilt-compensated heading:
-   `corrected = (raw − offset) × scale`.
+
+**Tier 2 — full 3D ellipsoid fit (least squares):**
+
+5. Once calibrated, a full least-squares ellipsoid fit (`mᵀPm + qᵀm = 1`)
+   runs on the retained samples. The data is centered and normalized to unit
+   radius (Hartley normalization) before the 9-unknown solve, keeping the
+   algebraic fit well-conditioned.
+6. The hard-iron offset is `b = −½P⁻¹q`; the soft-iron correction is the
+   transpose of the Cholesky factor of `P` (the whitening transform: for
+   `P = LLᵀ`, `|Lᵀv|² = vᵀPv`). This corrects **rotated** soft iron that
+   couples axes — something axis-aligned min/max scaling cannot undo.
+7. Degenerate fits (too few samples, planar/linear data, non-positive-
+   definite `P`, or a residual spread above 35%) are rejected and the app
+   falls back to tier 1.
+
+Calibration is applied before the tilt-compensated heading:
+`corrected = (raw − offset) × scale` (tier 1) or
+`corrected = softIron × (raw − ellipsoidOffset)` (tier 2).
 
 The live result (sample count, coverage, calibrated flag) is shown on the
 compass screen and auto-persisted (throttled) to DataStore
 (`nexasense_calibration`). The user can reset it at any time.
 
-**Limits (documented):** the min/max method needs samples covering the full
+**Limits (documented):** the calibration needs samples covering the full
 orientation space for good results — the UI instructs the user to move the
 phone in a figure-eight / rotate through different orientations. It assumes
 the field is roughly constant during collection (move away from magnets).

@@ -104,6 +104,16 @@ All notable changes to NexaSense are documented here. The format is based on
   (bundled via `androidx.profileinstaller`) that pre-compiles the cold-start
   hot path on Android 13+.
 
+### Fixed
+
+- **Rotated soft-iron calibration applied the wrong matrix**: the least-
+  squares ellipsoid fit stored the Cholesky factor `L` (with `P = LLᵀ`), but
+  the whitening transform is `Lᵀ` — `|Lᵀv|² = vᵀPv`. The correction now
+  stores the transpose, so rotated soft-iron distortion (off-axis coupling)
+  is fully removed instead of leaving a large residual spread. The sphere and
+  axis-aligned paths were unaffected (there `L` is diagonal, so `Lᵀ = L`);
+  the rotated case is now covered by a dedicated test.
+
 ### Planned
 
 - Complementary/Kalman/Madgwick/Mahony fusion options, relative altitude via
