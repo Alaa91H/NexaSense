@@ -7,6 +7,8 @@ import kotlin.math.cos
 import kotlin.math.sin
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -130,5 +132,142 @@ class MagneticCalibrationMathTest {
     fun `fit quality is low for a well-centered sphere`() {
         val samples = sphereSamples(Vec3(0f, 0f, 0f), 30f, 200)
         assertEquals(0f, MagneticCalibrationMath.fitQuality(samples), 2f)
+    }
+
+    // --- Least-squares ellipsoid fit (hard + soft iron) ----------------------
+
+    private fun magnitudeSpread(values: List<Float>): Float {
+        var min = Float.MAX_VALUE
+        var max = -Float.MAX_VALUE
+        for (v in values) {
+            if (v < min) min = v
+            if (v > max) max = v
+        }
+        return max - min
+    }
+
+    @Test
+    fun `ellipsoid fit recovers hard iron and restores the sphere`() {
+        val center = Vec3(10f, -20f, 5f)
+        val radius = 30f
+        val samples = sphereSamples(center, radius, 300)
+        val sampler = MagneticCalibrationMath.Sampler()
+        samples.forEach { sampler.addSample(it) }
+
+        val calibration = sampler.build()
+        val fit = requireNotNull(calibration.ellipsoid) { "ellipsoid fit should succeed" }
+        assertEquals(10f, fit.offsetX, 1.5f)
+        assertEquals(-20f, fit.offsetY, 1.5f)
+        assertEquals(5f, fit.offsetZ, 1.5f)
+
+        // Magnitudes are preserved (rescaled to the raw field strength).
+        val corrected = samples.map { MagneticCalibrationMath.apply(it, calibration).magnitude }
+        assertEquals(radius, corrected.average().toFloat(), 1f)
+        assertTrue(magnitudeSpread(corrected) < 2f)
+    }
+
+    @Test
+    fun `ellipsoid fit corrects axis-aligned soft iron`() {
+        // m = diag(1.2, 0.8, 1.0) * h, h on a radius-30 sphere.
+        val radius = 30f
+        val samples = sphereSamples(Vec3(0f, 0f, 0f), radius, 300).map { h ->
+            Vec3(1.2f * h.x, 0.8f * h.y, h.z)
+        }
+        val sampler = MagneticCalibrationMath.Sampler()
+        samples.forEach { sampler.addSample(it) }
+
+        val calibration = sampler.build()
+        assertNotNull(calibration.ellipsoid)
+        val corrected = samples.map { MagneticCalibrationMath.apply(it, calibration).magnitude }
+        assertEquals(radius, corrected.average().toFloat(), 1f)
+        assertTrue(magnitudeSpread(corrected) < 2f)
+    }
+
+    @Test
+    fun `ellipsoid fit corrects rotated soft iron that min-max cannot`() {
+        // m = R * diag(1.2, 0.8, 1.0) * R^T * h + b0 with a 30-degree rotation.
+        // Axis-aligned min/max scaling alone cannot undo the rotated coupling.
+        val radius = 30f
+        val b0 = Vec3(8f, -12f, 4f)
+        val rad = 30f * PI.toFloat() / 180f
+        val c = cos(rad)
+        val s = sin(rad)
+        val r = arrayOf(
+            floatArrayOf(c, -s, 0f),
+            floatArrayOf(s, c, 0f),
+            floatArrayOf(0f, 0f, 1f),
+        )
+        val d = floatArrayOf(1.2f, 0.8f, 1f)
+        // M = R * diag(d) * R^T
+        val m = Array(3) { i -> FloatArray(3) { j ->
+            (r[i][0] * d[0] * r[j][0] + r[i][1] * d[1] * r[j][1] + r[i][2] * d[2] * r[j][2])
+        } }
+        val samples = sphereSamples(Vec3(0f, 0f, 0f), radius, 400).map { h ->
+            Vec3(
+                m[0][0] * h.x + m[0][1] * h.y + m[0][2] * h.z + b0.x,
+                m[1][0] * h.x + m[1][1] * h.y + m[1][2] * h.z + b0.y,
+                m[2][0] * h.x + m[2][1] * h.y + m[2][2] * h.z + b0.z,
+            )
+        }
+
+        val sampler = MagneticCalibrationMath.Sampler()
+        samples.forEach { sampler.addSample(it) }
+        val calibration = sampler.build()
+        val fit = requireNotNull(calibration.ellipsoid) { "ellipsoid fit should succeed for rotated soft iron" }
+
+        val corrected = samples.map { MagneticCalibrationMath.apply(it, calibration).magnitude }
+        assertTrue("ellipsoid path should restore a sphere, spread=${magnitudeSpread(corrected)}",
+            magnitudeSpread(corrected) < 2f)
+        assertEquals(radius, corrected.average().toFloat(), 1f)
+
+        // Control: the axis-aligned path leaves a large spread on this data.
+        val axisOnly = calibration.copy(ellipsoid = null)
+        val axisCorrected = samples.map { MagneticCalibrationMath.apply(it, axisOnly).magnitude }
+        assertTrue("min/max alone must not fix rotated soft iron, spread=${magnitudeSpread(axisCorrected)}",
+            magnitudeSpread(axisCorrected) > 5f)
+    }
+
+    @Test
+    fun `planar data falls back to the axis-aligned model`() {
+        // A circle in the xy-plane: rank-deficient for the 3D fit.
+        val samples = (0 until 200).map { i ->
+            val u = i.toFloat() / 200
+            Vec3(30f * cos(2f * PI.toFloat() * u), 30f * sin(2f * PI.toFloat() * u), 0f)
+        }
+        assertNull(MagneticCalibrationMath.ellipsoidFit(samples))
+    }
+
+    @Test
+    fun `linear data falls back to the axis-aligned model`() {
+        // One-dimensional sweep: no ellipsoid exists, fit must be rejected.
+        val samples = (0 until 200).map { i -> Vec3(-30f + i * 0.3f, 0f, 0f) }
+        assertNull(MagneticCalibrationMath.ellipsoidFit(samples))
+    }
+
+    @Test
+    fun `ellipsoid fit requires enough samples`() {
+        assertNull(MagneticCalibrationMath.ellipsoidFit(sphereSamples(Vec3(0f, 0f, 0f), 30f, 5)))
+    }
+
+    @Test
+    fun `axis-aligned calibration applies when no ellipsoid is present`() {
+        // Backward compatibility: old persisted data (ellipsoid = null) keeps
+        // using the offset + scale path.
+        val calibration = MagnetometerCalibration(
+            offsetX = 10f,
+            offsetY = -20f,
+            offsetZ = 5f,
+            scaleX = 1f,
+            scaleY = 1f,
+            scaleZ = 1f,
+            sampleCount = 300,
+            coverage = 1f,
+            isCalibrated = true,
+            ellipsoid = null,
+        )
+        val corrected = MagneticCalibrationMath.apply(Vec3(40f, -50f, 35f), calibration)
+        assertEquals(30f, corrected.x, 1e-3f)
+        assertEquals(-30f, corrected.y, 1e-3f)
+        assertEquals(30f, corrected.z, 1e-3f)
     }
 }

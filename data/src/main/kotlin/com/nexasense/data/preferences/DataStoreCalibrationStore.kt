@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.nexasense.domain.model.EllipsoidCorrection
 import com.nexasense.domain.model.LevelCalibration
 import com.nexasense.domain.model.MagnetometerCalibration
 import com.nexasense.domain.port.CalibrationStore
@@ -31,6 +32,20 @@ class DataStoreCalibrationStore(private val context: Context) : CalibrationStore
         val MAG_SAMPLES = intPreferencesKey("mag_samples")
         val MAG_COVERAGE = floatPreferencesKey("mag_coverage")
         val MAG_CALIBRATED = booleanPreferencesKey("mag_calibrated")
+        // Full ellipsoid fit (least-squares hard + soft iron).
+        val MAG_ELLIPSOID = booleanPreferencesKey("mag_ellipsoid")
+        val MAG_ELL_OFFSET_X = floatPreferencesKey("mag_ell_offset_x")
+        val MAG_ELL_OFFSET_Y = floatPreferencesKey("mag_ell_offset_y")
+        val MAG_ELL_OFFSET_Z = floatPreferencesKey("mag_ell_offset_z")
+        val MAG_SOFT_IRON_00 = floatPreferencesKey("mag_softiron_00")
+        val MAG_SOFT_IRON_01 = floatPreferencesKey("mag_softiron_01")
+        val MAG_SOFT_IRON_02 = floatPreferencesKey("mag_softiron_02")
+        val MAG_SOFT_IRON_10 = floatPreferencesKey("mag_softiron_10")
+        val MAG_SOFT_IRON_11 = floatPreferencesKey("mag_softiron_11")
+        val MAG_SOFT_IRON_12 = floatPreferencesKey("mag_softiron_12")
+        val MAG_SOFT_IRON_20 = floatPreferencesKey("mag_softiron_20")
+        val MAG_SOFT_IRON_21 = floatPreferencesKey("mag_softiron_21")
+        val MAG_SOFT_IRON_22 = floatPreferencesKey("mag_softiron_22")
 
         val LEVEL_PITCH = floatPreferencesKey("level_pitch_offset")
         val LEVEL_ROLL = floatPreferencesKey("level_roll_offset")
@@ -58,6 +73,31 @@ class DataStoreCalibrationStore(private val context: Context) : CalibrationStore
             prefs[Keys.MAG_SAMPLES] = calibration.sampleCount
             prefs[Keys.MAG_COVERAGE] = calibration.coverage
             prefs[Keys.MAG_CALIBRATED] = calibration.isCalibrated
+            val ellipsoid = calibration.ellipsoid
+            if (ellipsoid != null) {
+                prefs[Keys.MAG_ELLIPSOID] = true
+                prefs[Keys.MAG_ELL_OFFSET_X] = ellipsoid.offsetX
+                prefs[Keys.MAG_ELL_OFFSET_Y] = ellipsoid.offsetY
+                prefs[Keys.MAG_ELL_OFFSET_Z] = ellipsoid.offsetZ
+                val m = ellipsoid.softIron
+                prefs[Keys.MAG_SOFT_IRON_00] = m[0]
+                prefs[Keys.MAG_SOFT_IRON_01] = m[1]
+                prefs[Keys.MAG_SOFT_IRON_02] = m[2]
+                prefs[Keys.MAG_SOFT_IRON_10] = m[3]
+                prefs[Keys.MAG_SOFT_IRON_11] = m[4]
+                prefs[Keys.MAG_SOFT_IRON_12] = m[5]
+                prefs[Keys.MAG_SOFT_IRON_20] = m[6]
+                prefs[Keys.MAG_SOFT_IRON_21] = m[7]
+                prefs[Keys.MAG_SOFT_IRON_22] = m[8]
+            } else {
+                listOf(
+                    Keys.MAG_ELLIPSOID, Keys.MAG_ELL_OFFSET_X, Keys.MAG_ELL_OFFSET_Y,
+                    Keys.MAG_ELL_OFFSET_Z,
+                    Keys.MAG_SOFT_IRON_00, Keys.MAG_SOFT_IRON_01, Keys.MAG_SOFT_IRON_02,
+                    Keys.MAG_SOFT_IRON_10, Keys.MAG_SOFT_IRON_11, Keys.MAG_SOFT_IRON_12,
+                    Keys.MAG_SOFT_IRON_20, Keys.MAG_SOFT_IRON_21, Keys.MAG_SOFT_IRON_22,
+                ).forEach { prefs.remove(it) }
+            }
         }
     }
 
@@ -67,6 +107,11 @@ class DataStoreCalibrationStore(private val context: Context) : CalibrationStore
                 Keys.MAG_OFFSET_X, Keys.MAG_OFFSET_Y, Keys.MAG_OFFSET_Z,
                 Keys.MAG_SCALE_X, Keys.MAG_SCALE_Y, Keys.MAG_SCALE_Z,
                 Keys.MAG_SAMPLES, Keys.MAG_COVERAGE, Keys.MAG_CALIBRATED,
+                Keys.MAG_ELLIPSOID, Keys.MAG_ELL_OFFSET_X, Keys.MAG_ELL_OFFSET_Y,
+                Keys.MAG_ELL_OFFSET_Z,
+                Keys.MAG_SOFT_IRON_00, Keys.MAG_SOFT_IRON_01, Keys.MAG_SOFT_IRON_02,
+                Keys.MAG_SOFT_IRON_10, Keys.MAG_SOFT_IRON_11, Keys.MAG_SOFT_IRON_12,
+                Keys.MAG_SOFT_IRON_20, Keys.MAG_SOFT_IRON_21, Keys.MAG_SOFT_IRON_22,
             ).forEach { prefs.remove(it) }
         }
     }
@@ -85,8 +130,28 @@ class DataStoreCalibrationStore(private val context: Context) : CalibrationStore
         }
     }
 
-    private fun Preferences.toMagnetometerCalibration(): MagnetometerCalibration =
-        MagnetometerCalibration(
+    private fun Preferences.toMagnetometerCalibration(): MagnetometerCalibration {
+        val ellipsoid = if (this[Keys.MAG_ELLIPSOID] == true) {
+            EllipsoidCorrection(
+                offsetX = this[Keys.MAG_ELL_OFFSET_X] ?: 0f,
+                offsetY = this[Keys.MAG_ELL_OFFSET_Y] ?: 0f,
+                offsetZ = this[Keys.MAG_ELL_OFFSET_Z] ?: 0f,
+                softIron = floatArrayOf(
+                    this[Keys.MAG_SOFT_IRON_00] ?: 1f,
+                    this[Keys.MAG_SOFT_IRON_01] ?: 0f,
+                    this[Keys.MAG_SOFT_IRON_02] ?: 0f,
+                    this[Keys.MAG_SOFT_IRON_10] ?: 0f,
+                    this[Keys.MAG_SOFT_IRON_11] ?: 1f,
+                    this[Keys.MAG_SOFT_IRON_12] ?: 0f,
+                    this[Keys.MAG_SOFT_IRON_20] ?: 0f,
+                    this[Keys.MAG_SOFT_IRON_21] ?: 0f,
+                    this[Keys.MAG_SOFT_IRON_22] ?: 1f,
+                ),
+            )
+        } else {
+            null
+        }
+        return MagnetometerCalibration(
             offsetX = this[Keys.MAG_OFFSET_X] ?: 0f,
             offsetY = this[Keys.MAG_OFFSET_Y] ?: 0f,
             offsetZ = this[Keys.MAG_OFFSET_Z] ?: 0f,
@@ -96,7 +161,9 @@ class DataStoreCalibrationStore(private val context: Context) : CalibrationStore
             sampleCount = this[Keys.MAG_SAMPLES] ?: 0,
             coverage = this[Keys.MAG_COVERAGE] ?: 0f,
             isCalibrated = this[Keys.MAG_CALIBRATED] ?: false,
+            ellipsoid = ellipsoid,
         )
+    }
 
     private fun Preferences.toLevelCalibration(): LevelCalibration = LevelCalibration(
         pitchOffsetDegrees = this[Keys.LEVEL_PITCH] ?: 0f,
