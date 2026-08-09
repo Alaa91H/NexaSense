@@ -1,0 +1,94 @@
+# NexaSense startup baseline profile
+# ----------------------------------
+# Bundled by AGP into the APK and applied by androidx.profileinstaller on
+# Android 13+ (ignored gracefully on Android 12). It pre-compiles the
+# cold-start hot path: application, activity, theme, navigation, the home
+# screen and the core sensor engines, plus the well-known AndroidX startup
+# cost centers (AppCompat delegate inflation, Compose recomposition loop,
+# navigation). Format follows AndroidX baseline profile syntax: HSPL marks
+# hot-startup rules; **->**(**)** matches every method of a class.
+
+# --- App: entry points ------------------------------------------------------
+HSPLcom/nexasense/android/NexaSenseApplication**->**(**)**
+HSPLcom/nexasense/android/MainActivity**->**(**)**
+HSPLcom/nexasense/android/AppContainerImpl**->**(**)**
+
+# --- App: root, theme, navigation -------------------------------------------
+HSPLcom/nexasense/presentation/NexaSenseRootKt**->**(**)**
+HSPLcom/nexasense/presentation/navigation/NexaNavHostKt**->**(**)**
+HSPLcom/nexasense/presentation/navigation/Routes**->**(**)**
+HSPLcom/nexasense/presentation/theme/ThemeKt**->**(**)**
+
+# --- App: screens and view models --------------------------------------------
+HSPLcom/nexasense/presentation/home/HomeScreenKt**->**(**)**
+HSPLcom/nexasense/presentation/home/HomeViewModel**->**(**)**
+HSPLcom/nexasense/presentation/compass/CompassScreenKt**->**(**)**
+HSPLcom/nexasense/presentation/compass/CompassDialKt**->**(**)**
+HSPLcom/nexasense/presentation/compass/CompassViewModel**->**(**)**
+HSPLcom/nexasense/presentation/level/LevelScreenKt**->**(**)**
+HSPLcom/nexasense/presentation/level/LevelViewModel**->**(**)**
+HSPLcom/nexasense/presentation/sensors/SensorsScreenKt**->**(**)**
+HSPLcom/nexasense/presentation/sensors/SensorsViewModel**->**(**)**
+HSPLcom/nexasense/presentation/sensordetail/SensorDetailScreenKt**->**(**)**
+HSPLcom/nexasense/presentation/sensordetail/SensorDetailViewModel**->**(**)**
+HSPLcom/nexasense/presentation/diagnostics/DiagnosticsScreenKt**->**(**)**
+HSPLcom/nexasense/presentation/diagnostics/DiagnosticsViewModel**->**(**)**
+HSPLcom/nexasense/presentation/settings/SettingsScreenKt**->**(**)**
+HSPLcom/nexasense/presentation/settings/SettingsViewModel**->**(**)**
+HSPLcom/nexasense/presentation/about/AboutScreenKt**->**(**)**
+
+# --- App: data engines and stores ---------------------------------------------
+HSPLcom/nexasense/data/sensor/CompassEngineImpl**->**(**)**
+HSPLcom/nexasense/data/sensor/QiblaEngineImpl**->**(**)**
+HSPLcom/nexasense/data/sensor/LevelEngineImpl**->**(**)**
+HSPLcom/nexasense/data/preferences/DataStoreSettingsStore**->**(**)**
+HSPLcom/nexasense/data/preferences/DataStoreCalibrationStore**->**(**)**
+
+# --- App: core gateways --------------------------------------------------------
+HSPLcom/nexasense/core/sensor/SensorManagerGateway**->**(**)**
+HSPLcom/nexasense/core/location/LocationProviderImpl**->**(**)**
+
+# --- App: domain hot math ------------------------------------------------------
+HSPLcom/nexasense/domain/engine/QiblaCalculator**->**(**)**
+HSPLcom/nexasense/domain/engine/DeclinationCache**->**(**)**
+HSPLcom/nexasense/domain/engine/NorthReferenceResolver**->**(**)**
+HSPLcom/nexasense/domain/engine/DeclinationEngine**->**(**)**
+HSPLcom/nexasense/domain/engine/HeadingCalculator**->**(**)**
+HSPLcom/nexasense/domain/engine/TiltCompensatedFusion**->**(**)**
+HSPLcom/nexasense/domain/engine/SourceSelector**->**(**)**
+HSPLcom/nexasense/domain/engine/MagneticFieldAnalyzer**->**(**)**
+HSPLcom/nexasense/domain/engine/SamplingRateEstimator**->**(**)**
+HSPLcom/nexasense/domain/math/AngleMath**->**(**)**
+
+# --- AndroidX: activity / appcompat (the classic startup cost centers) ----------
+HSPLandroid/app/Activity**->**(**)**
+HSPLandroidx/activity/ComponentActivity**->**(**)**
+HSPLandroidx/activity/compose/ComponentActivityKt**->**(**)**
+HSPLandroidx/appcompat/app/AppCompatActivity**->**(**)**
+HSPLandroidx/appcompat/app/AppCompatDelegateImpl**->**(**)**
+
+# --- AndroidX: compose runtime hot path ------------------------------------------
+HSPLandroidx/compose/runtime/ComposerImpl;->applyChanges()V
+HSPLandroidx/compose/runtime/ComposerImpl;->recordDelete(Landroidx/compose/runtime/Composition;)V
+HSPLandroidx/compose/runtime/ComposerImpl;->recompose(Landroidx/compose/runtime/ControlledComposition;)Z
+HSPLandroidx/compose/runtime/Recomposer**->**(**)**
+HSPLandroidx/compose/runtime/CompositionContext**->**(**)**
+
+# --- AndroidX: compose ui --------------------------------------------------------
+HSPLandroidx/compose/ui/platform/AndroidComposeView**->**(**)**
+HSPLandroidx/compose/ui/platform/ComposeView**->**(**)**
+HSPLandroidx/compose/ui/ComposeUiKt**->**(**)**
+
+# --- AndroidX: navigation ---------------------------------------------------------
+HSPLandroidx/navigation/compose/NavHostKt**->**(**)**
+HSPLandroidx/navigation/NavController**->**(**)**
+
+# --- AndroidX: material 3 core ------------------------------------------------------
+HSPLandroidx/compose/material3/MaterialThemeKt**->**(**)**
+HSPLandroidx/compose/material3/SurfaceKt**->**(**)**
+HSPLandroidx/compose/material3/TextKt**->**(**)**
+
+# --- AndroidX: lifecycle / saved state ----------------------------------------------
+HSPLandroidx/lifecycle/LifecycleRegistry**->**(**)**
+HSPLandroidx/lifecycle/ViewModelStore**->**(**)**
+HSPLandroidx/savedstate/SavedStateRegistryController**->**(**)**

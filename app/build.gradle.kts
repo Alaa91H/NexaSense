@@ -53,10 +53,16 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
-            // First release: no R8 shrinking yet; keep the build fully
-            // debuggable-safe and deterministic. Enable minify in a later
-            // release after validating with the full test suite.
-            isMinifyEnabled = false
+            // R8 minification + resource shrinking: smaller APK and
+            // obfuscated release code. Safe because the app uses no
+            // reflection/serialization (see proguard-rules.pro). Debug builds
+            // stay unminified for fast iteration.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 
@@ -80,6 +86,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.profileinstaller)
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(platform(libs.compose.bom))
