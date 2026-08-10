@@ -28,16 +28,14 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Cache Android SDK
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ runner.tool_cache }}/android-sdk
-          key: android-sdk-${{ runner.os }}
-
       - name: Install Android SDK
         run: |
-          sdkmanager --install "platforms;android-36" "build-tools;36.0.0" >/dev/null
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER="$(find "$SDK_ROOT" -name sdkmanager -type f 2>/dev/null | head -1)"
+          fi
+          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0" >/dev/null
 
       - name: Unit tests
         run: ./gradlew test --stacktrace
