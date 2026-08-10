@@ -7,14 +7,17 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
-- **Vertical (plumb) level mode** — the Level screen gains a horizontal /
-  vertical toggle. In vertical mode the bubble centers when the device is
-  held exactly upright (roll 0°, pitch 90°), so walls, edges and posts can be
-  checked for plumb on the same screen; the readout shows the deviation from
-  vertical and the haptic "level" pulse works in both modes.
-- **Kaaba marker on the compass** — when Qibla is enabled, a small Kaaba icon
-  (black cube with gold kiswah band) is drawn on the dial at the Qibla
-  bearing instead of the plain triangle.
+- **Automatic level modes** — the Level screen now switches by itself based
+  on how the device is held: flat (|pitch| < 45°) shows the two-axis bubble
+  level with four directions (pitch + roll); held upright shows a
+  water/mercury **tube level** with the bubble travelling left-right only
+  (roll), the classic plumb vial for checking walls, edges and posts. The
+  readout shows the deviation from vertical in upright mode and the haptic
+  "level" pulse works in both modes.
+- **Kaaba marker outside the compass frame** — when Qibla is enabled, a
+  professional Kaaba icon (black cube, gold kiswah band, door and roof
+  parapet) is drawn just outside the dial ring at the Qibla bearing; the
+  dial ring now sits at 80% of the canvas to leave room for it.
 
 ### Changed
 

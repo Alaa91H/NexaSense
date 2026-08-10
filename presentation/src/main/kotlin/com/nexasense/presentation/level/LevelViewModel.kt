@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -28,12 +30,19 @@ class LevelViewModel(
     val sensorBlocked = levelEngine.sensorBlocked
 
     /**
-     * True when the level is used in vertical (plumb) mode — the phone held
-     * upright to check that a wall, edge or post is truly vertical. The
-     * bubble then centers when roll is 0 and the pitch is ±90°.
+     * The level mode is derived automatically from how the device is held:
+     * - held upright (|pitch| above 45°) → vertical (plumb) mode, a one-axis
+     *   water/mercury tube level for checking walls, edges and posts;
+     * - held flat (|pitch| below 45°) → horizontal mode, the two-axis bubble.
      */
-    private val _verticalMode = MutableStateFlow(false)
-    val verticalMode: StateFlow<Boolean> = _verticalMode.asStateFlow()
+    val verticalMode: StateFlow<Boolean> = orientation
+        .map { abs(it.pitch) > VERTICAL_MODE_THRESHOLD_DEGREES }
+        .distinctUntilChanged()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = false,
+        )
 
     val calibration: StateFlow<LevelCalibration> = calibrationStore.levelCalibration.stateIn(
         scope = viewModelScope,
@@ -69,10 +78,6 @@ class LevelViewModel(
     }
 
     fun setActive(active: Boolean) = levelEngine.setActive(active)
-
-    fun setVerticalMode(enabled: Boolean) {
-        _verticalMode.value = enabled
-    }
 
     fun setDisplayRotation(rotationDegrees: Int) =
         levelEngine.setDisplayRotation(rotationDegrees)
@@ -112,6 +117,9 @@ class LevelViewModel(
         /** Matches the bubble's visual "level" zone on the canvas. */
         const val CENTERED_THRESHOLD_DEGREES = 1.5f
         const val HAPTIC_COOLDOWN_MILLIS = 2_000L
+
+        /** Above this |pitch| the device counts as held upright (plumb mode). */
+        const val VERTICAL_MODE_THRESHOLD_DEGREES = 45f
     }
 
     /** Captures the current reading as the new zero point. */

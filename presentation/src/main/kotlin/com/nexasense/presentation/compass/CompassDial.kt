@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -28,6 +30,9 @@ import kotlin.math.sin
 /**
  * A large compass dial with a fixed top marker. The dial rotates opposite to
  * the heading so the N label always points at the measured direction.
+ *
+ * The dial ring is drawn at 80% of the canvas so there is room for the Qibla
+ * Kaaba marker, which sits just outside the ring at the Qibla bearing.
  *
  * Three professional styles are supported (see [CompassStyle]): classic
  * (2° minor + 30° major ticks, 8-point cardinal labels), azimuth (numbered
@@ -80,23 +85,25 @@ fun CompassDial(
     ) {
         val radius = min(size.width, size.height) / 2f
         val center = this.center
+        // The dial ring is 80% of the canvas so the Qibla Kaaba fits outside.
+        val dialRadius = radius * 0.80f
 
-        drawCircle(color = dialColor, radius = radius)
+        drawCircle(color = dialColor, radius = dialRadius)
         drawCircle(
             color = tickColor.copy(alpha = 0.35f),
-            radius = radius * 0.97f,
+            radius = dialRadius * 0.97f,
             style = Stroke(width = 1.dp.toPx()),
         )
 
         rotate(degrees = -animatedHeading, pivot = center) {
             if (showDegreeTicks) {
-                drawTicks(center, radius, tickColor, style)
+                drawTicks(center, dialRadius, tickColor, style)
             }
             // The azimuth style is defined by its numbered ring; the other
             // styles show numbers only when explicitly enabled.
             if (style == CompassStyle.AZIMUTH || showDegreeNumbers) {
                 degreeNumbers.forEach { (degree, _) ->
-                    val position = polar(center, radius * numberRadius(style), degree.toFloat())
+                    val position = polar(center, dialRadius * numberRadius(style), degree.toFloat())
                     rotate(degrees = animatedHeading, pivot = position) {
                         val measured = measuredNumbers[degree] ?: return@rotate
                         drawText(
@@ -111,7 +118,7 @@ fun CompassDial(
             }
             if (showCardinalLabels) {
                 labels.forEach { (degree, _) ->
-                    val position = polar(center, radius * labelRadius(style), degree.toFloat())
+                    val position = polar(center, dialRadius * labelRadius(style), degree.toFloat())
                     rotate(degrees = animatedHeading, pivot = position) {
                         val measured = measuredLabels[degree] ?: return@rotate
                         drawText(
@@ -128,9 +135,9 @@ fun CompassDial(
 
         // Fixed marker showing the device heading at the top.
         val marker = Path().apply {
-            moveTo(center.x - 10.dp.toPx(), center.y - radius * 0.78f)
-            lineTo(center.x + 10.dp.toPx(), center.y - radius * 0.78f)
-            lineTo(center.x, center.y - radius * 0.66f)
+            moveTo(center.x - 10.dp.toPx(), center.y - dialRadius * 0.78f)
+            lineTo(center.x + 10.dp.toPx(), center.y - dialRadius * 0.78f)
+            lineTo(center.x, center.y - dialRadius * 0.66f)
             close()
         }
         drawPath(path = marker, color = markerColor)
@@ -138,13 +145,13 @@ fun CompassDial(
         // Center hub.
         drawCircle(color = markerColor, radius = 5.dp.toPx(), center = center)
 
-        // Qibla marker: the Kaaba drawn inside the rotating frame at the
-        // bearing, so it stays at the correct position relative to the
-        // (rotating) dial. The bearing must already be in the heading's north
-        // reference.
+        // Qibla marker: the Kaaba sits just outside the dial ring at the
+        // bearing, drawn inside the rotating frame so it stays at the correct
+        // position relative to the (rotating) dial. The bearing must already
+        // be in the heading's north reference.
         qiblaBearingDegrees?.let { bearing ->
             rotate(degrees = -animatedHeading, pivot = center) {
-                val position = polar(center, radius * 0.76f, bearing)
+                val position = polar(center, dialRadius * 1.16f, bearing)
                 drawKaaba(center = position, size = 22.dp.toPx())
             }
         }
@@ -152,39 +159,50 @@ fun CompassDial(
 }
 
 /**
- * Draws a small Kaaba: the black cube with its gold kiswah band, used as the
- * Qibla marker on the dial. Fixed brand colors — the Kaaba is black with a
- * gold band in reality, independent of the app theme.
+ * Draws a professional Kaaba: the black cube with its gold kiswah band and
+ * door, used as the Qibla marker outside the dial ring. Fixed brand colors —
+ * the Kaaba is black with gold in reality, independent of the app theme.
  */
 private fun DrawScope.drawKaaba(center: Offset, size: Float) {
-    val kaabaBlack = Color(0xFF17181C)
+    val kaabaBlack = Color(0xFF1B1C20)
     val gold = Color(0xFFD4AF37)
+    val goldSoft = Color(0xFFC9A227)
     val half = size / 2f
 
-    // Roof cap: a slightly wider gold line on top.
-    drawRect(
+    // Roof parapet: a slightly wider gold line on top.
+    drawRoundRect(
         color = gold,
-        topLeft = Offset(center.x - half * 1.05f, center.y - half * 0.45f),
-        size = androidx.compose.ui.geometry.Size(size * 1.10f, size * 0.07f),
+        topLeft = Offset(center.x - half * 1.05f, center.y - half * 0.66f),
+        size = Size(size * 1.10f, size * 0.14f),
+        cornerRadius = CornerRadius(size * 0.05f),
     )
-    // The cube body.
+    // The cube body (slightly taller than wide, like the real Kaaba).
     drawRoundRect(
         color = kaabaBlack,
-        topLeft = Offset(center.x - half, center.y - half * 0.35f),
-        size = androidx.compose.ui.geometry.Size(size, size * 0.85f),
-        cornerRadius = androidx.compose.ui.geometry.CornerRadius(2.dp.toPx()),
+        topLeft = Offset(center.x - half * 0.72f, center.y - half * 0.52f),
+        size = Size(size * 1.44f, size * 1.14f),
+        cornerRadius = CornerRadius(size * 0.06f),
     )
-    // The kiswah band (golden calligraphy band around the cube).
-    drawRect(
+    // The kiswah band (hizam) wrapping the upper third.
+    drawRoundRect(
         color = gold,
-        topLeft = Offset(center.x - half, center.y - half * 0.02f),
-        size = androidx.compose.ui.geometry.Size(size, size * 0.11f),
+        topLeft = Offset(center.x - half * 0.72f, center.y - half * 0.10f),
+        size = Size(size * 1.44f, size * 0.20f),
+        cornerRadius = CornerRadius(size * 0.04f),
     )
-    // Small gold door hint.
-    drawRect(
-        color = gold.copy(alpha = 0.9f),
-        topLeft = Offset(center.x - half * 0.16f, center.y + half * 0.35f),
-        size = androidx.compose.ui.geometry.Size(size * 0.32f, size * 0.16f),
+    // A thin second gold line below the band.
+    drawRoundRect(
+        color = goldSoft,
+        topLeft = Offset(center.x - half * 0.72f, center.y + half * 0.14f),
+        size = Size(size * 1.44f, size * 0.06f),
+        cornerRadius = CornerRadius(size * 0.02f),
+    )
+    // The door (Bab al-Kaaba).
+    drawRoundRect(
+        color = gold,
+        topLeft = Offset(center.x - half * 0.20f, center.y + half * 0.26f),
+        size = Size(size * 0.40f, size * 0.30f),
+        cornerRadius = CornerRadius(size * 0.05f),
     )
 }
 
