@@ -5,6 +5,13 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+
+- **Flat-mode centered indicator** — the circular (horizontal) level now
+  shows the same pulsing centered dot as the plumb mode: at the pivot it
+  lights up with a soft breathing glow exactly when the device is level on
+  both axes, drawn on top of the bubble and in sync with the haptic pulse.
+
 ### Changed
 
 - **Pulsing plumb indicator** — the perfect-plumb dot's glow now breathes

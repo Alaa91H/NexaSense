@@ -267,6 +267,19 @@ private fun BubbleLevel(
         label = "bubbleY",
     )
 
+    // The centered indicator breathes like the plumb dot: a slow, gentle
+    // pulse on its glow while the device is level — the same threshold the
+    // level's haptic uses, so the light and the vibration are always in sync.
+    val pulse by rememberInfiniteTransition(label = "flatPulse").animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1100, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "flatPulseValue",
+    )
+
     Canvas(modifier = modifier) {
         val radius = min(size.width, size.height) / 2f
         val center = this.center
@@ -314,6 +327,31 @@ private fun BubbleLevel(
             color = if (isLevel) primaryColor else errorColor,
             radius = bubbleRadius,
             center = Offset(center.x + x, center.y + y),
+        )
+
+        // Perfect-level indicator at the pivot: a small dot that lights up
+        // (filled primary + soft pulsing glow) exactly when the device is
+        // level on both axes — the same threshold the haptic uses, so the
+        // light and the vibration are always in sync. Drawn after the bubble
+        // so it stays visible on top of it.
+        val perfectlyLevel = abs(pitch) < LEVEL_CENTERED_THRESHOLD_DEGREES &&
+            abs(roll) < LEVEL_CENTERED_THRESHOLD_DEGREES
+        if (perfectlyLevel) {
+            drawCircle(
+                color = primaryColor.copy(alpha = 0.14f + 0.22f * pulse),
+                radius = (9.dp + 6.dp * pulse).toPx(),
+                center = center,
+            )
+        }
+        drawCircle(
+            color = if (perfectlyLevel) primaryColor else surfaceColor.copy(alpha = 0.55f),
+            radius = 4.5.dp.toPx(),
+            center = center,
+            style = if (perfectlyLevel) {
+                androidx.compose.ui.graphics.drawscope.Fill
+            } else {
+                androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx())
+            },
         )
     }
 }
@@ -486,8 +524,8 @@ private fun TubeLevel(
         // pivot that lights up (filled primary + soft glow) exactly when the
         // device is perfectly plumb — the same threshold the level's haptic
         // uses, so the light and the vibration are always in sync.
-        val perfectlyPlumb = abs(pitchDeviation) < PLUMB_CENTERED_THRESHOLD_DEGREES &&
-            abs(roll) < PLUMB_CENTERED_THRESHOLD_DEGREES
+        val perfectlyPlumb = abs(pitchDeviation) < LEVEL_CENTERED_THRESHOLD_DEGREES &&
+            abs(roll) < LEVEL_CENTERED_THRESHOLD_DEGREES
         if (perfectlyPlumb) {
             // Pulsing glow: radius and alpha breathe together, so the
             // centered state visibly throbs instead of sitting still.
@@ -526,10 +564,11 @@ private fun plumbPoint(pivot: Offset, length: Float, degrees: Float): Offset {
 private const val PLUMB_ALIGNED_DEGREES = 2f
 
 /**
- * Threshold for the perfect-plumb indicator, matching the level's haptic
- * centered zone (both axes) so the light and the vibration are in sync.
+ * Threshold for the perfect-level indicators (plumb dot and flat dot),
+ * matching the level's haptic centered zone (both axes) so the light and
+ * the vibration are in sync.
  */
-private const val PLUMB_CENTERED_THRESHOLD_DEGREES = 1.5f
+private const val LEVEL_CENTERED_THRESHOLD_DEGREES = 1.5f
 
 @Composable
 private fun LevelCalibrationDialog(
