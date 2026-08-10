@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import com.nexasense.core.logging.NexaLogger
 import com.nexasense.domain.model.LanguagePreference
 import com.nexasense.presentation.NexaSenseRoot
 
@@ -34,7 +35,10 @@ class MainActivity : AppCompatActivity() {
             ?: LocaleListCompat.getEmptyLocaleList()
         val current = AppCompatDelegate.getApplicationLocales()
         if (!current.equals(requested)) {
-            AppCompatDelegate.setApplicationLocales(requested)
+            // Per-app locales can fail on some OEM builds; a failure here must
+            // never prevent the app from launching (the device locale is kept).
+            runCatching { AppCompatDelegate.setApplicationLocales(requested) }
+                .onFailure { NexaLogger.w("setApplicationLocales failed: ${it.message}") }
         }
     }
 }

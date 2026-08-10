@@ -32,11 +32,26 @@ class SensorManagerGateway(context: Context) : SensorDiscovery, SensorEventStrea
         context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
 
     override suspend fun getSensors(): List<SensorDescriptor> = withContext(Dispatchers.Default) {
-        sensorManager?.getSensorList(Sensor.TYPE_ALL).orEmpty().map { it.toDescriptor() }
+        val manager = sensorManager ?: return@withContext emptyList()
+        // Some partial or misconfigured sensor HALs (custom ROMs) throw when
+        // the sensor list is inconsistent. Discovery must never crash the app:
+        // report an empty list and log, exactly as if no sensors existed.
+        runCatching {
+            manager.getSensorList(Sensor.TYPE_ALL).map { it.toDescriptor() }
+        }.getOrElse { error ->
+            NexaLogger.e("Sensor list unavailable: ${error.message}")
+            emptyList()
+        }
     }
 
-    override suspend fun hasSensor(kind: SensorKind): Boolean =
-        sensorManager?.getDefaultSensor(kind.type) != null
+    override suspend fun hasSensor(kind: SensorKind): Boolean {
+        val manager = sensorManager ?: return false
+        return runCatching { manager.getDefaultSensor(kind.type) != null }
+            .getOrElse { error ->
+                NexaLogger.w("Sensor lookup failed for ${kind.name}: ${error.message}")
+                false
+            }
+    }
 
     override suspend fun sensorsOf(kind: SensorKind): List<SensorDescriptor> =
         getSensors().filter { it.kind == kind }
@@ -104,14 +119,21 @@ class SensorManagerGateway(context: Context) : SensorDiscovery, SensorEventStrea
         sensorId: Int?,
     ): Sensor? {
         if (manager == null) return null
-        val sensors = manager.getSensorList(kind.type)
-        if (sensors.isEmpty()) return null
-        sensorId?.let { id ->
-            sensors.firstOrNull { it.id == id }?.let { return it }
+        return try {
+            val sensors = manager.getSensorList(kind.type)
+            if (sensors.isEmpty()) {
+                null
+            } else {
+                sensorId?.let { id -> sensors.firstOrNull { it.id == id } }
+                    ?: sensors.firstOrNull { !it.isWakeUpSensor }
+                    ?: sensors.first()
+            }
+        } catch (t: Throwable) {
+            // A throwing HAL must not take down the screen that opened the
+            // stream; treat it as "no sensor" and log instead.
+            NexaLogger.e("Sensor resolution failed for ${kind.name}: ${t.message}")
+            null
         }
-        // Prefer the non-wake-up instance for continuous streaming so the SoC
-        // is not woken for every sample (battery).
-        return sensors.firstOrNull { !it.isWakeUpSensor } ?: sensors.first()
     }
 
     private fun Sensor.toDescriptor(): SensorDescriptor = SensorDescriptor(

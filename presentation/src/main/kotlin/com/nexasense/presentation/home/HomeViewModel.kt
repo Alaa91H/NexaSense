@@ -27,7 +27,11 @@ class HomeViewModel(container: AppContainer) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            val kinds = container.sensorDiscovery.getSensors().map { it.kind }.toSet()
+            // Sensor discovery must never crash the home screen: a broken or
+            // partial sensor HAL (common on custom ROMs) simply reports the
+            // capabilities as unavailable instead of killing the app at launch.
+            val kinds = runCatching { container.sensorDiscovery.getSensors().map { it.kind }.toSet() }
+                .getOrDefault(emptySet())
             _state.value = HomeUiState(
                 compass = com.nexasense.domain.engine.SourceSelector.bestSource(kinds) !=
                     com.nexasense.domain.model.HeadingSource.UNAVAILABLE,

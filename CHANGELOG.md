@@ -13,6 +13,11 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Fixed
 
+- **Startup crash hardening** — sensor discovery, the home screen's
+  capability check and the per-app locale call can no longer crash the app at
+  launch when a device's sensor HAL is partial or misbehaving (common on
+  AOSP/custom ROMs); failures now degrade gracefully (capabilities reported
+  unavailable, device locale kept) instead of force-closing.
 - **Refresh button accessibility label** — the toolbar refresh action was
   announced as "Cancel" to screen readers; it now says "Refresh" in all 24
   locales.
