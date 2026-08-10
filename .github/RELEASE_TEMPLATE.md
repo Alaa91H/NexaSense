@@ -4,7 +4,7 @@
 
 ### Highlights
 
-- 🧭 **Compass** with 360° dial, smooth wrap-around heading, adaptive magnetic-interference detection and in-app magnetometer calibration (hard/soft iron).
+- 🧭 **Compass** with 360° dial, smooth wrap-around heading, adaptive magnetic-interference detection and in-app magnetometer calibration (hard/soft iron). Three professional dial styles (**Classic / Azimuth / Minimal**) switchable from Settings, with granular per-element toggles (cardinal labels, degree ticks, degree numbers, heading readout, north-reference badge, source/declination details, accuracy panel).
 - 🕋 **Qibla Direction** — fully local WGS84 geodesic bearing to the Kaaba (Vincenty inverse formula on the WGS84 ellipsoid, spherical fallback), live marker on the dial, turn guidance with a ±2° alignment threshold, optional distance and haptics, plus a **sun-over-Kaaba shadow check**: when the sun transits the Kaaba (twice a year) the solar azimuth equals the Qibla bearing, so shadows verify the direction compass-free. Disabled by default; location is requested only while enabled and never leaves the device.
 - 🧭 **North Reference** — Automatic / True North / Magnetic North with effective-reference resolution always shown (e.g. *Automatic · True North*).
 - 📏 **Level** — bubble level from the accelerometer alone, display-rotation aware, zero-point calibration.
@@ -15,7 +15,8 @@
 - Compass sources by priority: Rotation Vector → Geomagnetic Rotation Vector → Accelerometer + Magnetometer → *unavailable* (never faked).
 - Magnetic declination from the current official **WMM2025** model (pure-Kotlin, NOAA-verified to < 0.005°), cached by location/time — never per sensor event.
 - Adaptive interference thresholds, no single worldwide constant.
-- Settings: theme (System/Light/Dark + dynamic color), language (24 languages, system per-app language picker on Android 13+), North Reference, Qibla options, smoothing, sensor rate, haptics, keep-screen-on, developer mode.
+- Settings: theme (System/Light/Dark + dynamic color), language (24 languages, system per-app language picker on Android 13+), North Reference, Qibla options, compass style & appearance toggles, smoothing, sensor rate, haptics, keep-screen-on, developer mode.
+- Startup is hardened against broken/partial sensor HALs (common on custom ROMs) — sensor discovery, the home capability check and the per-app locale call degrade gracefully instead of crashing.
 - Sensors registered only while a screen is visible — no background collection; non-wake-up sensors preferred.
 - Heading stays in the user's frame across auto-rotate (display-rotation compensation), and the dial/level cap at 480 dp on large screens.
 - 182 unit tests (math, geodesy, geomagnetic WMM2025 model, solar position, engines, calibration, robustness), lint-clean; instrumented UI tests run on a device.
@@ -34,7 +35,7 @@ English, العربية, Deutsch, Français, Español, Português, Italiano, Tü
 
 ### UI
 
-Material 3 design system (centralized color/shape/typography/dimensions), dynamic color on Android 12+, light/dark/system themes, adaptive icons, edge-to-edge on Android 15/16, predictive-back support, TalkBack-friendly content descriptions with a heading live region, and 48 dp touch targets.
+Material 3 design system (centralized color/shape/typography/dimensions), dynamic color on Android 12+, light/dark/system themes, a new Google-2026-style launcher icon (diagonal blue gradient, white compass mark, monochrome themed-icon variant for Android 13+), edge-to-edge on Android 15/16, predictive-back support, TalkBack-friendly content descriptions with a heading live region, and 48 dp touch targets.
 
 ### Privacy
 

@@ -3,7 +3,7 @@
 All notable changes to NexaSense are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.0.2] - 2026-08-10
 
 ### Added
 
@@ -201,7 +201,7 @@ All notable changes to NexaSense are documented here. The format is based on
   settings flow.
 - **Docs**: `docs/qibla.md`, updated architecture/compass/compatibility.
 
-## [Unreleased]
+## [1.0.1] - 2026-08-10
 
 ### Added
 
