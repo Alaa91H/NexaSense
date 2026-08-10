@@ -146,6 +146,12 @@ are computed locally from fixed Kaaba coordinates. The diagnostic report
 contains hardware information only — see [PRIVACY.md](PRIVACY.md) and
 [docs/qibla.md](docs/qibla.md).
 
+## F-Droid
+
+NexaSense is F-Droid-ready: Apache-2.0, no ads/trackers/anti-features, no
+internet permission, and store metadata under `fastlane/metadata/`.
+See [docs/fdroid.md](docs/fdroid.md) for the submission guide.
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).

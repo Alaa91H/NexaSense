@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,7 +42,14 @@ fun ScreenScaffold(
     actions: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            // Edge-to-edge is enforced from targetSdk 35: reserve the system
+            // navigation bar so scrollable content never runs beneath it.
+            // The TopAppBar already consumes the status-bar inset.
+            .navigationBarsPadding(),
+    ) {
         TopAppBar(
             title = { Text(title) },
             navigationIcon = {

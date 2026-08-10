@@ -1,0 +1,13 @@
+NexaSense is a professional sensor suite built on the standard Android Sensor Framework, a reliable alternative to the built-in compass and level tools on AOSP and custom ROMs.
+
+Features:
+
+- Compass with rotation-vector sensor fusion and tilt compensation, plus an accelerometer + magnetometer fallback for devices without a gyroscope
+- True North reference computed with the current official WMM2025 magnetic model, or magnetic north — your choice
+- Qibla direction with an accurate geodesic (WGS84 / Vincenty) calculation and distance to Kaaba
+- Spirit bubble level using only the accelerometer, with zero-point calibration
+- Magnetometer calibration: automatic min/max and full ellipsoid (hard-iron + soft-iron) correction
+- Full sensor diagnostics: live readings, sampling rate, accuracy and power for every sensor on the device
+- 24 interface languages, dark theme, no ads, no trackers, no internet permission
+
+Open source (Apache-2.0). Location is used only for the True North declination and Qibla features, and only when you enable them.

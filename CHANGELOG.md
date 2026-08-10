@@ -23,6 +23,17 @@ All notable changes to NexaSense are documented here. The format is based on
   re-measuring 8 text layouts on every animation frame inside the Canvas
   draw lambda.
 
+### Fixed
+
+- **Edge-to-edge (Android 15/16)** — scrollable screens now reserve the system
+  navigation bar inset, so content no longer runs underneath the gesture bar
+  with the enforced edge-to-edge from targetSdk 35+.
+
+### Added
+
+- **F-Droid publishing** — `fastlane` store metadata (en-US, ar, fa, ur) and
+  a submission guide in `docs/fdroid.md`.
+
 ### Added
 
 - **WMM2025 declination model** — the True North feature now computes magnetic

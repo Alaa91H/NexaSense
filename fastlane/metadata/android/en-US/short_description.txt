@@ -1,0 +1,1 @@
+Compass, bubble level and sensor diagnostics for AOSP devices.
