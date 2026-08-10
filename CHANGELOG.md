@@ -7,6 +7,12 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Plumb gauge in vertical mode** — the upright (plumb) level now shows a
+  dashed vertical reference line with a needle that rotates away from it by
+  the deviation-from-vertical angle, on a ±50° scale with 10°/20° ticks and
+  degree labels; green (primary) within ±2° of plumb, red otherwise. The
+  horizontal mercury tube (roll) stays on top, so side lean (roll) and
+  forward/back deviation (pitch) are both visible at once.
 - **Always-portrait compass** — `MainActivity` is locked to portrait
   (`screenOrientation="portrait"`), so the compass and the whole app stay
   vertical and never flip to landscape when the device rotates (the

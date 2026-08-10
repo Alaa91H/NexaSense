@@ -27,14 +27,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nexasense.presentation.AppContainer
@@ -44,7 +49,9 @@ import com.nexasense.presentation.components.ScreenScaffold
 import com.nexasense.presentation.components.StatusPill
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.cos
 import kotlin.math.min
+import kotlin.math.sin
 
 @Composable
 fun LevelScreen(
@@ -134,13 +141,16 @@ fun LevelScreen(
 
             if (verticalMode) {
                 // Vertical mode: a water/mercury tube level with the bubble
-                // moving left-right only (roll), for checking plumb.
+                // moving left-right only (roll), plus a plumb gauge whose
+                // vertical reference line and needle show the deviation from
+                // vertical (pitch) visually.
                 TubeLevel(
                     roll = orientation.roll,
+                    pitchDeviation = pitchDeviation,
                     modifier = Modifier
                         .widthIn(max = 480.dp)
                         .fillMaxWidth()
-                        .aspectRatio(1.6f)
+                        .aspectRatio(1.35f)
                         .semantics {
                             contentDescription = bubbleDescription
                         },
@@ -288,29 +298,42 @@ private fun BubbleLevel(
 }
 
 /**
- * Vertical (plumb) mode: a water/mercury tube level. The bubble travels
- * left-right only, driven by roll — the tube is centered when the device is
- * held exactly upright with no side lean.
+ * Vertical (plumb) mode: a water/mercury tube level on top, plus a plumb
+ * gauge below. The tube's bubble travels left-right only, driven by roll;
+ * the gauge's needle rotates away from a dashed vertical reference line by
+ * the deviation-from-vertical (pitch) angle — 0° is exactly plumb.
  */
 @Composable
 private fun TubeLevel(
     roll: Float,
+    pitchDeviation: Float,
     modifier: Modifier = Modifier,
 ) {
     val surfaceColor = MaterialTheme.colorScheme.onSurface
     val primaryColor = MaterialTheme.colorScheme.primary
     val errorColor = MaterialTheme.colorScheme.error
 
+    val textMeasurer = rememberTextMeasurer()
+    val tickLabelStyle = remember(surfaceColor) {
+        TextStyle(color = surfaceColor.copy(alpha = 0.7f), fontSize = 11.sp)
+    }
+    // Measured once, outside the draw lambda (same convention as CompassDial).
+    val measuredTickLabels = remember(textMeasurer, tickLabelStyle) {
+        listOf(10, 20, 30, 40).associateWith { degree ->
+            textMeasurer.measure(degree.toString(), tickLabelStyle)
+        }
+    }
+
     Canvas(modifier = modifier) {
         val w = size.width
         val h = size.height
         val cx = w / 2f
-        val cy = h / 2f
 
-        // The vial: a horizontal capsule tube.
-        val tubeHeight = h * 0.42f
+        // ---------- Horizontal mercury tube (roll, left-right) ----------
+        val tubeHeight = h * 0.24f
+        val tubeCenterY = h * 0.20f
         val tubeInset = w * 0.07f
-        val tubeTop = cy - tubeHeight / 2f
+        val tubeTop = tubeCenterY - tubeHeight / 2f
         drawRoundRect(
             color = surfaceColor.copy(alpha = 0.16f),
             topLeft = Offset(tubeInset, tubeTop),
@@ -325,20 +348,20 @@ private fun TubeLevel(
             style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx()),
         )
 
-        // Center reference marks (the "level" window in the middle),
-        // symmetric around the tube's horizontal center.
+        // Center reference marks (the "level" window), symmetric around the
+        // tube's horizontal center.
         val tickHalf = tubeHeight * 0.34f
         val tickGap = 14.dp.toPx()
         drawLine(
             color = surfaceColor.copy(alpha = 0.7f),
-            start = Offset(cx - tickGap, cy - tickHalf),
-            end = Offset(cx - tickGap, cy + tickHalf),
+            start = Offset(cx - tickGap, tubeCenterY - tickHalf),
+            end = Offset(cx - tickGap, tubeCenterY + tickHalf),
             strokeWidth = 2.dp.toPx(),
         )
         drawLine(
             color = surfaceColor.copy(alpha = 0.7f),
-            start = Offset(cx + tickGap, cy - tickHalf),
-            end = Offset(cx + tickGap, cy + tickHalf),
+            start = Offset(cx + tickGap, tubeCenterY - tickHalf),
+            end = Offset(cx + tickGap, tubeCenterY + tickHalf),
             strokeWidth = 2.dp.toPx(),
         )
 
@@ -352,10 +375,80 @@ private fun TubeLevel(
         drawCircle(
             color = if (centered) primaryColor else errorColor,
             radius = bubbleRadius,
-            center = Offset(cx + x, cy),
+            center = Offset(cx + x, tubeCenterY),
+        )
+
+        // ---------- Plumb gauge: dashed vertical reference + needle ----------
+        val pivot = Offset(cx, h * 0.56f)
+        val needleLength = h * 0.30f
+
+        // The 0° reference: a dashed vertical line through the pivot.
+        drawLine(
+            color = surfaceColor.copy(alpha = 0.55f),
+            start = pivot,
+            end = Offset(pivot.x, pivot.y + needleLength),
+            strokeWidth = 1.5.dp.toPx(),
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10.dp.toPx(), 8.dp.toPx())),
+        )
+
+        // Degree scale: ticks every 10° (major every 20°) with labels.
+        val tickOuter = needleLength
+        val tickInner = needleLength * 0.86f
+        for (degree in -50..50 step 10) {
+            if (degree == 0) continue
+            val major = degree % 20 == 0
+            drawLine(
+                color = surfaceColor.copy(alpha = if (major) 0.6f else 0.35f),
+                start = plumbPoint(pivot, tickInner, degree.toFloat()),
+                end = plumbPoint(pivot, tickOuter, degree.toFloat()),
+                strokeWidth = if (major) 2.dp.toPx() else 1.dp.toPx(),
+            )
+            if (major) {
+                val labelPosition = plumbPoint(pivot, needleLength * 1.06f, degree.toFloat())
+                measuredTickLabels[abs(degree)]?.let { measured ->
+                    drawText(
+                        textLayoutResult = measured,
+                        topLeft = Offset(
+                            labelPosition.x - measured.size.width / 2f,
+                            labelPosition.y - measured.size.height / 2f,
+                        ),
+                    )
+                }
+            }
+        }
+
+        // The needle: rotates away from the reference by the deviation from
+        // vertical. Green (primary) when plumb (within ±2°), red otherwise.
+        val aligned = abs(pitchDeviation) <= PLUMB_ALIGNED_DEGREES
+        val needleColor = if (aligned) primaryColor else errorColor
+        val needleEnd = plumbPoint(pivot, needleLength, pitchDeviation.coerceIn(-50f, 50f))
+        drawLine(
+            color = needleColor,
+            start = pivot,
+            end = needleEnd,
+            strokeWidth = 3.dp.toPx(),
+        )
+        drawCircle(color = needleColor, radius = 5.dp.toPx(), center = needleEnd)
+        drawCircle(
+            color = surfaceColor.copy(alpha = 0.55f),
+            radius = 4.dp.toPx(),
+            center = pivot,
+            style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx()),
         )
     }
 }
+
+/** Point at [degrees] clockwise from straight-down, [length] from [pivot]. */
+private fun plumbPoint(pivot: Offset, length: Float, degrees: Float): Offset {
+    val radians = Math.toRadians(degrees.toDouble())
+    return Offset(
+        x = pivot.x + length * sin(radians).toFloat(),
+        y = pivot.y + length * cos(radians).toFloat(),
+    )
+}
+
+/** Deviation within which the plumb needle reads as aligned. */
+private const val PLUMB_ALIGNED_DEGREES = 2f
 
 @Composable
 private fun LevelCalibrationDialog(
