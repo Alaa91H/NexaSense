@@ -5,7 +5,7 @@
 ### Highlights
 
 - 🧭 **Compass** with 360° dial, smooth wrap-around heading, adaptive magnetic-interference detection and in-app magnetometer calibration (hard/soft iron).
-- 🕋 **Qibla Direction** — fully local WGS84 geodesic bearing to the Kaaba (Vincenty inverse formula on the WGS84 ellipsoid, spherical fallback), live marker on the dial, turn guidance with a ±2° alignment threshold, optional distance and haptics. Disabled by default; location is requested only while enabled and never leaves the device.
+- 🕋 **Qibla Direction** — fully local WGS84 geodesic bearing to the Kaaba (Vincenty inverse formula on the WGS84 ellipsoid, spherical fallback), live marker on the dial, turn guidance with a ±2° alignment threshold, optional distance and haptics, plus a **sun-over-Kaaba shadow check**: when the sun transits the Kaaba (twice a year) the solar azimuth equals the Qibla bearing, so shadows verify the direction compass-free. Disabled by default; location is requested only while enabled and never leaves the device.
 - 🧭 **North Reference** — Automatic / True North / Magnetic North with effective-reference resolution always shown (e.g. *Automatic · True North*).
 - 📏 **Level** — bubble level from the accelerometer alone, display-rotation aware, zero-point calibration.
 - 📡 **Sensor discovery & diagnostics** — every sensor the HAL exposes, with full metadata, live raw values, measured sampling rate and a shareable diagnostic report (no personal data).
@@ -15,9 +15,10 @@
 - Compass sources by priority: Rotation Vector → Geomagnetic Rotation Vector → Accelerometer + Magnetometer → *unavailable* (never faked).
 - Magnetic declination from the current official **WMM2025** model (pure-Kotlin, NOAA-verified to < 0.005°), cached by location/time — never per sensor event.
 - Adaptive interference thresholds, no single worldwide constant.
-- Settings: theme (System/Light/Dark + dynamic color), language (25 languages), North Reference, Qibla options, smoothing, sensor rate, haptics, keep-screen-on, developer mode.
+- Settings: theme (System/Light/Dark + dynamic color), language (24 languages, system per-app language picker on Android 13+), North Reference, Qibla options, smoothing, sensor rate, haptics, keep-screen-on, developer mode.
 - Sensors registered only while a screen is visible — no background collection; non-wake-up sensors preferred.
-- 163 unit tests (math, geodesy, geomagnetic model, engines, calibration, robustness), lint-clean; instrumented UI tests run on a device.
+- Heading stays in the user's frame across auto-rotate (display-rotation compensation), and the dial/level cap at 480 dp on large screens.
+- 182 unit tests (math, geodesy, geomagnetic WMM2025 model, solar position, engines, calibration, robustness), lint-clean; instrumented UI tests run on a device.
 
 ### Compatibility
 
@@ -29,11 +30,11 @@
 
 ### Localization
 
-English, العربية, Deutsch, Français, Español, Português, Italiano, Türkçe, Русский, Українська, Polski, Nederlands, Bahasa Indonesia, Bahasa Melayu, हिन्दी, বাংলা, اردو, فارسی, 简体中文, 繁體中文, 日本語, 한국어, Tiếng Việt, ไทย — with proper RTL support and per-app language selection (System Default follows the device language).
+English, العربية, Deutsch, Français, Español, Português, Italiano, Türkçe, Русский, Українська, Polski, Nederlands, Bahasa Indonesia, Bahasa Melayu, हिन्दी, বাংলা, اردو, فارسی, 简体中文, 繁體中文, 日本語, 한국어, Tiếng Việt, ไทย — 24 languages with proper RTL support, per-app language selection (System Default follows the device language) and the app name localized per language (e.g. البوصلة, Kompass, Brújula, 指南针).
 
 ### UI
 
-Material 3 design system (centralized color/shape/typography/dimensions), dynamic color on Android 12+, light/dark/system themes, adaptive icons, TalkBack-friendly content descriptions and 48 dp touch targets.
+Material 3 design system (centralized color/shape/typography/dimensions), dynamic color on Android 12+, light/dark/system themes, adaptive icons, edge-to-edge on Android 15/16, predictive-back support, TalkBack-friendly content descriptions with a heading live region, and 48 dp touch targets.
 
 ### Privacy
 
