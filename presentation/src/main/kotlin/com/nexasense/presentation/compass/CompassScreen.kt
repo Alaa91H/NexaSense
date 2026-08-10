@@ -3,7 +3,9 @@ package com.nexasense.presentation.compass
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
@@ -30,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
@@ -285,22 +289,52 @@ fun CompassScreen(
     }
 }
 
+/**
+ * The heading readout inside a closed card. The degree number renders in a
+ * fixed-width slot sized by an invisible placeholder (the widest value,
+ * "888°"), so the digits changing as the compass moves never re-measure
+ * and shift the text — it stays fixed in place no matter the heading.
+ */
 @Composable
 private fun HeadingReadout(heading: Heading) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = "${heading.degrees.toInt()}°",
-            style = MaterialTheme.typography.displayLarge,
-            textAlign = TextAlign.Center,
-        )
-        Text(
-            text = heading.cardinal.name,
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.primary,
-            // Live region: TalkBack announces the heading only when the cardinal
-            // direction changes (its text only changes then), never at sensor rate.
-            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-        )
+    Surface(
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+        border = BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+        ),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(vertical = 10.dp),
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                // Invisible placeholder sizes the slot to the widest possible
+                // value, keeping the real readout fixed-width and centered.
+                Text(
+                    text = "888°",
+                    style = MaterialTheme.typography.displayLarge,
+                    color = Color.Transparent,
+                    maxLines = 1,
+                )
+                Text(
+                    text = "${heading.degrees.toInt()}°",
+                    style = MaterialTheme.typography.displayLarge,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                )
+            }
+            Text(
+                text = heading.cardinal.name,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary,
+                // Live region: TalkBack announces the heading only when the cardinal
+                // direction changes (its text only changes then), never at sensor rate.
+                modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+            )
+        }
     }
 }
 

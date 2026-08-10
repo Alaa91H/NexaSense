@@ -29,6 +29,12 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Changed
 
+- **Fixed readout text in closed cards** — the compass heading and the
+  level's angle readouts now render inside closed cards (rounded, bordered,
+  semi-transparent), and every numeric readout sits in a fixed-width slot
+  sized by an invisible widest-value placeholder ("888°"/"-888.8°"). The
+  digits changing as the compass turns or the device tilts never re-measure
+  and shift the text — it stays fixed in place no matter the value.
 - **Smooth settings cards, no overlap** — expanding or collapsing an
   accordion card now animates smoothly with a 220 ms size tween, with the
   revealed content clipped to the growing bounds (animateContentSize +

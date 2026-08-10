@@ -7,8 +7,10 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,9 +20,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.PathEffect
@@ -230,20 +235,34 @@ fun LevelScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
+            // Readouts inside a closed card; each value renders in a
+            // fixed-width slot, so the numbers never shift as the device tilts.
+            Surface(
+                shape = RoundedCornerShape(20.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                ),
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                AngleReadout(
-                    label = stringResource(
-                        if (verticalMode) R.string.level_vertical_deviation else R.string.level_pitch,
-                    ),
-                    value = pitchDeviation,
-                )
-                AngleReadout(
-                    label = stringResource(R.string.level_roll),
-                    value = orientation.roll,
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    AngleReadout(
+                        label = stringResource(
+                            if (verticalMode) R.string.level_vertical_deviation else R.string.level_pitch,
+                        ),
+                        value = pitchDeviation,
+                    )
+                    AngleReadout(
+                        label = stringResource(R.string.level_roll),
+                        value = orientation.roll,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -288,10 +307,21 @@ private fun AngleReadout(label: String, value: Float) {
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Text(
-            text = stringResource(R.string.level_degrees, formatAngle(value)),
-            style = MaterialTheme.typography.headlineLarge,
-        )
+        // Fixed-width slot (invisible widest-value placeholder): the digits
+        // changing as the device tilts never re-measure and shift the text.
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = stringResource(R.string.level_degrees, "-888.8"),
+                style = MaterialTheme.typography.headlineLarge,
+                color = Color.Transparent,
+                maxLines = 1,
+            )
+            Text(
+                text = stringResource(R.string.level_degrees, formatAngle(value)),
+                style = MaterialTheme.typography.headlineLarge,
+                maxLines = 1,
+            )
+        }
     }
 }
 
