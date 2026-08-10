@@ -25,6 +25,7 @@ class LevelViewModel(
 
     val orientation = levelEngine.orientation
     val isAvailable = levelEngine.isAvailable
+    val sensorBlocked = levelEngine.sensorBlocked
 
     val calibration: StateFlow<LevelCalibration> = calibrationStore.levelCalibration.stateIn(
         scope = viewModelScope,

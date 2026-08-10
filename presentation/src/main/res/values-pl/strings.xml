@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Historia awarii</string>
+    <string name="diagnostics_crash_none">Brak zarejestrowanych awarii</string>
+    <string name="diagnostics_crash_note">Szczegóły awarii są przechowywane tylko na tym urządzeniu i nigdy go nie opuszczają.</string>
+    <string name="diagnostics_crash_clear">Wyczyść historię awarii</string>
+    <string name="sensors_blocked_title">Czujniki zablokowane</string>
+    <string name="sensors_blocked_message">Nie są odbierane żadne dane z czujników. Sprawdź, czy Sensors Off jest wyłączone, i zezwól tej aplikacji na dostęp do czujników.</string>
 </resources>

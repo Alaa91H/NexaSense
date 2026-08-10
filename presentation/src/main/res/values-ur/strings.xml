@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">خرابی کا ریکارڈ</string>
+    <string name="diagnostics_crash_none">کوئی خرابی درج نہیں</string>
+    <string name="diagnostics_crash_note">خرابی کی تفصیلات صرف اس ڈیوائس پر محفوظ ہوتی ہیں اور کبھی باہر نہیں جاتیں۔</string>
+    <string name="diagnostics_crash_clear">خرابی کا ریکارڈ صاف کریں</string>
+    <string name="sensors_blocked_title">سینسر بند ہیں</string>
+    <string name="sensors_blocked_message">سینسر سے کوئی ڈیٹا نہیں آ رہا۔ Sensors Off آپشن چیک کریں اور اس ایپ کو سینسر تک رسائی دیں۔</string>
 </resources>

@@ -77,6 +77,7 @@ fun CompassScreen(
     val liveCalibration by viewModel.liveCalibration.collectAsStateWithLifecycle()
     val qiblaState by viewModel.qiblaState.collectAsStateWithLifecycle()
     val hapticTick by viewModel.hapticTick.collectAsStateWithLifecycle()
+    val sensorBlocked by viewModel.sensorBlocked.collectAsStateWithLifecycle()
 
     EngineLifecycleEffect(active = true, onStateChanged = viewModel::setActive)
 
@@ -119,8 +120,12 @@ fun CompassScreen(
 
             if (!heading.isAvailable) {
                 UnavailablePanel(
-                    title = stringResource(R.string.compass_unavailable),
-                    message = stringResource(R.string.compass_unavailable_message),
+                    title = stringResource(
+                        if (sensorBlocked) R.string.sensors_blocked_title else R.string.compass_unavailable,
+                    ),
+                    message = stringResource(
+                        if (sensorBlocked) R.string.sensors_blocked_message else R.string.compass_unavailable_message,
+                    ),
                 )
                 return@ScreenScaffold
             }

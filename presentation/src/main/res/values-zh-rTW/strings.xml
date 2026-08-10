@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">崩潰記錄</string>
+    <string name="diagnostics_crash_none">暫無崩潰記錄</string>
+    <string name="diagnostics_crash_note">崩潰詳情僅儲存在本裝置上，絕不會外傳。</string>
+    <string name="diagnostics_crash_clear">清除崩潰記錄</string>
+    <string name="sensors_blocked_title">感測器被阻擋</string>
+    <string name="sensors_blocked_message">未收到感測器資料。請檢查 Sensors Off 是否已關閉，並允許此應用程式存取感測器。</string>
 </resources>

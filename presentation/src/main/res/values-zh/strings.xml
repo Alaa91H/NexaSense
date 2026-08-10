@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">崩溃记录</string>
+    <string name="diagnostics_crash_none">暂无崩溃记录</string>
+    <string name="diagnostics_crash_note">崩溃详情仅存储在本设备上，绝不会外传。</string>
+    <string name="diagnostics_crash_clear">清除崩溃记录</string>
+    <string name="sensors_blocked_title">传感器被阻止</string>
+    <string name="sensors_blocked_message">未收到传感器数据。请检查 Sensors Off 是否已关闭，并允许此应用访问传感器。</string>
 </resources>

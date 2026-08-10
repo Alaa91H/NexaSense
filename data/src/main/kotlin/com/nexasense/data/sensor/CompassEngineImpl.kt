@@ -34,6 +34,7 @@ import com.nexasense.domain.port.SensorEventStream
 import com.nexasense.domain.port.SettingsStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -80,6 +81,9 @@ class CompassEngineImpl(
     override val magneticField: StateFlow<MagneticFieldState> = _magneticField.asStateFlow()
     override val state: StateFlow<MagneticFieldState> = _magneticField.asStateFlow()
 
+    private val _sensorBlocked = MutableStateFlow(false)
+    override val sensorBlocked: StateFlow<Boolean> = _sensorBlocked.asStateFlow()
+
     private val _liveCalibration = MutableStateFlow(MagnetometerCalibration.NONE)
     override val liveCalibration: StateFlow<MagnetometerCalibration> = _liveCalibration.asStateFlow()
 
@@ -121,6 +125,7 @@ class CompassEngineImpl(
     override fun setActive(active: Boolean) {
         if (this.active == active) return
         this.active = active
+        _sensorBlocked.value = false
         if (active) startSensors() else stopSensors()
     }
 
@@ -184,24 +189,37 @@ class CompassEngineImpl(
             source = SourceSelector.bestSource(kinds)
             if (source == HeadingSource.UNAVAILABLE) {
                 _heading.value = unavailableHeading()
+                _sensorBlocked.value = false
                 NexaLogger.w("No heading source available on this device.")
                 return@launch
             }
-            when (source) {
-                HeadingSource.ROTATION_VECTOR -> collectHeadingStream(
-                    SensorKind.ROTATION_VECTOR,
-                    HeadingSource.ROTATION_VECTOR,
-                )
-
-                HeadingSource.GEOMAGNETIC_ROTATION_VECTOR -> collectHeadingStream(
-                    SensorKind.GEOMAGNETIC_ROTATION_VECTOR,
-                    HeadingSource.GEOMAGNETIC_ROTATION_VECTOR,
-                )
-
-                HeadingSource.ACCELEROMETER_MAGNETOMETER -> collectAccelMagnetometer()
-                HeadingSource.UNAVAILABLE -> Unit
+            // If the heading source exists but no heading arrives within the
+            // timeout, the stream is open but silent — the system "Sensors
+            // Off" toggle or a per-app sensor permission (AOSP ROMs) blocks
+            // it. A closed stream (no sensor) is NOT blocked.
+            val watchdog = scope.launch {
+                delay(SENSOR_BLOCKED_TIMEOUT_MILLIS)
+                if (!_heading.value.isAvailable) _sensorBlocked.value = true
             }
-            collectMagnetometer()
+            try {
+                when (source) {
+                    HeadingSource.ROTATION_VECTOR -> collectHeadingStream(
+                        SensorKind.ROTATION_VECTOR,
+                        HeadingSource.ROTATION_VECTOR,
+                    )
+
+                    HeadingSource.GEOMAGNETIC_ROTATION_VECTOR -> collectHeadingStream(
+                        SensorKind.GEOMAGNETIC_ROTATION_VECTOR,
+                        HeadingSource.GEOMAGNETIC_ROTATION_VECTOR,
+                    )
+
+                    HeadingSource.ACCELEROMETER_MAGNETOMETER -> collectAccelMagnetometer()
+                    HeadingSource.UNAVAILABLE -> Unit
+                }
+                collectMagnetometer()
+            } finally {
+                watchdog.cancel()
+            }
         }
     }
 
@@ -256,6 +274,7 @@ class CompassEngineImpl(
 
     private fun publishHeading(rawDegrees: Float, headingSource: HeadingSource) {
         if (rawDegrees.isNaN() || rawDegrees.isInfinite()) return
+        _sensorBlocked.value = false
         lastRawHeading = rawDegrees
         val smoothed = if (settings.smoothing == SmoothingPreference.NONE) {
             AngleMath.normalizeTo360(rawDegrees)
@@ -361,5 +380,8 @@ class CompassEngineImpl(
 
     companion object {
         const val CALIBRATION_SAVE_INTERVAL_SAMPLES = 60
+
+        /** Silence threshold before declaring the sensors blocked (ms). */
+        const val SENSOR_BLOCKED_TIMEOUT_MILLIS = 3_000L
     }
 }

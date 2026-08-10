@@ -10,6 +10,12 @@ interface LevelEngine {
     /** Whether the engine currently has a valid reading. */
     val isAvailable: StateFlow<Boolean>
 
+    /**
+     * True when the accelerometer exists but no readings arrive — typically
+     * the system "Sensors Off" toggle or a per-app sensor permission denial.
+     */
+    val sensorBlocked: StateFlow<Boolean>
+
     fun setActive(active: Boolean)
 
     /**

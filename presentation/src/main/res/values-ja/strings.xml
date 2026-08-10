@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">クラッシュ履歴</string>
+    <string name="diagnostics_crash_none">記録されたクラッシュはありません</string>
+    <string name="diagnostics_crash_note">クラッシュの詳細はこのデバイスにのみ保存され、外部に送信されることはありません。</string>
+    <string name="diagnostics_crash_clear">クラッシュ履歴を消去</string>
+    <string name="sensors_blocked_title">センサーがブロックされています</string>
+    <string name="sensors_blocked_message">センサーデータを受信できません。Sensors Off が無効であることを確認し、このアプリへのセンサーアクセスを許可してください。</string>
 </resources>

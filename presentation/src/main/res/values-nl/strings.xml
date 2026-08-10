@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Crashgeschiedenis</string>
+    <string name="diagnostics_crash_none">Geen crashes geregistreerd</string>
+    <string name="diagnostics_crash_note">Crashdetails worden alleen op dit apparaat bewaard en verlaten het nooit.</string>
+    <string name="diagnostics_crash_clear">Crashgeschiedenis wissen</string>
+    <string name="sensors_blocked_title">Sensoren geblokkeerd</string>
+    <string name="sensors_blocked_message">Er worden geen sensorgegevens ontvangen. Controleer of Sensors Off is uitgeschakeld en sta deze app toegang tot sensoren toe.</string>
 </resources>

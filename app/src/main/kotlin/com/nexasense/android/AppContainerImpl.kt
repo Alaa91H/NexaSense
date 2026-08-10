@@ -1,6 +1,7 @@
 package com.nexasense.android
 
 import android.content.Context
+import com.nexasense.core.crash.CrashLogStoreImpl
 import com.nexasense.core.diagnostics.DeviceInfoProviderImpl
 import com.nexasense.core.location.LocationProviderImpl
 import com.nexasense.core.location.Wmm2025DeclinationProvider
@@ -15,6 +16,7 @@ import com.nexasense.data.sensor.QiblaEngineImpl
 import com.nexasense.domain.engine.DeclinationCache
 import com.nexasense.domain.port.CalibrationStore
 import com.nexasense.domain.port.CompassEngine
+import com.nexasense.domain.port.CrashLogStore
 import com.nexasense.domain.port.DeviceInfoProvider
 import com.nexasense.domain.port.LevelEngine
 import com.nexasense.domain.port.MagneticFieldMonitor
@@ -31,7 +33,10 @@ import kotlinx.coroutines.SupervisorJob
  * Manual dependency graph. All engines share one application scope; sensor
  * registration itself is still gated by each screen's lifecycle.
  */
-class AppContainerImpl(context: Context) : AppContainer {
+class AppContainerImpl(
+    context: Context,
+    override val crashLogStore: CrashLogStore,
+) : AppContainer {
 
     private val appContext: Context = context.applicationContext
 

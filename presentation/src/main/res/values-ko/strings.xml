@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">충돌 기록</string>
+    <string name="diagnostics_crash_none">기록된 충돌 없음</string>
+    <string name="diagnostics_crash_note">충돌 세부 정보는 이 기기에만 저장되며 외부로 전송되지 않습니다.</string>
+    <string name="diagnostics_crash_clear">충돌 기록 지우기</string>
+    <string name="sensors_blocked_title">센서 차단됨</string>
+    <string name="sensors_blocked_message">센서 데이터를 수신하지 못했습니다. Sensors Off가 꺼져 있는지 확인하고 이 앱에 센서 액세스를 허용하세요.</string>
 </resources>

@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">क्रैश इतिहास</string>
+    <string name="diagnostics_crash_none">कोई क्रैश दर्ज नहीं</string>
+    <string name="diagnostics_crash_note">क्रैश विवरण केवल इस डिवाइस पर संग्रहीत होते हैं और कभी बाहर नहीं जाते।</string>
+    <string name="diagnostics_crash_clear">क्रैश इतिहास साफ़ करें</string>
+    <string name="sensors_blocked_title">सेंसर अवरुद्ध</string>
+    <string name="sensors_blocked_message">सेंसर से कोई डेटा नहीं मिल रहा। Sensors Off बंद है यह जाँचें और इस ऐप को सेंसर एक्सेस दें।</string>
 </resources>

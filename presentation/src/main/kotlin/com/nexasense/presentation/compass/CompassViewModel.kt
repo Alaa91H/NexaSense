@@ -28,6 +28,7 @@ class CompassViewModel(
     val magneticField = compassEngine.magneticField
     val liveCalibration = magneticMonitor.liveCalibration
     val qiblaState: StateFlow<QiblaState> = qiblaEngine.state
+    val sensorBlocked = compassEngine.sensorBlocked
 
     val settings: StateFlow<AppSettings> = settingsStore.settings.stateIn(
         scope = viewModelScope,

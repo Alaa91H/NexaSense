@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Sejarah ranap</string>
+    <string name="diagnostics_crash_none">Tiada ranap direkodkan</string>
+    <string name="diagnostics_crash_note">Butiran ranap disimpan hanya pada peranti ini dan tidak pernah meninggalkannya.</string>
+    <string name="diagnostics_crash_clear">Kosongkan sejarah ranap</string>
+    <string name="sensors_blocked_title">Sensor disekat</string>
+    <string name="sensors_blocked_message">Tiada data sensor diterima. Semak bahawa Sensors Off dimatikan dan benarkan aplikasi ini mengakses sensor.</string>
 </resources>

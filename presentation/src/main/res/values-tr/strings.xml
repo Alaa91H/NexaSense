@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Çökme geçmişi</string>
+    <string name="diagnostics_crash_none">Kayıtlı çökme yok</string>
+    <string name="diagnostics_crash_note">Çökme ayrıntıları yalnızca bu cihazda saklanır ve asla cihazdan çıkmaz.</string>
+    <string name="diagnostics_crash_clear">Çökme geçmişini temizle</string>
+    <string name="sensors_blocked_title">Sensörler engellendi</string>
+    <string name="sensors_blocked_message">Sensörlerden veri alınmıyor. Sensors Off kapalı olduğunu kontrol edin ve bu uygulamaya sensör erişimi izni verin.</string>
 </resources>

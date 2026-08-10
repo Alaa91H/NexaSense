@@ -254,4 +254,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">سجل الأعطال</string>
+    <string name="diagnostics_crash_none">لا توجد أعطال مسجلة</string>
+    <string name="diagnostics_crash_note">تُخزَّن تفاصيل الأعطال على هذا الجهاز فقط ولا تغادره أبدًا.</string>
+    <string name="diagnostics_crash_clear">مسح سجل الأعطال</string>
+    <string name="sensors_blocked_title">الحساسات محجوبة</string>
+    <string name="sensors_blocked_message">لا تصل أي بيانات من الحساسات. تحقق من إيقاف تشغيل الحساسات (Sensors Off) واسمح للتطبيق بالوصول إليها.</string>
 </resources>

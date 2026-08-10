@@ -7,6 +7,14 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Local crash history** — uncaught crashes are recorded on-device (the app
+  has no INTERNET permission, so they can never leave it) and shown in the
+  Diagnostics screen with a clear-history action; the handler is installed
+  before the dependency container so even construction failures are captured.
+- **Sensors-blocked detection** — when a sensor exists but delivers no data
+  (the system "Sensors Off" toggle or a per-app sensor permission on
+  AOSP/GrapheneOS), the compass and level screens now explain this clearly
+  instead of showing a generic "unavailable".
 - **New professional launcher icon** — a Google-2026-style compass mark on a
   modern diagonal blue gradient (sky → vivid → deep indigo), with a white
   ring, white north needle and light-blue south needle, a dedicated

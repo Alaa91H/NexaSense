@@ -19,6 +19,14 @@ interface CompassEngine {
     val magneticField: StateFlow<MagneticFieldState>
 
     /**
+     * True when the heading source exists but no readings arrive — typically
+     * the system "Sensors Off" toggle or a per-app sensor permission denial
+     * (AOSP/GrapheneOS). Lets the UI explain the silence instead of showing
+     * a generic "unavailable".
+     */
+    val sensorBlocked: StateFlow<Boolean>
+
+    /**
      * Starts or stops sensor registration. Call with `true` while the compass
      * screen is in the STARTED lifecycle state and `false` when it stops.
      */

@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Riwayat error</string>
+    <string name="diagnostics_crash_none">Tidak ada error tercatat</string>
+    <string name="diagnostics_crash_note">Detail error hanya disimpan di perangkat ini dan tidak pernah meninggalkannya.</string>
+    <string name="diagnostics_crash_clear">Hapus riwayat error</string>
+    <string name="sensors_blocked_title">Sensor diblokir</string>
+    <string name="sensors_blocked_message">Tidak ada data sensor yang diterima. Periksa apakah Sensors Off nonaktif dan izinkan aplikasi ini mengakses sensor.</string>
 </resources>

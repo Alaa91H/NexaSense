@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">تاریخچه خطا</string>
+    <string name="diagnostics_crash_none">هیچ خطایی ثبت نشده است</string>
+    <string name="diagnostics_crash_note">جزئیات خطا فقط روی همین دستگاه ذخیره می‌شود و هرگز از آن خارج نمی‌شود.</string>
+    <string name="diagnostics_crash_clear">پاک کردن تاریخچه خطا</string>
+    <string name="sensors_blocked_title">حسگرها مسدود شده‌اند</string>
+    <string name="sensors_blocked_message">هیچ داده‌ای از حسگرها دریافت نمی‌شود. گزینه Sensors Off را بررسی و دسترسی به حسگرها را برای این برنامه مجاز کنید.</string>
 </resources>

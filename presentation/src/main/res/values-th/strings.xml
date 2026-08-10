@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">ประวัติการขัดข้อง</string>
+    <string name="diagnostics_crash_none">ไม่มีการบันทึกการขัดข้อง</string>
+    <string name="diagnostics_crash_note">รายละเอียดการขัดข้องถูกเก็บไว้ในอุปกรณ์นี้เท่านั้นและไม่เคยถูกส่งออกไป</string>
+    <string name="diagnostics_crash_clear">ล้างประวัติการขัดข้อง</string>
+    <string name="sensors_blocked_title">เซนเซอร์ถูกบล็อก</string>
+    <string name="sensors_blocked_message">ไม่ได้รับข้อมูลจากเซนเซอร์ โปรดตรวจสอบว่า Sensors Off ปิดอยู่และอนุญาตให้แอปนี้เข้าถึงเซนเซอร์</string>
 </resources>

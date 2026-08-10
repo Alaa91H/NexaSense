@@ -3,6 +3,7 @@ package com.nexasense.presentation
 import com.nexasense.data.diagnostics.DiagnosticReportFactory
 import com.nexasense.domain.port.CalibrationStore
 import com.nexasense.domain.port.CompassEngine
+import com.nexasense.domain.port.CrashLogStore
 import com.nexasense.domain.port.DeviceInfoProvider
 import com.nexasense.domain.port.LevelEngine
 import com.nexasense.domain.port.MagneticFieldMonitor
@@ -18,6 +19,7 @@ import com.nexasense.domain.port.SettingsStore
 interface AppContainer {
     val settingsStore: SettingsStore
     val calibrationStore: CalibrationStore
+    val crashLogStore: CrashLogStore
     val sensorDiscovery: SensorDiscovery
     val sensorEventStream: SensorEventStream
     val compassEngine: CompassEngine

@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Cronologia degli errori</string>
+    <string name="diagnostics_crash_none">Nessun errore registrato</string>
+    <string name="diagnostics_crash_note">I dettagli degli errori sono salvati solo su questo dispositivo e non lo lasciano mai.</string>
+    <string name="diagnostics_crash_clear">Cancella cronologia errori</string>
+    <string name="sensors_blocked_title">Sensori bloccati</string>
+    <string name="sensors_blocked_message">Non vengono ricevuti dati dai sensori. Controlla che Sensors Off sia disattivato e consenti l\'accesso ai sensori a questa app.</string>
 </resources>

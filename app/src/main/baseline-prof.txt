@@ -47,6 +47,8 @@ HSPLcom/nexasense/data/preferences/DataStoreCalibrationStore**->**(**)**
 # --- App: core gateways --------------------------------------------------------
 HSPLcom/nexasense/core/sensor/SensorManagerGateway**->**(**)**
 HSPLcom/nexasense/core/location/LocationProviderImpl**->**(**)**
+HSPLcom/nexasense/core/crash/CrashLogHandler**->**(**)**
+HSPLcom/nexasense/core/crash/CrashLogStoreImpl**->**(**)**
 
 # --- App: domain hot math ------------------------------------------------------
 HSPLcom/nexasense/domain/engine/QiblaCalculator**->**(**)**
@@ -58,7 +60,12 @@ HSPLcom/nexasense/domain/engine/TiltCompensatedFusion**->**(**)**
 HSPLcom/nexasense/domain/engine/SourceSelector**->**(**)**
 HSPLcom/nexasense/domain/engine/MagneticFieldAnalyzer**->**(**)**
 HSPLcom/nexasense/domain/engine/SamplingRateEstimator**->**(**)**
+HSPLcom/nexasense/domain/engine/LevelCalculator**->**(**)**
+HSPLcom/nexasense/domain/engine/SolarPositionCalculator**->**(**)**
+HSPLcom/nexasense/domain/geomag/Wmm2025**->**(**)**
 HSPLcom/nexasense/domain/math/AngleMath**->**(**)**
+HSPLcom/nexasense/domain/math/SmoothingFilters**->**(**)**
+HSPLcom/nexasense/domain/math/MagneticCalibrationMath**->**(**)**
 
 # --- AndroidX: activity / appcompat (the classic startup cost centers) ----------
 HSPLandroid/app/Activity**->**(**)**

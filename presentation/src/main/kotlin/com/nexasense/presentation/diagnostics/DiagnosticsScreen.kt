@@ -32,6 +32,9 @@ import com.nexasense.presentation.components.GroupCard
 import com.nexasense.presentation.components.ScreenScaffold
 import com.nexasense.presentation.components.SectionHeader
 import com.nexasense.presentation.components.StatusPill
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun DiagnosticsScreen(
@@ -99,6 +102,39 @@ fun DiagnosticsScreen(
                 )
             }
 
+            SectionHeader(text = stringResource(R.string.diagnostics_crash_history))
+            GroupCard {
+                if (state.crashHistory.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.diagnostics_crash_none),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(16.dp),
+                    )
+                } else {
+                    state.crashHistory.forEach { crash ->
+                        DetailRow(
+                            label = formatCrashTime(crash.timestampMillis),
+                            value = crash.throwableClassName,
+                        )
+                    }
+                    OutlinedButton(
+                        onClick = viewModel::clearCrashHistory,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 4.dp),
+                    ) {
+                        Text(stringResource(R.string.diagnostics_crash_clear))
+                    }
+                }
+            }
+            Text(
+                text = stringResource(R.string.diagnostics_crash_note),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            )
+
             if (state.developerMode) {
                 SectionHeader(text = stringResource(R.string.diagnostics_developer_section))
                 GroupCard {
@@ -165,3 +201,6 @@ fun DiagnosticsScreen(
         }
     }
 }
+
+private fun formatCrashTime(timestampMillis: Long): String =
+    SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timestampMillis))

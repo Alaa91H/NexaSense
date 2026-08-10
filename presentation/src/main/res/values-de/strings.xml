@@ -254,4 +254,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Absturzverlauf</string>
+    <string name="diagnostics_crash_none">Keine Abstürze aufgezeichnet</string>
+    <string name="diagnostics_crash_note">Absturzdetails werden nur auf diesem Gerät gespeichert und verlassen es nie.</string>
+    <string name="diagnostics_crash_clear">Absturzverlauf löschen</string>
+    <string name="sensors_blocked_title">Sensoren blockiert</string>
+    <string name="sensors_blocked_message">Es werden keine Sensordaten empfangen. Prüfen Sie, ob Sensors Off deaktiviert ist, und erlauben Sie dieser App den Sensorzugriff.</string>
 </resources>

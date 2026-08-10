@@ -254,4 +254,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Crash history</string>
+    <string name="diagnostics_crash_none">No crashes recorded</string>
+    <string name="diagnostics_crash_note">Crash details are stored only on this device and never leave it.</string>
+    <string name="diagnostics_crash_clear">Clear crash history</string>
+    <string name="sensors_blocked_title">Sensors blocked</string>
+    <string name="sensors_blocked_message">No sensor data is being received. Check the Sensors Off toggle and allow sensor access for this app.</string>
 </resources>

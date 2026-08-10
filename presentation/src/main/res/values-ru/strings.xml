@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Журнал сбоев</string>
+    <string name="diagnostics_crash_none">Сбоев не зарегистрировано</string>
+    <string name="diagnostics_crash_note">Сведения о сбоях хранятся только на этом устройстве и никогда его не покидают.</string>
+    <string name="diagnostics_crash_clear">Очистить журнал сбоев</string>
+    <string name="sensors_blocked_title">Датчики заблокированы</string>
+    <string name="sensors_blocked_message">Данные датчиков не поступают. Проверьте, что Sensors Off отключен, и разрешите этому приложению доступ к датчикам.</string>
 </resources>

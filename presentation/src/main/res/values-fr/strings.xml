@@ -240,4 +240,10 @@
     <string name="settings_language_korean">한국어</string>
     <string name="settings_language_vietnamese">Tiếng Việt</string>
     <string name="settings_language_thai">ไทย</string>
+    <string name="diagnostics_crash_history">Historique des plantages</string>
+    <string name="diagnostics_crash_none">Aucun plantage enregistré</string>
+    <string name="diagnostics_crash_note">Les détails des plantages sont stockés uniquement sur cet appareil et ne le quittent jamais.</string>
+    <string name="diagnostics_crash_clear">Effacer l\'historique des plantages</string>
+    <string name="sensors_blocked_title">Capteurs bloqués</string>
+    <string name="sensors_blocked_message">Aucune donnée de capteur reçue. Vérifiez que Sensors Off est désactivé et autorisez l\'accès aux capteurs pour cette application.</string>
 </resources>

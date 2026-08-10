@@ -60,6 +60,7 @@ fun LevelScreen(
     val isAvailable by viewModel.isAvailable.collectAsStateWithLifecycle()
     val calibration by viewModel.calibration.collectAsStateWithLifecycle()
     val hapticTick by viewModel.hapticTick.collectAsStateWithLifecycle()
+    val sensorBlocked by viewModel.sensorBlocked.collectAsStateWithLifecycle()
 
     EngineLifecycleEffect(active = true, onStateChanged = viewModel::setActive)
 
@@ -90,11 +91,15 @@ fun LevelScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    stringResource(R.string.level_unavailable),
+                    stringResource(
+                        if (sensorBlocked) R.string.sensors_blocked_title else R.string.level_unavailable,
+                    ),
                     style = MaterialTheme.typography.headlineMedium,
                 )
                 Text(
-                    stringResource(R.string.level_unavailable_message),
+                    stringResource(
+                        if (sensorBlocked) R.string.sensors_blocked_message else R.string.level_unavailable_message,
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp),
