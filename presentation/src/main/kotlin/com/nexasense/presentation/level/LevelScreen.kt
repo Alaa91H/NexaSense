@@ -1,6 +1,11 @@
 package com.nexasense.presentation.level
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -356,6 +361,20 @@ private fun TubeLevel(
         label = "plumbNeedle",
     )
 
+    // The perfect-plumb indicator breathes: a slow, gentle pulse on its glow
+    // (radius + alpha) so the centered state is unmistakable at a glance.
+    // The pulse value is only consumed while plumb, so it has no effect
+    // otherwise.
+    val pulse by rememberInfiniteTransition(label = "plumbPulse").animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1100, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "plumbPulseValue",
+    )
+
     Canvas(modifier = modifier) {
         val w = size.width
         val h = size.height
@@ -470,9 +489,11 @@ private fun TubeLevel(
         val perfectlyPlumb = abs(pitchDeviation) < PLUMB_CENTERED_THRESHOLD_DEGREES &&
             abs(roll) < PLUMB_CENTERED_THRESHOLD_DEGREES
         if (perfectlyPlumb) {
+            // Pulsing glow: radius and alpha breathe together, so the
+            // centered state visibly throbs instead of sitting still.
             drawCircle(
-                color = primaryColor.copy(alpha = 0.22f),
-                radius = 10.dp.toPx(),
+                color = primaryColor.copy(alpha = 0.14f + 0.22f * pulse),
+                radius = (9.dp + 6.dp * pulse).toPx(),
                 center = pivot,
             )
         }

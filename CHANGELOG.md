@@ -7,6 +7,10 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Changed
 
+- **Pulsing plumb indicator** — the perfect-plumb dot's glow now breathes
+  with a slow, gentle pulse (radius + alpha oscillate together) while the
+  device is plumb, so the centered state is unmistakable at a glance and
+  stays in sync with the haptic pulse.
 - **Per-screen orientation** — the portrait lock now applies to the compass
   screen only (it stays vertical no matter how the phone is held); the level
   and settings screens rotate freely with the device. The lock follows the
