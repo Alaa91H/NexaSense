@@ -7,6 +7,9 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Kaaba emoji Qibla marker** — the drawn Kaaba icon on the compass dial is
+  replaced by the 🕋 emoji, rendered upright (never tilted with the dial) and
+  positioned just outside the ring at the Qibla bearing.
 - **Auto-hide numbers at low accuracy** — a new Compass setting that, when
   enabled, automatically hides the heading readout, the dial degree numbers
   and the source/declination details while the magnetic accuracy is low or

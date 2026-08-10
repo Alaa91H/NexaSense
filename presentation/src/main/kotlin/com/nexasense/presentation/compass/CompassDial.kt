@@ -7,9 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -79,6 +77,12 @@ fun CompassDial(
     val measuredNumbers = remember(textMeasurer, numberStyle) {
         degreeNumbers.associate { (degree, label) -> degree to textMeasurer.measure(label, numberStyle) }
     }
+    // The Kaaba emoji is the Qibla marker: more recognizable than any drawn
+    // icon. It is rendered upright (never tilted with the dial).
+    val kaabaStyle = remember { TextStyle(fontSize = 26.sp) }
+    val measuredKaaba = remember(textMeasurer, kaabaStyle) {
+        textMeasurer.measure("\uD83D\uDD4B", kaabaStyle)
+    }
 
     Canvas(
         modifier = modifier.semantics { this.contentDescription = contentDescription },
@@ -145,80 +149,22 @@ fun CompassDial(
         // Center hub.
         drawCircle(color = markerColor, radius = 5.dp.toPx(), center = center)
 
-        // Qibla marker: the Kaaba sits just outside the dial ring at the
-        // bearing, drawn inside the rotating frame so it stays at the correct
-        // position relative to the (rotating) dial. The bearing must already
-        // be in the heading's north reference.
+        // Qibla marker: the Kaaba emoji sits just outside the dial ring at
+        // the bearing. Its position tracks the rotating dial (bearing minus
+        // the heading), but the emoji itself is drawn upright — it never tilts
+        // with the dial. The bearing must already be in the heading's north
+        // reference.
         qiblaBearingDegrees?.let { bearing ->
-            rotate(degrees = -animatedHeading, pivot = center) {
-                val position = polar(center, dialRadius * 1.16f, bearing)
-                drawKaaba(center = position, size = 22.dp.toPx())
-            }
+            val position = polar(center, dialRadius * 1.16f, bearing - animatedHeading)
+            drawText(
+                textLayoutResult = measuredKaaba,
+                topLeft = Offset(
+                    position.x - measuredKaaba.size.width / 2f,
+                    position.y - measuredKaaba.size.height / 2f,
+                ),
+            )
         }
     }
-}
-
-/**
- * Draws a professional Kaaba: the black cube with its gold kiswah band and
- * door, used as the Qibla marker outside the dial ring. All measurements are
- * fractions of the icon [size] and the body is centered on [center], so the
- * icon stays symmetric. Fixed brand colors — the Kaaba is black with gold in
- * reality, independent of the app theme.
- */
-private fun DrawScope.drawKaaba(center: Offset, size: Float) {
-    val kaabaBlack = Color(0xFF1B1C20)
-    val gold = Color(0xFFD4AF37)
-    val goldSoft = Color(0xFFC9A227)
-    val outline = Color.White.copy(alpha = 0.85f)
-
-    val bodyW = size * 0.74f
-    val bodyH = size * 0.90f
-    val bodyLeft = center.x - bodyW / 2f
-    val bodyTop = center.y - bodyH / 2f + size * 0.02f
-    val corner = size * 0.06f
-
-    // Roof parapet: a slightly wider gold bar above the cube.
-    drawRoundRect(
-        color = gold,
-        topLeft = Offset(center.x - bodyW * 0.55f, bodyTop - size * 0.075f),
-        size = Size(bodyW * 1.10f, size * 0.075f),
-        cornerRadius = CornerRadius(corner * 0.5f),
-    )
-    // Thin light outline so the black cube reads on any dial color.
-    drawRoundRect(
-        color = outline,
-        topLeft = Offset(bodyLeft - 1.5.dp.toPx(), bodyTop - 1.5.dp.toPx()),
-        size = Size(bodyW + 3.dp.toPx(), bodyH + 3.dp.toPx()),
-        cornerRadius = CornerRadius(corner + 1.dp.toPx()),
-    )
-    // The cube body (slightly taller than wide, like the real Kaaba).
-    drawRoundRect(
-        color = kaabaBlack,
-        topLeft = Offset(bodyLeft, bodyTop),
-        size = Size(bodyW, bodyH),
-        cornerRadius = CornerRadius(corner),
-    )
-    // The kiswah band (hizam) wrapping the upper third.
-    drawRoundRect(
-        color = gold,
-        topLeft = Offset(bodyLeft, bodyTop + bodyH * 0.28f),
-        size = Size(bodyW, size * 0.11f),
-        cornerRadius = CornerRadius(size * 0.03f),
-    )
-    // A thin second gold line below the band.
-    drawRoundRect(
-        color = goldSoft,
-        topLeft = Offset(bodyLeft, bodyTop + bodyH * 0.44f),
-        size = Size(bodyW, size * 0.045f),
-        cornerRadius = CornerRadius(size * 0.02f),
-    )
-    // The door (Bab al-Kaaba), centered in the lower third.
-    drawRoundRect(
-        color = gold,
-        topLeft = Offset(center.x - bodyW * 0.16f, bodyTop + bodyH * 0.60f),
-        size = Size(bodyW * 0.32f, size * 0.16f),
-        cornerRadius = CornerRadius(size * 0.03f),
-    )
 }
 
 private fun DrawScope.drawTicks(center: Offset, radius: Float, tickColor: Color, style: CompassStyle) {
