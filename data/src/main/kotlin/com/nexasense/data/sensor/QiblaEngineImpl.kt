@@ -76,6 +76,14 @@ class QiblaEngineImpl(
     @Volatile
     private var declination: Float? = null
 
+    // The sun moves ~0.004°/s, so cache its position and only recompute every
+    // 30 s instead of on every sensor event (updates run at sensor rate).
+    @Volatile
+    private var lastSunComputeMillis = 0L
+
+    @Volatile
+    private var sunCache: SolarPositionCalculator.SunPosition? = null
+
     private val locationJobs = mutableListOf<Job>()
     private val lifecycleJobs = mutableListOf<Job>()
 
@@ -152,6 +160,16 @@ class QiblaEngineImpl(
         locationJobs.clear()
     }
 
+    private fun currentSunPosition(latitude: Double, longitude: Double): SolarPositionCalculator.SunPosition {
+        val now = System.currentTimeMillis()
+        val cached = sunCache
+        if (cached != null && now - lastSunComputeMillis < SUN_RECOMPUTE_INTERVAL_MILLIS) return cached
+        val computed = SolarPositionCalculator.positionAt(latitude, longitude, now)
+        sunCache = computed
+        lastSunComputeMillis = now
+        return computed
+    }
+
     private fun onFix(fix: LocationPoint) {
         lastFix = fix
         qiblaBearing = QiblaCalculator.bearingToKaaba(fix.latitudeDegrees, fix.longitudeDegrees)
@@ -186,12 +204,8 @@ class QiblaEngineImpl(
         val currentHeading = heading.value
 
         // Current solar position (pure local math; enables the "sun aligned
-        // with Qibla" shadow check without any compass).
-        val sun = SolarPositionCalculator.positionAt(
-            fix.latitudeDegrees,
-            fix.longitudeDegrees,
-            System.currentTimeMillis(),
-        )
+        // with Qibla" shadow check without any compass). Cached — see above.
+        val sun = currentSunPosition(fix.latitudeDegrees, fix.longitudeDegrees)
 
         val deviceTrue = QiblaCalculator.deviceHeadingInTrueReference(currentHeading, declination)
         val relative = deviceTrue?.let {
@@ -251,5 +265,9 @@ class QiblaEngineImpl(
 
         !calibrationComplete -> QiblaStatus.CALIBRATION_REQUIRED
         else -> QiblaStatus.READY
+    }
+
+    private companion object {
+        const val SUN_RECOMPUTE_INTERVAL_MILLIS = 30_000L
     }
 }

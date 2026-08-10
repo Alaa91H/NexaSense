@@ -36,8 +36,18 @@ All notable changes to NexaSense are documented here. The format is based on
   (AAPT2 rejects unversioned `mipmap-anydpi` for the API 33 monochrome
   element); lint is now free of app-code findings.
 
+### Added
+
+- **Level haptic on centered** — the bubble level fires one short haptic
+  pulse when the bubble enters the centered zone (≤1.5° in both axes), so a
+  surface can be leveled without watching the screen; gated by the global
+  haptics setting with a 2 s cooldown (mirrors the Qibla alignment haptic).
+
 ### Changed
 
+- **Qibla sun position caching** — the solar azimuth/elevation is recomputed
+  at most every 30 s instead of on every sensor event (the sun moves
+  ~0.004°/s), removing needless trig work from the sensor-rate update path.
 - **Dependency refresh (low-risk)** — navigation-compose 2.9.0 → 2.9.8,
   appcompat 1.7.0 → 1.7.1, coroutines 1.10.2 → 1.11.0, and the test-only
   stack (ext-junit 1.3.0, espresso 3.7.0, runner/rules 1.7.0). Major

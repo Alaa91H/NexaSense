@@ -25,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -51,13 +53,21 @@ fun LevelScreen(
         LevelViewModel(
             levelEngine = container.levelEngine,
             calibrationStore = container.calibrationStore,
+            settingsStore = container.settingsStore,
         )
     })
     val orientation by viewModel.orientation.collectAsStateWithLifecycle()
     val isAvailable by viewModel.isAvailable.collectAsStateWithLifecycle()
     val calibration by viewModel.calibration.collectAsStateWithLifecycle()
+    val hapticTick by viewModel.hapticTick.collectAsStateWithLifecycle()
 
     EngineLifecycleEffect(active = true, onStateChanged = viewModel::setActive)
+
+    // One short pulse when the bubble enters the centered zone.
+    val hapticFeedback = LocalHapticFeedback.current
+    LaunchedEffect(hapticTick) {
+        if (hapticTick > 0) hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+    }
 
     // Keep pitch/roll in the user's frame of reference across display rotations.
     val view = LocalView.current
