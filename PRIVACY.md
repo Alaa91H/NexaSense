@@ -14,8 +14,9 @@ NexaSense is designed to be **offline-first** and privacy-respecting.
 The app declares exactly **one** runtime permission:
 
 - `ACCESS_COARSE_LOCATION` — used **only** by the True North feature to compute
-  magnetic declination (`GeomagneticField`). It is requested at runtime only
-  when the user enables True North mode, and is never used otherwise.
+  magnetic declination (computed fully on-device with the official NOAA/BGS
+  WMM2025 geomagnetic model; no network involved). It is requested at runtime
+  only when the user enables True North mode, and is never used otherwise.
 
 No internet, storage, contacts, phone, camera, microphone or Bluetooth
 permissions are requested.

@@ -3,6 +3,17 @@
 All notable changes to NexaSense are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- **WMM2025 declination model** — the True North feature now computes magnetic
+  declination with the current official NOAA/BGS World Magnetic Model 2025
+  (valid 2025.0–2030.0), implemented in pure Kotlin with the official
+  coefficients embedded verbatim and verified against all 100 NOAA test
+  points (max error 0.005°). Replaces `GeomagneticField`, which embeds the
+  expired WMM2020 model. `GeomagneticField` remains as a defensive fallback.
+
 ## [1.0.0] - 2026-08-09
 
 ### Added

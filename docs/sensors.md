@@ -38,6 +38,26 @@ need fresh data and therefore register with zero report latency; if a future
 feature collects a slow-changing sensor continuously (e.g. a pressure-based
 altitude readout), it can request FIFO **batching** by extending
 `SensorEventStream.stream` with a `maxReportLatencyMicros` parameter — the
+
+## Declination model
+
+True North conversion uses the **WMM2025** World Magnetic Model, implemented
+in pure Kotlin (`domain/geomag/Wmm2025.kt`):
+
+- coefficients embedded verbatim from the official `WMM2025.COF` (verified
+  against the NOAA file) and the algorithm follows the reference C code
+  (`geomag.c`) exactly;
+- valid 2025.0–2030.0; the decimal year is clamped at the boundaries;
+- verified against all 100 official NOAA test points: max declination error
+  **0.005°** (the reference itself is rounded to 0.01°) and max
+  horizontal-intensity error 0.0007 nT;
+- replaces `android.hardware.GeomagneticField`, which embeds the expired
+  WMM2020 model (its declination error grows every year past 2025.0).
+  `GeomagneticField` remains only as a defensive fallback in
+  `Wmm2025DeclinationProvider`;
+- declination is still evaluated only on a location fix and cached
+  (`DeclinationCache`) — never per sensor event.
+
 `SensorManagerGateway` already threads that value into
 `registerListener(listener, sensor, delay, maxReportLatency)`.
 

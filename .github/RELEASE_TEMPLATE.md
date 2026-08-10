@@ -13,11 +13,11 @@
 ### Features
 
 - Compass sources by priority: Rotation Vector → Geomagnetic Rotation Vector → Accelerometer + Magnetometer → *unavailable* (never faked).
-- Magnetic declination via `GeomagneticField`, cached by location/time — never per sensor event.
+- Magnetic declination from the current official **WMM2025** model (pure-Kotlin, NOAA-verified to < 0.005°), cached by location/time — never per sensor event.
 - Adaptive interference thresholds, no single worldwide constant.
 - Settings: theme (System/Light/Dark + dynamic color), language (25 languages), North Reference, Qibla options, smoothing, sensor rate, haptics, keep-screen-on, developer mode.
 - Sensors registered only while a screen is visible — no background collection; non-wake-up sensors preferred.
-- 148 unit tests (math, geodesy, engines, calibration, robustness), lint-clean; instrumented UI tests run on a device.
+- 163 unit tests (math, geodesy, geomagnetic model, engines, calibration, robustness), lint-clean; instrumented UI tests run on a device.
 
 ### Compatibility
 

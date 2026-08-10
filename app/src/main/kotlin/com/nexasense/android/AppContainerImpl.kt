@@ -2,8 +2,8 @@ package com.nexasense.android
 
 import android.content.Context
 import com.nexasense.core.diagnostics.DeviceInfoProviderImpl
-import com.nexasense.core.location.GeomagneticFieldDeclinationProvider
 import com.nexasense.core.location.LocationProviderImpl
+import com.nexasense.core.location.Wmm2025DeclinationProvider
 import com.nexasense.core.permissions.PermissionChecker
 import com.nexasense.core.sensor.SensorManagerGateway
 import com.nexasense.data.diagnostics.DiagnosticReportFactory
@@ -42,10 +42,12 @@ class AppContainerImpl(context: Context) : AppContainer {
     private val calibrationStoreImpl = DataStoreCalibrationStore(appContext)
     private val deviceInfoProviderImpl = DeviceInfoProviderImpl()
 
+    private val declinationProvider = Wmm2025DeclinationProvider()
+
     private val compassEngineImpl = CompassEngineImpl(
         discovery = gateway,
         streams = gateway,
-        declinationProvider = GeomagneticFieldDeclinationProvider(),
+        declinationProvider = declinationProvider,
         locationProvider = LocationProviderImpl(appContext),
         calibrationStore = calibrationStoreImpl,
         settingsStore = settingsStoreImpl,
@@ -63,7 +65,7 @@ class AppContainerImpl(context: Context) : AppContainer {
         compassEngine = compassEngineImpl,
         magneticMonitor = compassEngineImpl,
         locationProvider = LocationProviderImpl(appContext),
-        declinationProvider = GeomagneticFieldDeclinationProvider(),
+        declinationProvider = declinationProvider,
         declinationCache = DeclinationCache(),
         settingsStore = settingsStoreImpl,
         scope = applicationScope,
