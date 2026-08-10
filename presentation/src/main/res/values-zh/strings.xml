@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">界面</string>
     <string name="settings_rate_game">游戏</string>
     <string name="settings_haptics">触觉反馈</string>
+    <string name="settings_level_sound">水平确认音</string>
     <string name="settings_keep_screen_on">保持屏幕常亮</string>
     <string name="settings_developer_mode">开发者模式</string>
     <string name="settings_compass">指南针</string>

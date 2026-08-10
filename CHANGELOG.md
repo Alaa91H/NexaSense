@@ -7,6 +7,14 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Level confirmation sound** — reaching perfect level now plays a short,
+  soft two-tone chime (a gentle major-third "ding" generated in-app, no
+  external asset), routed through the notification stream. It is a separate
+  toggle from the haptics (Settings → status → "Level confirmation sound",
+  on by default, translated in all 24 languages), so the user can have
+  sound, vibration, both, or neither — the centered pulse is now emitted
+  independently of the haptics toggle and the UI renders each feedback
+  according to its own setting.
 - **Graded haptic in the vertical level** — instead of a single pulse on
   entering the centered zone, the plumb mode now ramps up: each proximity
   band crossed inward (8° → 5° → 3° → 2° → 1.5° → 1° → 0.5°) fires a

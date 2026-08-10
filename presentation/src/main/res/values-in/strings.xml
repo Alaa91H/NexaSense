@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">Antarmuka</string>
     <string name="settings_rate_game">Game</string>
     <string name="settings_haptics">Umpan balik haptik</string>
+    <string name="settings_level_sound">Suara konfirmasi level</string>
     <string name="settings_keep_screen_on">Jaga layar tetap menyala</string>
     <string name="settings_developer_mode">Mode pengembang</string>
     <string name="settings_compass">Kompas</string>

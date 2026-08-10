@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">Interfejs</string>
     <string name="settings_rate_game">Gra</string>
     <string name="settings_haptics">Wibracje</string>
+    <string name="settings_level_sound">Dźwięk potwierdzenia poziomu</string>
     <string name="settings_keep_screen_on">Nie wyłączaj ekranu</string>
     <string name="settings_developer_mode">Tryb programisty</string>
     <string name="settings_compass">Kompas</string>

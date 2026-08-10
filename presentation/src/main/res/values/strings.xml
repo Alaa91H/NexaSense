@@ -201,6 +201,7 @@
     <string name="settings_rate_ui">UI</string>
     <string name="settings_rate_game">Game</string>
     <string name="settings_haptics">Haptic feedback</string>
+    <string name="settings_level_sound">Level confirmation sound</string>
     <string name="settings_keep_screen_on">Keep screen on</string>
     <string name="settings_developer_mode">Developer mode</string>
     <string name="settings_compass">Compass</string>

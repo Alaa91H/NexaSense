@@ -119,10 +119,12 @@ class LevelViewModel(
         val entering = centered && !lastCentered
         lastCentered = centered
         if (!entering) return
-        if (!currentSettings.hapticsEnabled) return
         val now = System.currentTimeMillis()
         if (now - lastCenteredHapticAtMillis < HAPTIC_COOLDOWN_MILLIS) return
         lastCenteredHapticAtMillis = now
+        // The centered pulse fires regardless of the haptics toggle; the UI
+        // decides which feedback to render (vibration, sound, both, or
+        // neither) from the settings, keeping them independent.
         firePulse(strength = 1f, centered = true)
     }
 

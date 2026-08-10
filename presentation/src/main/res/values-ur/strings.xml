@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">انٹرفیس</string>
     <string name="settings_rate_game">گیم</string>
     <string name="settings_haptics">ہپٹک فیڈ بیک</string>
+    <string name="settings_level_sound">سطح ہونے کی تصدیقی آواز</string>
     <string name="settings_keep_screen_on">اسکرین آن رکھیں</string>
     <string name="settings_developer_mode">ڈویلپر موڈ</string>
     <string name="settings_compass">قطب نما</string>

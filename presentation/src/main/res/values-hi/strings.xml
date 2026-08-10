@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">इंटरफ़ेस</string>
     <string name="settings_rate_game">गेम</string>
     <string name="settings_haptics">हैप्टिक फ़ीडबैक</string>
+    <string name="settings_level_sound">समतल होने की पुष्टि ध्वनि</string>
     <string name="settings_keep_screen_on">स्क्रीन चालू रखें</string>
     <string name="settings_developer_mode">डेवलपर मोड</string>
     <string name="settings_compass">कम्पास</string>

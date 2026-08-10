@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">Giao diện</string>
     <string name="settings_rate_game">Trò chơi</string>
     <string name="settings_haptics">Phản hồi rung</string>
+    <string name="settings_level_sound">Âm thanh xác nhận cân bằng</string>
     <string name="settings_keep_screen_on">Giữ màn hình luôn bật</string>
     <string name="settings_developer_mode">Chế độ nhà phát triển</string>
     <string name="settings_compass">La bàn</string>

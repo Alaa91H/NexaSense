@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">UI</string>
     <string name="settings_rate_game">게임</string>
     <string name="settings_haptics">햅틱 피드백</string>
+    <string name="settings_level_sound">수평 확인음</string>
     <string name="settings_keep_screen_on">화면 켜짐 유지</string>
     <string name="settings_developer_mode">개발자 모드</string>
     <string name="settings_compass">나침반</string>

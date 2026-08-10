@@ -13,6 +13,13 @@ data class AppSettings(
     val smoothing: SmoothingPreference = SmoothingPreference.MEDIUM,
     val sensorRate: SensorRatePreference = SensorRatePreference.GAME,
     val hapticsEnabled: Boolean = true,
+
+    /**
+     * Plays a short, soft confirmation sound when the level reaches perfect
+     * level (both axes centered). Independent of [hapticsEnabled], so the
+     * user can have sound, vibration, both, or neither.
+     */
+    val levelSoundEnabled: Boolean = true,
     val keepScreenOn: Boolean = false,
     val developerMode: Boolean = false,
 

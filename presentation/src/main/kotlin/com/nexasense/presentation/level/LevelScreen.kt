@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +37,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.PathEffect
 import android.content.Context
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -80,19 +83,45 @@ fun LevelScreen(
     val isAvailable by viewModel.isAvailable.collectAsStateWithLifecycle()
     val calibration by viewModel.calibration.collectAsStateWithLifecycle()
     val hapticPulse by viewModel.hapticPulse.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
     val sensorBlocked by viewModel.sensorBlocked.collectAsStateWithLifecycle()
     val verticalMode by viewModel.verticalMode.collectAsStateWithLifecycle()
 
     EngineLifecycleEffect(active = true, onStateChanged = viewModel::setActive)
 
-    // Haptic feedback: the ViewModel emits pulses whose strength ramps up as
-    // the device approaches plumb (vertical mode). Play them through the
-    // system Vibrator with per-pulse amplitude so the ramp is actually felt;
-    // fall back to standard haptic feedback when no vibrator is present.
-    val hapticFeedback = LocalHapticFeedback.current
     val context = LocalContext.current
+
+    // Soft confirmation chime for reaching perfect level, played through a
+    // SoundPool created once for the screen's lifetime. The sample loads
+    // asynchronously; playing before it is ready is silently ignored, and by
+    // the time the user levels the device it is long since loaded.
+    val soundPool = remember {
+        SoundPool.Builder()
+            .setMaxStreams(1)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build(),
+            )
+            .build()
+    }
+    val centeredSoundId = remember { soundPool.load(context, R.raw.level_centered, 1) }
+    DisposableEffect(Unit) {
+        onDispose { soundPool.release() }
+    }
+
+    // Feedback on the ViewModel's pulses: the centered pulse plays the soft
+    // chime when the sound setting is on, and the haptic (graded in the
+    // vertical mode) plays when the haptics setting is on — the two are
+    // independent, so the user can have sound, vibration, both, or neither.
+    val hapticFeedback = LocalHapticFeedback.current
     LaunchedEffect(hapticPulse?.id) {
         val pulse = hapticPulse ?: return@LaunchedEffect
+        if (pulse.centered && settings.levelSoundEnabled) {
+            soundPool.play(centeredSoundId, 0.5f, 0.5f, 1, 0, 1f)
+        }
+        if (!settings.hapticsEnabled) return@LaunchedEffect
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
         if (vibrator != null && vibrator.hasVibrator()) {
             val amplitude = (40 + 215 * pulse.strength).toInt().coerceIn(1, 255)

@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">رابط کاربری</string>
     <string name="settings_rate_game">بازی</string>
     <string name="settings_haptics">بازخورد لمسی</string>
+    <string name="settings_level_sound">صدای تأیید تراز شدن</string>
     <string name="settings_keep_screen_on">روشن نگه داشتن صفحه</string>
     <string name="settings_developer_mode">حالت توسعه‌دهنده</string>
     <string name="settings_compass">قطب‌نما</string>

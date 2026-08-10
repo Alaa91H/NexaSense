@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">อินเทอร์เฟซ</string>
     <string name="settings_rate_game">เกม</string>
     <string name="settings_haptics">การตอบสนองแบบสัมผัส</string>
+    <string name="settings_level_sound">เสียงยืนยันการปรับระดับ</string>
     <string name="settings_keep_screen_on">เปิดหน้าจอค้างไว้</string>
     <string name="settings_developer_mode">โหมดนักพัฒนา</string>
     <string name="settings_compass">เข็มทิศ</string>

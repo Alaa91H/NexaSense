@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">Interfaccia</string>
     <string name="settings_rate_game">Gioco</string>
     <string name="settings_haptics">Feedback aptico</string>
+    <string name="settings_level_sound">Suono di conferma del livello</string>
     <string name="settings_keep_screen_on">Mantieni lo schermo acceso</string>
     <string name="settings_developer_mode">Modalità sviluppatore</string>
     <string name="settings_compass">Bussola</string>

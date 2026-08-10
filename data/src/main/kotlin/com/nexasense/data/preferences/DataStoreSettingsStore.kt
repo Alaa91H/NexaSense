@@ -57,6 +57,7 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
         val SMOOTHING = stringPreferencesKey("smoothing")
         val SENSOR_RATE = stringPreferencesKey("sensor_rate")
         val HAPTICS = booleanPreferencesKey("haptics")
+        val LEVEL_SOUND = booleanPreferencesKey("level_sound")
         val KEEP_SCREEN_ON = booleanPreferencesKey("keep_screen_on")
         val DEVELOPER_MODE = booleanPreferencesKey("developer_mode")
 
@@ -92,6 +93,7 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
             prefs[Keys.SMOOTHING] = next.smoothing.name
             prefs[Keys.SENSOR_RATE] = next.sensorRate.name
             prefs[Keys.HAPTICS] = next.hapticsEnabled
+            prefs[Keys.LEVEL_SOUND] = next.levelSoundEnabled
             prefs[Keys.KEEP_SCREEN_ON] = next.keepScreenOn
             prefs[Keys.DEVELOPER_MODE] = next.developerMode
             prefs[Keys.COMPASS_STYLE] = next.compassStyle.name
@@ -122,6 +124,7 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
         smoothing = enumValueOr<SmoothingPreference>(this[Keys.SMOOTHING], SmoothingPreference.MEDIUM),
         sensorRate = enumValueOr<SensorRatePreference>(this[Keys.SENSOR_RATE], SensorRatePreference.GAME),
         hapticsEnabled = this[Keys.HAPTICS] ?: true,
+        levelSoundEnabled = this[Keys.LEVEL_SOUND] ?: true,
         keepScreenOn = this[Keys.KEEP_SCREEN_ON] ?: false,
         developerMode = this[Keys.DEVELOPER_MODE] ?: false,
         compassStyle = enumValueOr<CompassStyle>(this[Keys.COMPASS_STYLE], CompassStyle.CLASSIC),

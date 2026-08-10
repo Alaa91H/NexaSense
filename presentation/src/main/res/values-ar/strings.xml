@@ -201,6 +201,7 @@
     <string name="settings_rate_ui">الواجهة</string>
     <string name="settings_rate_game">الألعاب</string>
     <string name="settings_haptics">الاهتزاز اللمسي</string>
+    <string name="settings_level_sound">صوت التأكيد عند الاستواء</string>
     <string name="settings_keep_screen_on">إبقاء الشاشة مضاءة</string>
     <string name="settings_developer_mode">وضع المطور</string>
     <string name="settings_compass">البوصلة</string>

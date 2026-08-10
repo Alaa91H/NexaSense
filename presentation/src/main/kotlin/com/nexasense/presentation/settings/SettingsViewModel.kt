@@ -75,6 +75,8 @@ class SettingsViewModel(container: AppContainer) : ViewModel() {
 
     fun setHaptics(enabled: Boolean) = update { it.copy(hapticsEnabled = enabled) }
 
+    fun setLevelSound(enabled: Boolean) = update { it.copy(levelSoundEnabled = enabled) }
+
     fun setKeepScreenOn(enabled: Boolean) = update { it.copy(keepScreenOn = enabled) }
 
     fun reset() {

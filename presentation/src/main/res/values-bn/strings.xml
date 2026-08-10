@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">ইন্টারফেস</string>
     <string name="settings_rate_game">গেম</string>
     <string name="settings_haptics">হ্যাপটিক ফিডব্যাক</string>
+    <string name="settings_level_sound">সমতল হওয়ার নিশ্চিতকরণ শব্দ</string>
     <string name="settings_keep_screen_on">স্ক্রিন চালু রাখুন</string>
     <string name="settings_developer_mode">ডেভেলপার মোড</string>
     <string name="settings_compass">কম্পাস</string>

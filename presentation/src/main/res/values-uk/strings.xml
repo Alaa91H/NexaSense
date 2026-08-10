@@ -189,6 +189,7 @@
     <string name="settings_rate_ui">Інтерфейс</string>
     <string name="settings_rate_game">Гра</string>
     <string name="settings_haptics">Тактильний відгук</string>
+    <string name="settings_level_sound">Звук підтвердження вирівнювання</string>
     <string name="settings_keep_screen_on">Не вимикати екран</string>
     <string name="settings_developer_mode">Режим розробника</string>
     <string name="settings_compass">Компас</string>

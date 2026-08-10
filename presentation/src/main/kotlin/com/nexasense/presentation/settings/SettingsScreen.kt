@@ -350,6 +350,11 @@ fun SettingsScreen(
                         onCheckedChange = viewModel::setHaptics,
                     )
                     ToggleSetting(
+                        label = stringResource(R.string.settings_level_sound),
+                        checked = settings.levelSoundEnabled,
+                        onCheckedChange = viewModel::setLevelSound,
+                    )
+                    ToggleSetting(
                         label = stringResource(R.string.settings_keep_screen_on),
                         checked = settings.keepScreenOn,
                         onCheckedChange = viewModel::setKeepScreenOn,
