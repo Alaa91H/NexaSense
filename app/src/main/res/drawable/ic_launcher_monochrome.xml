@@ -1,22 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Compass needle outline, single color for themed icons. -->
-    <group
-        android:rotation="-45"
-        android:pivotX="54"
-        android:pivotY="54">
-        <path
-            android:fillColor="#FFFFFFFF"
-            android:pathData="M54,30 L61,54 L54,47 L47,54 Z" />
-        <path
-            android:fillColor="#FFFFFFFF"
-            android:pathData="M54,78 L61,54 L54,61 L47,54 Z" />
-    </group>
+    <!--
+        Single-color compass silhouette used for themed (monochrome) launcher
+        icons on Android 13+. The system tints it with the wallpaper palette,
+        so only the shape matters — it is kept as one unified mark.
+    -->
+    <path
+        android:pathData="M54,28 A26,26 0 1,1 53.99,28 Z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:fillColor="#00000000" />
+
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M52,52 L56,52 L56,56 L52,56 Z" />
+        android:pathData="M54,33 L61.5,54 L54,46.5 L46.5,54 Z" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,75 L46.5,54 L54,61.5 L61.5,54 Z" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M33,51.5 h6 v5 h-6 Z" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M69,51.5 h6 v5 h-6 Z" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M52,51.5 h4 v5 h-4 Z" />
 </vector>

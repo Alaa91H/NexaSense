@@ -7,6 +7,11 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **New professional launcher icon** — a Google-2026-style compass mark on a
+  modern diagonal blue gradient (sky → vivid → deep indigo), with a white
+  ring, white north needle and light-blue south needle, a dedicated
+  monochrome silhouette for Android 13+ themed icons, and bilaterally
+  symmetric artwork that needs no mirroring for RTL locales.
 - **Compass styles & granular customization** — three professional dial
   styles (Classic, Azimuth with a numbered degree ring, Minimal) switchable
   from Settings, plus per-element toggles: cardinal labels, degree ticks,

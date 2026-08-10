@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!--
+        Modern diagonal gradient (Material You / Google 2026 language):
+        sky blue -> vivid blue -> deep indigo. Reads clearly on both light
+        and dark launchers, and the bilateral symmetry of the mark needs no
+        mirroring for RTL locales.
+    -->
+    <path android:pathData="M0,0h108v108h-108z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="16"
+                android:startY="10"
+                android:endX="92"
+                android:endY="98">
+                <item android:offset="0.0" android:color="#FF5EB5F7" />
+                <item android:offset="0.45" android:color="#FF1E88E5" />
+                <item android:offset="1.0" android:color="#FF0B3D91" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

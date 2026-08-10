@@ -1,25 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Compass needle: north tip (white), south tail (light blue). -->
-    <group
-        android:rotation="-45"
-        android:pivotX="54"
-        android:pivotY="54">
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M54,30 L61,54 L54,47 L47,54 Z" />
-        <path
-            android:fillColor="#CEE5FF"
-            android:pathData="M54,78 L61,54 L54,61 L47,54 Z" />
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M54,30 L54,47 L61,54 Z" />
-    </group>
+    <!--
+        Compass mark, drawn inside the adaptive-icon safe zone (center 54,54,
+        radius 33). White needle family on the blue gradient, matching the
+        translated app name (البوصلة / قطبنما / 指南针…). Bilaterally
+        symmetric so it renders identically in RTL locales.
+    -->
+    <!-- Outer ring -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M52,52 L56,52 L56,56 L52,56 Z" />
+        android:pathData="M54,28 A26,26 0 1,1 53.99,28 Z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:fillColor="#00000000" />
+
+    <!-- North needle (white, bold) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,33 L61.5,54 L54,46.5 L46.5,54 Z" />
+
+    <!-- South needle (light blue, subtle) -->
+    <path
+        android:fillColor="#FFB3E5FC"
+        android:pathData="M54,75 L46.5,54 L54,61.5 L61.5,54 Z" />
+
+    <!-- West tick -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M33,51.5 h6 v5 h-6 Z" />
+
+    <!-- East tick -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M69,51.5 h6 v5 h-6 Z" />
+
+    <!-- Center hub -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M52,51.5 h4 v5 h-4 Z" />
 </vector>
