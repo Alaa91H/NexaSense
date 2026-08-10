@@ -33,6 +33,13 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Fixed
 
+- **Tube level centering** — the vertical (plumb) tube level used the
+  vertical center as the horizontal center, so the bubble and the reference
+  marks sat off-center; they are now symmetric around the tube's real center.
+- **Kaaba icon geometry** — the Kaaba marker mixed icon-size and half-size
+  measurements, leaving the cube off-center and too wide; the drawing now
+  uses consistent proportions (centered cube body, roof parapet, kiswah
+  band, door) plus a thin light outline for contrast on any dial color.
 - **Settings accordion** — every settings section now starts collapsed and
   only one section is open at a time: tapping a header expands it and
   collapses the previously open one. The screen stays compact and the reset

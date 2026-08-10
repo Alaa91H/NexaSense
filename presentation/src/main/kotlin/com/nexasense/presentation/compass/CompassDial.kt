@@ -160,49 +160,64 @@ fun CompassDial(
 
 /**
  * Draws a professional Kaaba: the black cube with its gold kiswah band and
- * door, used as the Qibla marker outside the dial ring. Fixed brand colors —
- * the Kaaba is black with gold in reality, independent of the app theme.
+ * door, used as the Qibla marker outside the dial ring. All measurements are
+ * fractions of the icon [size] and the body is centered on [center], so the
+ * icon stays symmetric. Fixed brand colors — the Kaaba is black with gold in
+ * reality, independent of the app theme.
  */
 private fun DrawScope.drawKaaba(center: Offset, size: Float) {
     val kaabaBlack = Color(0xFF1B1C20)
     val gold = Color(0xFFD4AF37)
     val goldSoft = Color(0xFFC9A227)
-    val half = size / 2f
+    val outline = Color.White.copy(alpha = 0.85f)
 
-    // Roof parapet: a slightly wider gold line on top.
+    val bodyW = size * 0.74f
+    val bodyH = size * 0.90f
+    val bodyLeft = center.x - bodyW / 2f
+    val bodyTop = center.y - bodyH / 2f + size * 0.02f
+    val corner = size * 0.06f
+
+    // Roof parapet: a slightly wider gold bar above the cube.
     drawRoundRect(
         color = gold,
-        topLeft = Offset(center.x - half * 1.05f, center.y - half * 0.66f),
-        size = Size(size * 1.10f, size * 0.14f),
-        cornerRadius = CornerRadius(size * 0.05f),
+        topLeft = Offset(center.x - bodyW * 0.55f, bodyTop - size * 0.075f),
+        size = Size(bodyW * 1.10f, size * 0.075f),
+        cornerRadius = CornerRadius(corner * 0.5f),
+    )
+    // Thin light outline so the black cube reads on any dial color.
+    drawRoundRect(
+        color = outline,
+        topLeft = Offset(bodyLeft - 1.5.dp.toPx(), bodyTop - 1.5.dp.toPx()),
+        size = Size(bodyW + 3.dp.toPx(), bodyH + 3.dp.toPx()),
+        cornerRadius = CornerRadius(corner + 1.dp.toPx()),
     )
     // The cube body (slightly taller than wide, like the real Kaaba).
     drawRoundRect(
         color = kaabaBlack,
-        topLeft = Offset(center.x - half * 0.72f, center.y - half * 0.52f),
-        size = Size(size * 1.44f, size * 1.14f),
-        cornerRadius = CornerRadius(size * 0.06f),
+        topLeft = Offset(bodyLeft, bodyTop),
+        size = Size(bodyW, bodyH),
+        cornerRadius = CornerRadius(corner),
     )
     // The kiswah band (hizam) wrapping the upper third.
     drawRoundRect(
         color = gold,
-        topLeft = Offset(center.x - half * 0.72f, center.y - half * 0.10f),
-        size = Size(size * 1.44f, size * 0.20f),
-        cornerRadius = CornerRadius(size * 0.04f),
+        topLeft = Offset(bodyLeft, bodyTop + bodyH * 0.28f),
+        size = Size(bodyW, size * 0.11f),
+        cornerRadius = CornerRadius(size * 0.03f),
     )
     // A thin second gold line below the band.
     drawRoundRect(
         color = goldSoft,
-        topLeft = Offset(center.x - half * 0.72f, center.y + half * 0.14f),
-        size = Size(size * 1.44f, size * 0.06f),
+        topLeft = Offset(bodyLeft, bodyTop + bodyH * 0.44f),
+        size = Size(bodyW, size * 0.045f),
         cornerRadius = CornerRadius(size * 0.02f),
     )
-    // The door (Bab al-Kaaba).
+    // The door (Bab al-Kaaba), centered in the lower third.
     drawRoundRect(
         color = gold,
-        topLeft = Offset(center.x - half * 0.20f, center.y + half * 0.26f),
-        size = Size(size * 0.40f, size * 0.30f),
-        cornerRadius = CornerRadius(size * 0.05f),
+        topLeft = Offset(center.x - bodyW * 0.16f, bodyTop + bodyH * 0.60f),
+        size = Size(bodyW * 0.32f, size * 0.16f),
+        cornerRadius = CornerRadius(size * 0.03f),
     )
 }
 

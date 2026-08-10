@@ -304,6 +304,7 @@ private fun TubeLevel(
     Canvas(modifier = modifier) {
         val w = size.width
         val h = size.height
+        val cx = w / 2f
         val cy = h / 2f
 
         // The vial: a horizontal capsule tube.
@@ -324,23 +325,25 @@ private fun TubeLevel(
             style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx()),
         )
 
-        // Center reference marks (the "level" window in the middle).
+        // Center reference marks (the "level" window in the middle),
+        // symmetric around the tube's horizontal center.
         val tickHalf = tubeHeight * 0.34f
         val tickGap = 14.dp.toPx()
         drawLine(
             color = surfaceColor.copy(alpha = 0.7f),
-            start = Offset(cy - tickGap, cy - tickHalf),
-            end = Offset(cy - tickGap, cy + tickHalf),
+            start = Offset(cx - tickGap, cy - tickHalf),
+            end = Offset(cx - tickGap, cy + tickHalf),
             strokeWidth = 2.dp.toPx(),
         )
         drawLine(
             color = surfaceColor.copy(alpha = 0.7f),
-            start = Offset(cy + tickGap, cy - tickHalf),
-            end = Offset(cy + tickGap, cy + tickHalf),
+            start = Offset(cx + tickGap, cy - tickHalf),
+            end = Offset(cx + tickGap, cy + tickHalf),
             strokeWidth = 2.dp.toPx(),
         )
 
-        // The mercury/bubble: moves left-right with roll.
+        // The mercury/bubble: moves left-right with roll, symmetric around
+        // the tube's horizontal center.
         val bubbleRadius = tubeHeight * 0.26f
         val maxOffset = w / 2f - tubeInset - bubbleRadius - 6.dp.toPx()
         val x = (roll / 30f).coerceIn(-1f, 1f) * maxOffset
@@ -349,7 +352,7 @@ private fun TubeLevel(
         drawCircle(
             color = if (centered) primaryColor else errorColor,
             radius = bubbleRadius,
-            center = Offset(cy + x, cy),
+            center = Offset(cx + x, cy),
         )
     }
 }
