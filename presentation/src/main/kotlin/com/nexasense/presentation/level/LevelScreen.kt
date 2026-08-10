@@ -1,5 +1,7 @@
 package com.nexasense.presentation.level
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -324,6 +326,16 @@ private fun TubeLevel(
         }
     }
 
+    // The raw roll arrives at sensor rate (up to 50 Hz at GAME rate) and
+    // jumps sample to sample, which makes the mercury bubble snap between
+    // positions. Animate its normalized position with a short tween so the
+    // bubble glides smoothly, like a real liquid, instead of jumping.
+    val animatedBubbleFactor by animateFloatAsState(
+        targetValue = (roll / 30f).coerceIn(-1f, 1f),
+        animationSpec = tween(durationMillis = TUBE_BUBBLE_ANIMATION_MILLIS),
+        label = "tubeBubble",
+    )
+
     Canvas(modifier = modifier) {
         val w = size.width
         val h = size.height
@@ -365,11 +377,11 @@ private fun TubeLevel(
             strokeWidth = 2.dp.toPx(),
         )
 
-        // The mercury/bubble: moves left-right with roll, symmetric around
-        // the tube's horizontal center.
+        // The mercury/bubble: moves left-right with the (animated) roll,
+        // symmetric around the tube's horizontal center.
         val bubbleRadius = tubeHeight * 0.26f
         val maxOffset = w / 2f - tubeInset - bubbleRadius - 6.dp.toPx()
-        val x = (roll / 30f).coerceIn(-1f, 1f) * maxOffset
+        val x = animatedBubbleFactor * maxOffset
         val centered = abs(x) < tickGap * 0.6f
 
         drawCircle(
@@ -437,6 +449,9 @@ private fun TubeLevel(
         )
     }
 }
+
+/** Duration of the mercury bubble's smooth glide (ms). */
+private const val TUBE_BUBBLE_ANIMATION_MILLIS = 180
 
 /** Point at [degrees] clockwise from straight-down, [length] from [pivot]. */
 private fun plumbPoint(pivot: Offset, length: Float, degrees: Float): Offset {
