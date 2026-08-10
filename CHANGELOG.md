@@ -36,6 +36,21 @@ All notable changes to NexaSense are documented here. The format is based on
   (AAPT2 rejects unversioned `mipmap-anydpi` for the API 33 monochrome
   element); lint is now free of app-code findings.
 
+### Changed
+
+- **Dependency refresh (low-risk)** — navigation-compose 2.9.0 → 2.9.8,
+  appcompat 1.7.0 → 1.7.1, coroutines 1.10.2 → 1.11.0, and the test-only
+  stack (ext-junit 1.3.0, espresso 3.7.0, runner/rules 1.7.0). Major
+  toolchain bumps (AGP 9, Kotlin 2.4, Compose BOM 2026) are deliberately
+  deferred and documented in the new `docs/dependencies.md`.
+- **Security review** — manifest audit (single launcher-exported activity,
+  one coarse-location permission, no network/cleartext, explicit backup
+  rules) and diagnostic-report review (hardware/capability info only, no
+  coordinates or personal data): no findings, no changes required.
+- **String-resource audit** — verified zero unescaped apostrophes across all
+  24 locales (aapt2 rejects them); the French string from the previous
+  round is properly escaped.
+
 ### Added
 
 - **Sun-over-Kaaba Qibla verification** — `SolarPositionCalculator` (NOAA
