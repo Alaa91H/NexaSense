@@ -8,6 +8,9 @@
         No internet, storage, contacts, phone or bluetooth permissions exist.
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Used only for the level's graded haptic feedback (amplitude-controlled
+         vibration); a normal permission granted automatically at install. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".NexaSenseApplication"

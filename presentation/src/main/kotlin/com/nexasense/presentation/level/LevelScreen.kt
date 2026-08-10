@@ -35,7 +35,11 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.PathEffect
+import android.content.Context
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -75,16 +79,35 @@ fun LevelScreen(
     val orientation by viewModel.orientation.collectAsStateWithLifecycle()
     val isAvailable by viewModel.isAvailable.collectAsStateWithLifecycle()
     val calibration by viewModel.calibration.collectAsStateWithLifecycle()
-    val hapticTick by viewModel.hapticTick.collectAsStateWithLifecycle()
+    val hapticPulse by viewModel.hapticPulse.collectAsStateWithLifecycle()
     val sensorBlocked by viewModel.sensorBlocked.collectAsStateWithLifecycle()
     val verticalMode by viewModel.verticalMode.collectAsStateWithLifecycle()
 
     EngineLifecycleEffect(active = true, onStateChanged = viewModel::setActive)
 
-    // One short pulse when the bubble enters the centered zone.
+    // Haptic feedback: the ViewModel emits pulses whose strength ramps up as
+    // the device approaches plumb (vertical mode). Play them through the
+    // system Vibrator with per-pulse amplitude so the ramp is actually felt;
+    // fall back to standard haptic feedback when no vibrator is present.
     val hapticFeedback = LocalHapticFeedback.current
-    LaunchedEffect(hapticTick) {
-        if (hapticTick > 0) hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+    val context = LocalContext.current
+    LaunchedEffect(hapticPulse?.id) {
+        val pulse = hapticPulse ?: return@LaunchedEffect
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        if (vibrator != null && vibrator.hasVibrator()) {
+            val amplitude = (40 + 215 * pulse.strength).toInt().coerceIn(1, 255)
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    if (pulse.centered) 80L else 40L,
+                    amplitude,
+                ),
+            )
+        } else {
+            hapticFeedback.performHapticFeedback(
+                if (pulse.centered) HapticFeedbackType.LongPress
+                else HapticFeedbackType.TextHandleMove,
+            )
+        }
     }
 
     // Keep pitch/roll in the user's frame of reference across display rotations.

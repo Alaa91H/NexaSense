@@ -9,6 +9,7 @@ import com.nexasense.domain.port.CalibrationStore
 import com.nexasense.domain.port.LevelEngine
 import com.nexasense.domain.port.SettingsStore
 import kotlin.math.abs
+import kotlin.math.max
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -57,15 +58,28 @@ class LevelViewModel(
     )
 
     /**
-     * Increments when the bubble enters the centered zone, so the UI can
-     * fire one short haptic pulse — the user can level a surface without
+     * A discrete haptic pulse request for the UI. [strength] is normalized
+     * 0..1 (amplitude), [id] strictly increases so every pulse retriggers the
+     * UI effect even at equal strength, and [centered] marks the final strong
+     * pulse fired on entering the perfectly-level zone.
+     */
+    data class HapticPulse(val id: Long, val strength: Float, val centered: Boolean)
+
+    /**
+     * Emits a pulse when the level needs attention: in the vertical mode the
+     * strength ramps up in bands as the device approaches plumb (a graded
+     * "getting closer" feel), and both modes fire a final strong pulse when
+     * the centered zone is entered — the user can level a surface without
      * watching the screen (standard bubble-level UX).
      */
-    private val _hapticTick = MutableStateFlow(0)
-    val hapticTick: StateFlow<Int> = _hapticTick.asStateFlow()
+    private val _hapticPulse = MutableStateFlow<HapticPulse?>(null)
+    val hapticPulse: StateFlow<HapticPulse?> = _hapticPulse.asStateFlow()
 
     private var lastCentered = false
-    private var lastHapticAtMillis = 0L
+    private var lastCenteredHapticAtMillis = 0L
+    private var lastPlumbBand = -1
+    private var lastBandPulseAtMillis = 0L
+    private var pulseId = 0L
 
     init {
         viewModelScope.launch {
@@ -88,6 +102,13 @@ class LevelViewModel(
         vertical: Boolean,
     ) {
         val pitchDeviation = verticalDeviation(orientation.pitch)
+
+        // Vertical mode: grade the pulse strength by how close the device is
+        // to plumb — each band crossed inward fires a stronger pulse.
+        if (vertical && currentSettings.hapticsEnabled) {
+            maybeFirePlumbBandPulse(pitchDeviation, orientation.roll)
+        }
+
         val centered = if (vertical) {
             abs(pitchDeviation) < CENTERED_THRESHOLD_DEGREES &&
                 abs(orientation.roll) < CENTERED_THRESHOLD_DEGREES
@@ -100,9 +121,44 @@ class LevelViewModel(
         if (!entering) return
         if (!currentSettings.hapticsEnabled) return
         val now = System.currentTimeMillis()
-        if (now - lastHapticAtMillis < HAPTIC_COOLDOWN_MILLIS) return
-        lastHapticAtMillis = now
-        _hapticTick.value += 1
+        if (now - lastCenteredHapticAtMillis < HAPTIC_COOLDOWN_MILLIS) return
+        lastCenteredHapticAtMillis = now
+        firePulse(strength = 1f, centered = true)
+    }
+
+    /**
+     * Fires a pulse when the device crosses inward through a proximity band
+     * (8° → 5° → 3° → 2° → 1.5° → 1° → 0.5°), with the strength scaling with
+     * how close the band is to plumb. Crossing outward never refires until
+     * the device leaves the outer band, so hovering near plumb doesn't spam.
+     */
+    private fun maybeFirePlumbBandPulse(pitchDeviation: Float, roll: Float) {
+        val deviation = max(abs(pitchDeviation), abs(roll))
+        var band = -1
+        for (i in PLUMB_HAPTIC_BANDS.indices) {
+            if (deviation < PLUMB_HAPTIC_BANDS[i]) band = i
+        }
+        if (band < 0) {
+            lastPlumbBand = -1
+            return
+        }
+        if (band <= lastPlumbBand) return
+        val now = System.currentTimeMillis()
+        if (now - lastBandPulseAtMillis < BAND_PULSE_MIN_GAP_MILLIS) return
+        lastBandPulseAtMillis = now
+        lastPlumbBand = band
+        firePulse(
+            strength = (band + 1) / PLUMB_HAPTIC_BANDS.size.toFloat(),
+            centered = false,
+        )
+    }
+
+    private fun firePulse(strength: Float, centered: Boolean) {
+        _hapticPulse.value = HapticPulse(
+            id = ++pulseId,
+            strength = strength,
+            centered = centered,
+        )
     }
 
     /**
@@ -120,6 +176,16 @@ class LevelViewModel(
 
         /** Above this |pitch| the device counts as held upright (plumb mode). */
         const val VERTICAL_MODE_THRESHOLD_DEGREES = 45f
+
+        /**
+         * Proximity bands for the graded vertical-mode haptic, outermost
+         * first. Crossing inward through a band fires a pulse whose strength
+         * scales with the band index (closest band = strongest pulse).
+         */
+        val PLUMB_HAPTIC_BANDS = floatArrayOf(8f, 5f, 3f, 2f, 1.5f, 1f, 0.5f)
+
+        /** Minimum gap between band pulses, to avoid boundary flutter. */
+        const val BAND_PULSE_MIN_GAP_MILLIS = 250L
     }
 
     /** Captures the current reading as the new zero point. */

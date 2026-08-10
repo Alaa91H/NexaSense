@@ -7,6 +7,13 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Graded haptic in the vertical level** — instead of a single pulse on
+  entering the centered zone, the plumb mode now ramps up: each proximity
+  band crossed inward (8° → 5° → 3° → 2° → 1.5° → 1° → 0.5°) fires a
+  vibration whose amplitude scales with closeness, so you feel the device
+  getting closer to plumb, followed by the final strong pulse when centered.
+  Played through the system vibrator with per-pulse amplitude (API 26+),
+  falling back to standard haptic feedback without a vibrator.
 - **Flat-mode centered indicator** — the circular (horizontal) level now
   shows the same pulsing centered dot as the plumb mode: at the pivot it
   lights up with a soft breathing glow exactly when the device is level on
