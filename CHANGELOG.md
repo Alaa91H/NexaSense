@@ -61,6 +61,20 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Fixed
 
+- **Invisible black text in dark mode (regression from the night gradient)** —
+  making the navigation `Scaffold` transparent for the sky-gradient background
+  left its `contentColor` at the default `contentColorFor(containerColor)`,
+  which matches the container against color-scheme roles: `Color.Transparent`
+  matches none, so the content color became `Color.Unspecified` and every text
+  with an implicit color (the compass heading readout, the level angle
+  readouts, settings labels) rendered in the low-level default **black** —
+  invisible on the dark navy. The scaffold now pins
+  `contentColor = MaterialTheme.colorScheme.onSurface`, so readouts are light
+  and legible in dark mode. Confirmed at the bytecode level of material3
+  1.3.2 (`contentColorFor` returns `Unspecified` for unmatched colors).
+- **Compass layout compaction** — the top spacers were tightened so the
+  heading readout and dial sit higher, using the space directly below the
+  app bar instead of leaving a dead band.
 - **Tube level centering** — the vertical (plumb) tube level used the
   vertical center as the horizontal center, so the bubble and the reference
   marks sat off-center; they are now symmetric around the tube's real center.

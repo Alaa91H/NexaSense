@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -41,7 +42,12 @@ fun NexaNavHost(container: AppContainer) {
 
     Scaffold(
         // Transparent so the theme's sky gradient shows behind the content.
+        // IMPORTANT: a transparent container makes the default contentColor
+        // resolve to BLACK (contentColorFor treats it as light), which turns
+        // every implicit-color text invisible on the dark theme. Pin the
+        // content color to the scheme's onSurface so readouts stay legible.
         containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onSurface,
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(

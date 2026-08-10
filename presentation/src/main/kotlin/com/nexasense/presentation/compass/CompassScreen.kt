@@ -116,7 +116,7 @@ fun CompassScreen(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             if (!heading.isAvailable) {
                 UnavailablePanel(
@@ -144,10 +144,8 @@ fun CompassScreen(
 
             if (settings.showNorthReferenceBadge) {
                 NorthReferenceBadge(heading = heading)
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             CompassDial(
                 headingDegrees = heading.degrees,
