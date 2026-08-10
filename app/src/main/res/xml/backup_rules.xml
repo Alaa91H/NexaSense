@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Legacy full-backup rules (Android 11 and earlier; kept for the
+    android:fullBackupContent attribute referenced by lint on minSdk < 31).
+    Mirrors data_extraction_rules.xml: everything is backed up.
+-->
+<full-backup-content>
+    <include domain="file" path="." />
+    <include domain="sharedpref" path="." />
+    <include domain="database" path="." />
+    <include domain="external" path="." />
+    <include domain="root" path="." />
+</full-backup-content>

@@ -28,9 +28,24 @@ All notable changes to NexaSense are documented here. The format is based on
 - **Edge-to-edge (Android 15/16)** — scrollable screens now reserve the system
   navigation bar inset, so content no longer runs underneath the gesture bar
   with the enforced edge-to-edge from targetSdk 35+.
+- **DataStore robustness** — both settings and calibration stores now use a
+  `ReplaceFileCorruptionHandler`: a corrupt preferences file is reset instead
+  of throwing on every read/write.
+- **Lint cleanup** — added explicit Android 12+ data-extraction and legacy
+  full-backup rules, and silenced the redundant adaptive-icon folder notice
+  (AAPT2 rejects unversioned `mipmap-anydpi` for the API 33 monochrome
+  element); lint is now free of app-code findings.
 
 ### Added
 
+- **System language picker (Android 13+)** — the app now declares
+  `android:localeConfig` with all 24 locales, so it appears in the system
+  per-app language settings.
+- **Property-based invariant tests** — 11 seeded randomized tests covering
+  angle normalization/idempotence, angular difference, short-way lerp,
+  cardinal sectors, smoother convergence and the 0°/360° seam, WMM2025 field
+  plausibility/smoothness, and geodesic distance symmetry + exact meridian/
+  equator bearings (independent Python Vincenty cross-check).
 - **F-Droid publishing** — `fastlane` store metadata (en-US, ar, fa, ur) and
   a submission guide in `docs/fdroid.md`.
 - **Display-rotation compensation** — the compass heading now stays in the

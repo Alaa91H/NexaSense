@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!--
+        ObsoleteSdkInt on mipmap-anydpi-v26: minSdk is 31 so the -v26 qualifier
+        is technically redundant, but AAPT2 rejects adaptive icons (with the
+        API 33 <monochrome> element) in an unversioned mipmap-anydpi folder,
+        so the versioned folder is required. Keep the conventional layout.
+    -->
+    <issue id="ObsoleteSdkInt">
+        <ignore regexp=".*mipmap-anydpi-v26.*" />
+    </issue>
+</lint>

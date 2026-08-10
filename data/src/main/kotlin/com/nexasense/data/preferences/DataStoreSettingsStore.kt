@@ -1,12 +1,14 @@
 package com.nexasense.data.preferences
 
 import android.content.Context
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.nexasense.core.logging.NexaLogger
 import com.nexasense.domain.model.AppSettings
 import com.nexasense.domain.model.LanguagePreference
 import com.nexasense.domain.model.NorthReference
@@ -19,7 +21,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
-private val Context.settingsDataStore by preferencesDataStore(name = "nexasense_settings")
+private val Context.settingsDataStore by preferencesDataStore(
+    name = "nexasense_settings",
+    // If the store file is ever corrupt (crash mid-write, storage error),
+    // replace it with an empty store instead of throwing on every read/write.
+    corruptionHandler = ReplaceFileCorruptionHandler { error ->
+        NexaLogger.e("Settings DataStore corrupt; resetting to defaults.", error)
+        emptyPreferences()
+    },
+)
 
 /**
  * Settings persisted with DataStore Preferences (not SharedPreferences).

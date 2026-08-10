@@ -1,6 +1,7 @@
 package com.nexasense.data.preferences
 
 import android.content.Context
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -8,6 +9,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.nexasense.core.logging.NexaLogger
 import com.nexasense.domain.model.EllipsoidCorrection
 import com.nexasense.domain.model.LevelCalibration
 import com.nexasense.domain.model.MagnetometerCalibration
@@ -17,7 +19,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
-private val Context.calibrationDataStore by preferencesDataStore(name = "nexasense_calibration")
+private val Context.calibrationDataStore by preferencesDataStore(
+    name = "nexasense_calibration",
+    // Repair a corrupt calibration file instead of throwing on every access;
+    // losing calibration is preferable to crashing the app.
+    corruptionHandler = ReplaceFileCorruptionHandler { error ->
+        NexaLogger.e("Calibration DataStore corrupt; resetting.", error)
+        emptyPreferences()
+    },
+)
 
 /** Calibration data persisted with DataStore Preferences. */
 class DataStoreCalibrationStore(private val context: Context) : CalibrationStore {
