@@ -3,6 +3,8 @@ package com.nexasense.presentation.settings
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -30,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -435,7 +438,15 @@ private object Section {
 private fun toggle(section: String, current: String?): String? =
     if (current == section) null else section
 
-/** A tappable section header; the body is only composed while expanded. */
+/**
+ * A tappable section header whose body animates open/closed when toggled.
+ * The size change animates smoothly and is clipped to the growing bounds
+ * (animateContentSize + clipToBounds), so the revealed content never
+ * overlaps the rows below it — unlike a raw AnimatedVisibility inside a
+ * LazyColumn item, which draws the full content beyond the animating
+ * bounds. The LazyColumn's scroll anchoring keeps the visible text fixed
+ * while the card expands or collapses.
+ */
 @Composable
 private fun ExpandableSettingsSection(
     title: String,
@@ -443,23 +454,29 @@ private fun ExpandableSettingsSection(
     onClick: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    Row(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
+            .animateContentSize(animationSpec = tween(durationMillis = 220))
+            .clipToBounds(),
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.weight(1f),
-        )
-        ExpandIndicator(expanded = expanded)
-    }
-    if (expanded) {
-        content()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.weight(1f),
+            )
+            ExpandIndicator(expanded = expanded)
+        }
+        if (expanded) {
+            content()
+        }
     }
 }
 

@@ -29,6 +29,13 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Changed
 
+- **Smooth settings cards, no overlap** — expanding or collapsing an
+  accordion card now animates smoothly with a 220 ms size tween, with the
+  revealed content clipped to the growing bounds (animateContentSize +
+  clipToBounds). This replaces the AnimatedVisibility approach, which in a
+  LazyColumn item drew the full content beyond the animating bounds and
+  made the first option of each card overlap the rows below. The scroll
+  anchoring still keeps the visible text fixed while a card animates.
 - **Stable settings text** — the settings screen is now a keyed LazyColumn,
   so expanding or collapsing an accordion card never makes the visible text
   jump: the scroll anchors to the first visible item and keeps it in place
