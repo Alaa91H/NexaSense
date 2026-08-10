@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">충돌 기록 지우기</string>
     <string name="sensors_blocked_title">센서 차단됨</string>
     <string name="sensors_blocked_message">센서 데이터를 수신하지 못했습니다. Sensors Off가 꺼져 있는지 확인하고 이 앱에 센서 액세스를 허용하세요.</string>
+    <string name="level_mode_horizontal">수평</string>
+    <string name="level_mode_vertical">수직</string>
+    <string name="level_vertical_deviation">수직 편차</string>
 </resources>

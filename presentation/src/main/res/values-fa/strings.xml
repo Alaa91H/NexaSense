@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">پاک کردن تاریخچه خطا</string>
     <string name="sensors_blocked_title">حسگرها مسدود شده‌اند</string>
     <string name="sensors_blocked_message">هیچ داده‌ای از حسگرها دریافت نمی‌شود. گزینه Sensors Off را بررسی و دسترسی به حسگرها را برای این برنامه مجاز کنید.</string>
+    <string name="level_mode_horizontal">افقی</string>
+    <string name="level_mode_vertical">عمودی</string>
+    <string name="level_vertical_deviation">انحراف از عمود</string>
 </resources>

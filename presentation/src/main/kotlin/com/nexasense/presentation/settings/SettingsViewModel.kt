@@ -74,8 +74,6 @@ class SettingsViewModel(container: AppContainer) : ViewModel() {
 
     fun setKeepScreenOn(enabled: Boolean) = update { it.copy(keepScreenOn = enabled) }
 
-    fun setDeveloperMode(enabled: Boolean) = update { it.copy(developerMode = enabled) }
-
     fun reset() {
         viewModelScope.launch { settingsStore.reset() }
     }

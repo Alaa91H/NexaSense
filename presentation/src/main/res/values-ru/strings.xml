@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Очистить журнал сбоев</string>
     <string name="sensors_blocked_title">Датчики заблокированы</string>
     <string name="sensors_blocked_message">Данные датчиков не поступают. Проверьте, что Sensors Off отключен, и разрешите этому приложению доступ к датчикам.</string>
+    <string name="level_mode_horizontal">Горизонтально</string>
+    <string name="level_mode_vertical">Вертикально</string>
+    <string name="level_vertical_deviation">Вертикальное отклонение</string>
 </resources>

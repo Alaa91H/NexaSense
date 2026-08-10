@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -63,7 +62,6 @@ import java.util.Locale
 fun CompassScreen(
     container: AppContainer,
     onBack: (() -> Unit)? = null,
-    onOpenMenu: () -> Unit = {},
 ) {
     val viewModel: CompassViewModel = viewModel(initializer = {
         CompassViewModel(
@@ -106,11 +104,6 @@ fun CompassScreen(
         title = stringResource(R.string.compass_title),
         onBack = onBack,
         actions = {
-            // The compass is the app's home screen: a menu button opens the
-            // dashboard with the other tools and settings.
-            IconButton(onClick = onOpenMenu) {
-                Icon(Icons.Outlined.Menu, contentDescription = stringResource(R.string.nav_home))
-            }
             IconButton(onClick = viewModel::refresh) {
                 Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.refresh))
             }
@@ -197,10 +190,6 @@ fun CompassScreen(
                         permissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
                     },
                 )
-            }
-
-            if (settings.developerMode) {
-                DeveloperInfoBlock(heading = heading, qiblaState = qiblaState)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -461,53 +450,6 @@ private fun QiblaCard(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun DeveloperInfoBlock(heading: Heading, qiblaState: QiblaState) {
-    Surface(
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        shape = MaterialTheme.shapes.medium,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-    ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            val declination = heading.declinationDegrees
-            val magnetic = when (heading.mode) {
-                HeadingMode.TRUE -> declination?.let { AngleMath.normalizeDegrees(heading.degrees - it) }
-                HeadingMode.MAGNETIC -> heading.degrees.takeIf { heading.isAvailable }
-            }
-            val trueHeading = when (heading.mode) {
-                HeadingMode.TRUE -> heading.degrees.takeIf { heading.isAvailable }
-                HeadingMode.MAGNETIC -> declination?.let { AngleMath.normalizeDegrees(heading.degrees + it) }
-            }
-            DevRow(stringResource(R.string.dev_magnetic), magnetic?.let { formatFloat(it) + "°" })
-            DevRow(stringResource(R.string.dev_declination), declination?.let { String.format(Locale.US, "%+.1f°", it) })
-            DevRow(stringResource(R.string.dev_true), trueHeading?.let { formatFloat(it) + "°" })
-            DevRow(stringResource(R.string.dev_north_reference), heading.effectiveNorthReference.name)
-            DevRow(
-                stringResource(R.string.qibla_bearing_label),
-                qiblaState.bearingDegrees?.let { formatFloat(it) + "°" },
-            )
-            DevRow(
-                stringResource(R.string.dev_relative_qibla),
-                qiblaState.relativeQiblaDegrees?.let { String.format(Locale.US, "%+.1f°", it) },
-            )
-        }
-    }
-}
-
-@Composable
-private fun DevRow(label: String, value: String?) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(
-            value ?: stringResource(R.string.not_available),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
     }
 }
 

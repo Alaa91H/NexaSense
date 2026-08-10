@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">清除崩溃记录</string>
     <string name="sensors_blocked_title">传感器被阻止</string>
     <string name="sensors_blocked_message">未收到传感器数据。请检查 Sensors Off 是否已关闭，并允许此应用访问传感器。</string>
+    <string name="level_mode_horizontal">水平</string>
+    <string name="level_mode_vertical">垂直</string>
+    <string name="level_vertical_deviation">垂直偏差</string>
 </resources>

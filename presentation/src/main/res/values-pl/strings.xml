@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Wyczyść historię awarii</string>
     <string name="sensors_blocked_title">Czujniki zablokowane</string>
     <string name="sensors_blocked_message">Nie są odbierane żadne dane z czujników. Sprawdź, czy Sensors Off jest wyłączone, i zezwól tej aplikacji na dostęp do czujników.</string>
+    <string name="level_mode_horizontal">Poziomo</string>
+    <string name="level_mode_vertical">Pionowo</string>
+    <string name="level_vertical_deviation">Odchylenie pionowe</string>
 </resources>

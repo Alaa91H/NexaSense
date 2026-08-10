@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">خرابی کا ریکارڈ صاف کریں</string>
     <string name="sensors_blocked_title">سینسر بند ہیں</string>
     <string name="sensors_blocked_message">سینسر سے کوئی ڈیٹا نہیں آ رہا۔ Sensors Off آپشن چیک کریں اور اس ایپ کو سینسر تک رسائی دیں۔</string>
+    <string name="level_mode_horizontal">افقی</string>
+    <string name="level_mode_vertical">عمودی</string>
+    <string name="level_vertical_deviation">عمودی انحراف</string>
 </resources>

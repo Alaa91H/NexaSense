@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">クラッシュ履歴を消去</string>
     <string name="sensors_blocked_title">センサーがブロックされています</string>
     <string name="sensors_blocked_message">センサーデータを受信できません。Sensors Off が無効であることを確認し、このアプリへのセンサーアクセスを許可してください。</string>
+    <string name="level_mode_horizontal">水平</string>
+    <string name="level_mode_vertical">垂直</string>
+    <string name="level_vertical_deviation">垂直偏差</string>
 </resources>

@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">क्रैश इतिहास साफ़ करें</string>
     <string name="sensors_blocked_title">सेंसर अवरुद्ध</string>
     <string name="sensors_blocked_message">सेंसर से कोई डेटा नहीं मिल रहा। Sensors Off बंद है यह जाँचें और इस ऐप को सेंसर एक्सेस दें।</string>
+    <string name="level_mode_horizontal">क्षैतिज</string>
+    <string name="level_mode_vertical">ऊर्ध्वाधर</string>
+    <string name="level_vertical_deviation">ऊर्ध्वाधर विचलन</string>
 </resources>

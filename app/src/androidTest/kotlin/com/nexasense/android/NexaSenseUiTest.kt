@@ -4,10 +4,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
@@ -18,8 +16,9 @@ import org.junit.runner.RunWith
  * device's actual sensor HAL — including devices without sensors, where the
  * screens must degrade gracefully instead of crashing.
  *
- * The compass is the app's home screen; the dashboard (with Level, Sensors,
- * Diagnostics, Settings, About) is reached through the menu button.
+ * The app has three tools switched via the bottom navigation bar: Compass
+ * (home), Level and Settings. The sensors/diagnostics/about screens have been
+ * removed.
  */
 @RunWith(AndroidJUnit4::class)
 class NexaSenseUiTest {
@@ -34,45 +33,30 @@ class NexaSenseUiTest {
     }
 
     @Test
-    fun menuOpensDashboard() {
-        rule.onNodeWithContentDescription("Home").performClick()
-        rule.waitForIdle()
-        rule.onNodeWithText("NexaSense", substring = true).assertIsDisplayed()
-        rule.onAllNodesWithText("Level").onFirst().assertExists()
-        rule.onAllNodesWithText("Sensors").onFirst().assertExists()
-    }
-
-    @Test
-    fun navigateFromMenuToLevelAndBack() {
-        rule.onNodeWithContentDescription("Home").performClick()
-        rule.waitForIdle()
+    fun bottomNavSwitchesToLevelAndBack() {
         rule.onAllNodesWithText("Level").onFirst().performClick()
         rule.waitForIdle()
         rule.onAllNodesWithText("Level").onFirst().assertExists()
-        Espresso.pressBack()
+        rule.onAllNodesWithText("Compass").onFirst().performClick()
         rule.waitForIdle()
-        rule.onNodeWithText("NexaSense", substring = true).assertIsDisplayed()
+        rule.onAllNodesWithText("Compass").onFirst().assertExists()
     }
 
     @Test
-    fun navigateToSensorsList() {
-        rule.onNodeWithContentDescription("Home").performClick()
-        rule.waitForIdle()
-        rule.onAllNodesWithText("Sensors").onFirst().performClick()
-        rule.waitForIdle()
-        rule.onAllNodesWithText("Sensors").onFirst().assertExists()
-    }
-
-    @Test
-    fun navigateToSettingsAndAbout() {
-        rule.onNodeWithContentDescription("Home").performClick()
-        rule.waitForIdle()
+    fun bottomNavOpensSettings() {
         rule.onAllNodesWithText("Settings").onFirst().performClick()
         rule.waitForIdle()
         // Section headers are always visible; the body expands on tap.
         rule.onNodeWithText("Theme").assertExists()
-        rule.onAllNodesWithText("About").onFirst().performClick()
-        rule.waitForIdle()
-        rule.onNodeWithText("NexaSense — AOSP Sensor Suite").assertIsDisplayed()
+        rule.onAllNodesWithText("Compass").onFirst().assertExists()
+    }
+
+    @Test
+    fun removedScreensAreNotReachable() {
+        // The sensors, diagnostics and about screens no longer exist: none of
+        // their titles appear anywhere in the app.
+        rule.onNodeWithText("Sensors").assertDoesNotExist()
+        rule.onNodeWithText("Diagnostics").assertDoesNotExist()
+        rule.onNodeWithText("NexaSense — AOSP Sensor Suite").assertDoesNotExist()
     }
 }

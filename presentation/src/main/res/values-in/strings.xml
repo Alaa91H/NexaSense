@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Hapus riwayat error</string>
     <string name="sensors_blocked_title">Sensor diblokir</string>
     <string name="sensors_blocked_message">Tidak ada data sensor yang diterima. Periksa apakah Sensors Off nonaktif dan izinkan aplikasi ini mengakses sensor.</string>
+    <string name="level_mode_horizontal">Horizontal</string>
+    <string name="level_mode_vertical">Vertikal</string>
+    <string name="level_vertical_deviation">Deviasi vertikal</string>
 </resources>

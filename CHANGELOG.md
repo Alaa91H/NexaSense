@@ -5,19 +5,35 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+
+- **Vertical (plumb) level mode** — the Level screen gains a horizontal /
+  vertical toggle. In vertical mode the bubble centers when the device is
+  held exactly upright (roll 0°, pitch 90°), so walls, edges and posts can be
+  checked for plumb on the same screen; the readout shows the deviation from
+  vertical and the haptic "level" pulse works in both modes.
+- **Kaaba marker on the compass** — when Qibla is enabled, a small Kaaba icon
+  (black cube with gold kiswah band) is drawn on the dial at the Qibla
+  bearing instead of the plain triangle.
+
 ### Changed
 
-- **Compass is always the home screen** — the app now opens directly on the
-  compass, which acts as the app's home page. A menu button in the compass
-  top bar opens the dashboard (Level, Sensors, Diagnostics, Settings, About);
-  the back arrow is hidden when the compass is the start destination.
-- **Settings accordion** — every settings section now starts collapsed and
-  only one section is open at a time: tapping a header expands it and
-  collapses the previously open one. The screen stays compact and the reset /
-  about buttons remain always visible.
+- **Bottom navigation bar** — the app is now three tools only: Compass
+  (home), Level and Settings, switched via a bottom navigation bar with a
+  single instance per tab and preserved state.
+- **Removed screens** — the home dashboard, Sensors list, Sensor detail,
+  Diagnostics and About screens are gone, together with the status display
+  and the developer-mode block; unsupported sensor lists are no longer
+  shown anywhere.
+- **Settings cleanup** — the About button and the developer-mode toggle were
+  removed.
 
 ### Fixed
 
+- **Settings accordion** — every settings section now starts collapsed and
+  only one section is open at a time: tapping a header expands it and
+  collapses the previously open one. The screen stays compact and the reset
+  button remains always visible.
 - **Instrumented Compose UI tests** — declared `kotlinx-coroutines-test`
   explicitly (androidTest + debug) so its `META-INF/services` exception-
   handler registration is packaged; without it, `runTest` fails with

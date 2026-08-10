@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">清除崩潰記錄</string>
     <string name="sensors_blocked_title">感測器被阻擋</string>
     <string name="sensors_blocked_message">未收到感測器資料。請檢查 Sensors Off 是否已關閉，並允許此應用程式存取感測器。</string>
+    <string name="level_mode_horizontal">水平</string>
+    <string name="level_mode_vertical">垂直</string>
+    <string name="level_vertical_deviation">垂直偏差</string>
 </resources>

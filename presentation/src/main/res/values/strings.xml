@@ -260,4 +260,7 @@
     <string name="diagnostics_crash_clear">Clear crash history</string>
     <string name="sensors_blocked_title">Sensors blocked</string>
     <string name="sensors_blocked_message">No sensor data is being received. Check the Sensors Off toggle and allow sensor access for this app.</string>
+    <string name="level_mode_horizontal">Horizontal</string>
+    <string name="level_mode_vertical">Vertical</string>
+    <string name="level_vertical_deviation">Vertical deviation</string>
 </resources>

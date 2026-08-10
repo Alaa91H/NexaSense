@@ -53,8 +53,7 @@ import com.nexasense.presentation.components.StatusPill
 @Composable
 fun SettingsScreen(
     container: AppContainer,
-    onBack: () -> Unit,
-    onOpenAbout: () -> Unit = {},
+    onBack: (() -> Unit)? = null,
 ) {
     val viewModel: SettingsViewModel = viewModel(initializer = { SettingsViewModel(container) })
     val settings by viewModel.settings.collectAsStateWithLifecycle()
@@ -350,11 +349,6 @@ fun SettingsScreen(
                         checked = settings.keepScreenOn,
                         onCheckedChange = viewModel::setKeepScreenOn,
                     )
-                    ToggleSetting(
-                        label = stringResource(R.string.settings_developer_mode),
-                        checked = settings.developerMode,
-                        onCheckedChange = viewModel::setDeveloperMode,
-                    )
                 }
             }
 
@@ -364,12 +358,6 @@ fun SettingsScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
             ) {
                 Text(stringResource(R.string.settings_reset))
-            }
-            TextButton(
-                onClick = onOpenAbout,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            ) {
-                Text(stringResource(R.string.nav_about))
             }
             Spacer(modifier = Modifier.height(8.dp))
         }

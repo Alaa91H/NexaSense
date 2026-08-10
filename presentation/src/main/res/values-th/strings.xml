@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">ล้างประวัติการขัดข้อง</string>
     <string name="sensors_blocked_title">เซนเซอร์ถูกบล็อก</string>
     <string name="sensors_blocked_message">ไม่ได้รับข้อมูลจากเซนเซอร์ โปรดตรวจสอบว่า Sensors Off ปิดอยู่และอนุญาตให้แอปนี้เข้าถึงเซนเซอร์</string>
+    <string name="level_mode_horizontal">แนวนอน</string>
+    <string name="level_mode_vertical">แนวตั้ง</string>
+    <string name="level_vertical_deviation">ค่าเบี่ยงเบนแนวตั้ง</string>
 </resources>

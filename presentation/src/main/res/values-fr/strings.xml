@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Effacer l\'historique des plantages</string>
     <string name="sensors_blocked_title">Capteurs bloqués</string>
     <string name="sensors_blocked_message">Aucune donnée de capteur reçue. Vérifiez que Sensors Off est désactivé et autorisez l\'accès aux capteurs pour cette application.</string>
+    <string name="level_mode_horizontal">Horizontal</string>
+    <string name="level_mode_vertical">Vertical</string>
+    <string name="level_vertical_deviation">Déviation verticale</string>
 </resources>

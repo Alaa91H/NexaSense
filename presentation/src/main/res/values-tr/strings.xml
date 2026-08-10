@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Çökme geçmişini temizle</string>
     <string name="sensors_blocked_title">Sensörler engellendi</string>
     <string name="sensors_blocked_message">Sensörlerden veri alınmıyor. Sensors Off kapalı olduğunu kontrol edin ve bu uygulamaya sensör erişimi izni verin.</string>
+    <string name="level_mode_horizontal">Yatay</string>
+    <string name="level_mode_vertical">Dikey</string>
+    <string name="level_vertical_deviation">Dikey sapma</string>
 </resources>

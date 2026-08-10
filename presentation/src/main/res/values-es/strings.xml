@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Borrar historial de errores</string>
     <string name="sensors_blocked_title">Sensores bloqueados</string>
     <string name="sensors_blocked_message">No se reciben datos de los sensores. Comprueba que Sensors Off esté desactivado y permite el acceso a los sensores a esta app.</string>
+    <string name="level_mode_horizontal">Horizontal</string>
+    <string name="level_mode_vertical">Vertical</string>
+    <string name="level_vertical_deviation">Desviación vertical</string>
 </resources>

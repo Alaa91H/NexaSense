@@ -260,4 +260,7 @@
     <string name="diagnostics_crash_clear">مسح سجل الأعطال</string>
     <string name="sensors_blocked_title">الحساسات محجوبة</string>
     <string name="sensors_blocked_message">لا تصل أي بيانات من الحساسات. تحقق من إيقاف تشغيل الحساسات (Sensors Off) واسمح للتطبيق بالوصول إليها.</string>
+    <string name="level_mode_horizontal">أفقي</string>
+    <string name="level_mode_vertical">عمودي</string>
+    <string name="level_vertical_deviation">انحراف عن العمودي</string>
 </resources>

@@ -49,7 +49,6 @@ fun CompassDial(
     showDegreeTicks: Boolean = true,
     showDegreeNumbers: Boolean = false,
     qiblaBearingDegrees: Float? = null,
-    qiblaColor: Color = com.nexasense.presentation.theme.NexaSenseColors.QiblaMarker,
 ) {
     val animatedHeading by animateFloatAsState(
         targetValue = headingDegrees,
@@ -139,23 +138,54 @@ fun CompassDial(
         // Center hub.
         drawCircle(color = markerColor, radius = 5.dp.toPx(), center = center)
 
-        // Qibla marker: drawn inside the rotating frame at the bearing, so it
-        // stays at the correct position relative to the (rotating) dial. The
-        // bearing must already be in the heading's north reference.
+        // Qibla marker: the Kaaba drawn inside the rotating frame at the
+        // bearing, so it stays at the correct position relative to the
+        // (rotating) dial. The bearing must already be in the heading's north
+        // reference.
         qiblaBearingDegrees?.let { bearing ->
             rotate(degrees = -animatedHeading, pivot = center) {
-                val position = polar(center, radius * 0.72f, bearing)
-                val qiblaMarker = Path().apply {
-                    moveTo(position.x, position.y - 8.dp.toPx())
-                    lineTo(position.x + 8.dp.toPx(), position.y + 8.dp.toPx())
-                    lineTo(position.x - 8.dp.toPx(), position.y + 8.dp.toPx())
-                    close()
-                }
-                drawPath(path = qiblaMarker, color = qiblaColor)
-                drawCircle(color = qiblaColor, radius = 2.5.dp.toPx(), center = position)
+                val position = polar(center, radius * 0.76f, bearing)
+                drawKaaba(center = position, size = 22.dp.toPx())
             }
         }
     }
+}
+
+/**
+ * Draws a small Kaaba: the black cube with its gold kiswah band, used as the
+ * Qibla marker on the dial. Fixed brand colors — the Kaaba is black with a
+ * gold band in reality, independent of the app theme.
+ */
+private fun DrawScope.drawKaaba(center: Offset, size: Float) {
+    val kaabaBlack = Color(0xFF17181C)
+    val gold = Color(0xFFD4AF37)
+    val half = size / 2f
+
+    // Roof cap: a slightly wider gold line on top.
+    drawRect(
+        color = gold,
+        topLeft = Offset(center.x - half * 1.05f, center.y - half * 0.45f),
+        size = androidx.compose.ui.geometry.Size(size * 1.10f, size * 0.07f),
+    )
+    // The cube body.
+    drawRoundRect(
+        color = kaabaBlack,
+        topLeft = Offset(center.x - half, center.y - half * 0.35f),
+        size = androidx.compose.ui.geometry.Size(size, size * 0.85f),
+        cornerRadius = androidx.compose.ui.geometry.CornerRadius(2.dp.toPx()),
+    )
+    // The kiswah band (golden calligraphy band around the cube).
+    drawRect(
+        color = gold,
+        topLeft = Offset(center.x - half, center.y - half * 0.02f),
+        size = androidx.compose.ui.geometry.Size(size, size * 0.11f),
+    )
+    // Small gold door hint.
+    drawRect(
+        color = gold.copy(alpha = 0.9f),
+        topLeft = Offset(center.x - half * 0.16f, center.y + half * 0.35f),
+        size = androidx.compose.ui.geometry.Size(size * 0.32f, size * 0.16f),
+    )
 }
 
 private fun DrawScope.drawTicks(center: Offset, radius: Float, tickColor: Color, style: CompassStyle) {

@@ -1,72 +1,92 @@
 package com.nexasense.presentation.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Straighten
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.nexasense.presentation.AppContainer
-import com.nexasense.presentation.about.AboutScreen
+import com.nexasense.presentation.R
 import com.nexasense.presentation.compass.CompassScreen
-import com.nexasense.presentation.diagnostics.DiagnosticsScreen
-import com.nexasense.presentation.home.HomeScreen
 import com.nexasense.presentation.level.LevelScreen
-import com.nexasense.presentation.sensordetail.SensorDetailScreen
-import com.nexasense.presentation.sensors.SensorsScreen
 import com.nexasense.presentation.settings.SettingsScreen
 
+/**
+ * The app's single navigation graph: three tools (Compass, Level, Settings)
+ * switched via a bottom navigation bar. The compass is the start destination
+ * and acts as the home screen.
+ */
 @Composable
 fun NexaNavHost(container: AppContainer) {
     val navController: NavHostController = rememberNavController()
-    NavHost(
-        navController = navController,
-        // The compass is always the app's home screen.
-        startDestination = Routes.COMPASS,
-    ) {
-        composable(Routes.HOME) {
-            HomeScreen(container = container, onNavigate = navController::navigate)
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
+
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                NavigationBarItem(
+                    selected = currentRoute == Routes.COMPASS,
+                    onClick = { navController.selectTab(Routes.COMPASS) },
+                    icon = { Icon(Icons.Outlined.Explore, contentDescription = null) },
+                    label = { Text(stringResource(R.string.nav_compass)) },
+                )
+                NavigationBarItem(
+                    selected = currentRoute == Routes.LEVEL,
+                    onClick = { navController.selectTab(Routes.LEVEL) },
+                    icon = { Icon(Icons.Outlined.Straighten, contentDescription = null) },
+                    label = { Text(stringResource(R.string.nav_level)) },
+                )
+                NavigationBarItem(
+                    selected = currentRoute == Routes.SETTINGS,
+                    onClick = { navController.selectTab(Routes.SETTINGS) },
+                    icon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
+                    label = { Text(stringResource(R.string.nav_settings)) },
+                )
+            }
+        },
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Routes.COMPASS,
+            modifier = Modifier.padding(innerPadding),
+        ) {
+            composable(Routes.COMPASS) {
+                CompassScreen(container = container)
+            }
+            composable(Routes.LEVEL) {
+                LevelScreen(container = container)
+            }
+            composable(Routes.SETTINGS) {
+                SettingsScreen(container = container)
+            }
         }
-        composable(Routes.COMPASS) {
-            CompassScreen(
-                container = container,
-                // Hide the back arrow when the compass is the start destination.
-                onBack = navController.previousBackStackEntry?.let { { navController.navigateUp() } },
-                onOpenMenu = { navController.navigate(Routes.HOME) },
-            )
+    }
+}
+
+/** Switches to a tab, keeping a single instance and preserving state. */
+private fun NavHostController.selectTab(route: String) {
+    navigate(route) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
         }
-        composable(Routes.LEVEL) {
-            LevelScreen(container = container, onBack = navController::navigateUp)
-        }
-        composable(Routes.SENSORS) {
-            SensorsScreen(container = container, onBack = navController::navigateUp, onOpen = { id ->
-                navController.navigate(Routes.sensorDetail(id))
-            })
-        }
-        composable(
-            route = Routes.SENSOR_DETAIL,
-            arguments = listOf(navArgument("sensorId") { type = NavType.IntType }),
-        ) { entry ->
-            val sensorId = entry.arguments?.getInt("sensorId") ?: -1
-            SensorDetailScreen(
-                sensorId = sensorId,
-                container = container,
-                onBack = navController::navigateUp,
-            )
-        }
-        composable(Routes.DIAGNOSTICS) {
-            DiagnosticsScreen(container = container, onBack = navController::navigateUp)
-        }
-        composable(Routes.SETTINGS) {
-            SettingsScreen(
-                container = container,
-                onBack = navController::navigateUp,
-                onOpenAbout = { navController.navigate(Routes.ABOUT) },
-            )
-        }
-        composable(Routes.ABOUT) {
-            AboutScreen(container = container, onBack = navController::navigateUp)
-        }
+        launchSingleTop = true
+        restoreState = true
     }
 }

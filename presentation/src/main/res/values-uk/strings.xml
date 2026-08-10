@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Очистити журнал збоїв</string>
     <string name="sensors_blocked_title">Датчики заблоковано</string>
     <string name="sensors_blocked_message">Дані датчиків не надходять. Перевірте, що Sensors Off вимкнено, і дозвольте цьому застосунку доступ до датчиків.</string>
+    <string name="level_mode_horizontal">Горизонтально</string>
+    <string name="level_mode_vertical">Вертикально</string>
+    <string name="level_vertical_deviation">Вертикальне відхилення</string>
 </resources>

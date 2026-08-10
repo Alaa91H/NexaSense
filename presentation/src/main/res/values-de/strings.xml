@@ -260,4 +260,7 @@
     <string name="diagnostics_crash_clear">Absturzverlauf löschen</string>
     <string name="sensors_blocked_title">Sensoren blockiert</string>
     <string name="sensors_blocked_message">Es werden keine Sensordaten empfangen. Prüfen Sie, ob Sensors Off deaktiviert ist, und erlauben Sie dieser App den Sensorzugriff.</string>
+    <string name="level_mode_horizontal">Horizontal</string>
+    <string name="level_mode_vertical">Vertikal</string>
+    <string name="level_vertical_deviation">Vertikale Abweichung</string>
 </resources>

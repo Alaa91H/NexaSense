@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Xóa lịch sử sự cố</string>
     <string name="sensors_blocked_title">Cảm biến bị chặn</string>
     <string name="sensors_blocked_message">Không nhận được dữ liệu cảm biến. Kiểm tra Sensors Off đã tắt và cho phép ứng dụng này truy cập cảm biến.</string>
+    <string name="level_mode_horizontal">Ngang</string>
+    <string name="level_mode_vertical">Dọc</string>
+    <string name="level_vertical_deviation">Độ lệch dọc</string>
 </resources>

@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -47,7 +50,7 @@ import kotlin.math.min
 @Composable
 fun LevelScreen(
     container: AppContainer,
-    onBack: () -> Unit,
+    onBack: (() -> Unit)? = null,
 ) {
     val viewModel: LevelViewModel = viewModel(initializer = {
         LevelViewModel(
@@ -61,6 +64,7 @@ fun LevelScreen(
     val calibration by viewModel.calibration.collectAsStateWithLifecycle()
     val hapticTick by viewModel.hapticTick.collectAsStateWithLifecycle()
     val sensorBlocked by viewModel.sensorBlocked.collectAsStateWithLifecycle()
+    val verticalMode by viewModel.verticalMode.collectAsStateWithLifecycle()
 
     EngineLifecycleEffect(active = true, onStateChanged = viewModel::setActive)
 
@@ -120,8 +124,37 @@ fun LevelScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(8.dp))
+
+            // Horizontal (surface leveling) vs vertical (plumb) mode.
+            SingleChoiceSegmentedButtonRow {
+                SegmentedButton(
+                    selected = !verticalMode,
+                    onClick = { viewModel.setVerticalMode(false) },
+                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                ) {
+                    Text(stringResource(R.string.level_mode_horizontal))
+                }
+                SegmentedButton(
+                    selected = verticalMode,
+                    onClick = { viewModel.setVerticalMode(true) },
+                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                ) {
+                    Text(stringResource(R.string.level_mode_vertical))
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // In vertical mode the pitch is re-based to the deviation from
+            // upright: the bubble centers when the device is exactly vertical.
+            val pitchDeviation = if (verticalMode) {
+                if (orientation.pitch >= 0f) orientation.pitch - 90f else orientation.pitch + 90f
+            } else {
+                orientation.pitch
+            }
+
             BubbleLevel(
-                pitch = orientation.pitch,
+                pitch = pitchDeviation,
                 roll = orientation.roll,
                 modifier = Modifier
                     .widthIn(max = 480.dp)
@@ -138,8 +171,10 @@ fun LevelScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 AngleReadout(
-                    label = stringResource(R.string.level_pitch),
-                    value = orientation.pitch,
+                    label = stringResource(
+                        if (verticalMode) R.string.level_vertical_deviation else R.string.level_pitch,
+                    ),
+                    value = pitchDeviation,
                 )
                 AngleReadout(
                     label = stringResource(R.string.level_roll),

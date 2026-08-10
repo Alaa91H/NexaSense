@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Kosongkan sejarah ranap</string>
     <string name="sensors_blocked_title">Sensor disekat</string>
     <string name="sensors_blocked_message">Tiada data sensor diterima. Semak bahawa Sensors Off dimatikan dan benarkan aplikasi ini mengakses sensor.</string>
+    <string name="level_mode_horizontal">Mendatar</string>
+    <string name="level_mode_vertical">Menegak</string>
+    <string name="level_vertical_deviation">Sisihan menegak</string>
 </resources>

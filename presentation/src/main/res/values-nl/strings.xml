@@ -246,4 +246,7 @@
     <string name="diagnostics_crash_clear">Crashgeschiedenis wissen</string>
     <string name="sensors_blocked_title">Sensoren geblokkeerd</string>
     <string name="sensors_blocked_message">Er worden geen sensorgegevens ontvangen. Controleer of Sensors Off is uitgeschakeld en sta deze app toegang tot sensoren toe.</string>
+    <string name="level_mode_horizontal">Horizontaal</string>
+    <string name="level_mode_vertical">Verticaal</string>
+    <string name="level_vertical_deviation">Verticale afwijking</string>
 </resources>
