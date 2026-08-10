@@ -10,6 +10,7 @@
     <string name="app_source">Codice sorgente</string>
     <string name="back">Indietro</string>
     <string name="cancel">Annulla</string>
+    <string name="refresh">Aggiorna</string>
     <string name="ok">OK</string>
     <string name="close">Chiudi</string>
     <string name="reset">Ripristina</string>

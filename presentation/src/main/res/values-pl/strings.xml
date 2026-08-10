@@ -10,6 +10,7 @@
     <string name="app_source">Kod źródłowy</string>
     <string name="back">Wstecz</string>
     <string name="cancel">Anuluj</string>
+    <string name="refresh">Odśwież</string>
     <string name="ok">OK</string>
     <string name="close">Zamknij</string>
     <string name="reset">Resetuj</string>

@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -46,7 +47,12 @@ fun CompassDial(
         label = "compassHeading",
     )
     val textMeasurer = rememberTextMeasurer()
-    val labelStyle = TextStyle(color = labelColor, fontSize = 18.sp)
+    val labelStyle = remember(labelColor) { TextStyle(color = labelColor, fontSize = 18.sp) }
+    // Measure the (static) cardinal labels once. Measuring text inside the
+    // Canvas draw lambda would re-run 8 measures on every animation frame.
+    val measuredLabels = remember(textMeasurer, labelStyle) {
+        cardinalLabels.associate { (degree, label) -> degree to textMeasurer.measure(label, labelStyle) }
+    }
 
     Canvas(
         modifier = modifier.semantics { this.contentDescription = contentDescription },
@@ -74,18 +80,16 @@ fun CompassDial(
                     strokeWidth = if (major) 2.5.dp.toPx() else 1.dp.toPx(),
                 )
             }
-            cardinalLabels.forEach { (degree, label) ->
+            cardinalLabels.forEach { (degree, _) ->
                 val position = polar(center, radius * 0.62f, degree.toFloat())
                 rotate(degrees = animatedHeading, pivot = position) {
-                    val measured = textMeasurer.measure(label, labelStyle)
+                    val measured = measuredLabels[degree] ?: return@rotate
                     drawText(
-                        textMeasurer = textMeasurer,
-                        text = label,
+                        textLayoutResult = measured,
                         topLeft = Offset(
                             position.x - measured.size.width / 2f,
                             position.y - measured.size.height / 2f,
                         ),
-                        style = labelStyle,
                     )
                 }
             }

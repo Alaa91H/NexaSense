@@ -32,6 +32,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -91,7 +94,7 @@ fun CompassScreen(
         onBack = onBack,
         actions = {
             IconButton(onClick = viewModel::refresh) {
-                Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.cancel))
+                Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.refresh))
             }
         },
     ) {
@@ -265,6 +268,9 @@ private fun HeadingReadout(heading: Heading) {
             text = heading.cardinal.name,
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
+            // Live region: TalkBack announces the heading only when the cardinal
+            // direction changes (its text only changes then), never at sensor rate.
+            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
         )
     }
 }

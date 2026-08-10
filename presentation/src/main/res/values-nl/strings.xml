@@ -10,6 +10,7 @@
     <string name="app_source">Broncode</string>
     <string name="back">Terug</string>
     <string name="cancel">Annuleren</string>
+    <string name="refresh">Verversen</string>
     <string name="ok">OK</string>
     <string name="close">Sluiten</string>
     <string name="reset">Resetten</string>

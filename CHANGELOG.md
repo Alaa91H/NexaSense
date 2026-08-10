@@ -7,6 +7,24 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Heading accessibility** — the compass dial's live region announces the
+  heading (cardinal direction) to TalkBack exactly when it changes, without
+  spamming at sensor rate.
+
+### Fixed
+
+- **Refresh button accessibility label** — the toolbar refresh action was
+  announced as "Cancel" to screen readers; it now says "Refresh" in all 24
+  locales.
+
+### Performance
+
+- **Compass dial** — cardinal labels are measured once and reused, instead of
+  re-measuring 8 text layouts on every animation frame inside the Canvas
+  draw lambda.
+
+### Added
+
 - **WMM2025 declination model** — the True North feature now computes magnetic
   declination with the current official NOAA/BGS World Magnetic Model 2025
   (valid 2025.0–2030.0), implemented in pure Kotlin with the official

@@ -11,6 +11,7 @@
 
     <string name="back">رجوع</string>
     <string name="cancel">إلغاء</string>
+    <string name="refresh">تحديث</string>
     <string name="ok">موافق</string>
     <string name="close">إغلاق</string>
     <string name="reset">إعادة تعيين</string>

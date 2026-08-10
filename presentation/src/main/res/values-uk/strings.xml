@@ -10,6 +10,7 @@
     <string name="app_source">Вихідний код</string>
     <string name="back">Назад</string>
     <string name="cancel">Скасувати</string>
+    <string name="refresh">Оновити</string>
     <string name="ok">OK</string>
     <string name="close">Закрити</string>
     <string name="reset">Скинути</string>

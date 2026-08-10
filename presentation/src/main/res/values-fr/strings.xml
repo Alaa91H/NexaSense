@@ -10,6 +10,7 @@
     <string name="app_source">Code source</string>
     <string name="back">Retour</string>
     <string name="cancel">Annuler</string>
+    <string name="refresh">Actualiser</string>
     <string name="ok">OK</string>
     <string name="close">Fermer</string>
     <string name="reset">Réinitialiser</string>

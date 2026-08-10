@@ -10,6 +10,7 @@
     <string name="app_source">Kaynak kod</string>
     <string name="back">Geri</string>
     <string name="cancel">İptal</string>
+    <string name="refresh">Yenile</string>
     <string name="ok">Tamam</string>
     <string name="close">Kapat</string>
     <string name="reset">Sıfırla</string>

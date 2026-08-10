@@ -10,6 +10,7 @@
     <string name="app_source">ซอร์สโค้ด</string>
     <string name="back">กลับ</string>
     <string name="cancel">ยกเลิก</string>
+    <string name="refresh">รีเฟรช</string>
     <string name="ok">ตกลง</string>
     <string name="close">ปิด</string>
     <string name="reset">รีเซ็ต</string>

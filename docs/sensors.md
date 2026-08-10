@@ -89,6 +89,16 @@ The compass uses `AngleSmoother` with a user-selectable strength
 (None/Light/Medium/Strong). Invalid inputs are ignored without poisoning the
 filter state.
 
+## Accessibility
+
+- The compass dial exposes a `contentDescription` with the current heading
+  degrees for screen-reader users.
+- The cardinal direction text is a **live region**: TalkBack announces the
+  heading exactly when the cardinal changes (N → NE → …), never at sensor
+  rate — no announcement spam while rotating.
+- The toolbar refresh action is labelled "Refresh" in every locale (it was
+  previously announced as "Cancel" by screen readers).
+
 ## No fake data
 
 If `SensorManager` does not expose a sensor, the app says so:

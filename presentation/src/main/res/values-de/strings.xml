@@ -11,6 +11,7 @@
 
     <string name="back">Zurück</string>
     <string name="cancel">Abbrechen</string>
+    <string name="refresh">Aktualisieren</string>
     <string name="ok">OK</string>
     <string name="close">Schließen</string>
     <string name="reset">Zurücksetzen</string>

@@ -10,6 +10,7 @@
     <string name="app_source">ソースコード</string>
     <string name="back">戻る</string>
     <string name="cancel">キャンセル</string>
+    <string name="refresh">更新</string>
     <string name="ok">OK</string>
     <string name="close">閉じる</string>
     <string name="reset">リセット</string>
