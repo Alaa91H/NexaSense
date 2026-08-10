@@ -249,4 +249,5 @@
     <string name="level_mode_horizontal">Yatay</string>
     <string name="level_mode_vertical">Dikey</string>
     <string name="level_vertical_deviation">Dikey sapma</string>
+    <string name="settings_compass_auto_hide_low_accuracy">Düşük doğrulukta sayıları gizle</string>
 </resources>

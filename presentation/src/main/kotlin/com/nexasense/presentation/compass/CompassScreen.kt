@@ -130,7 +130,14 @@ fun CompassScreen(
                 return@ScreenScaffold
             }
 
-            if (settings.showHeadingReadout) {
+            // When auto-hide is enabled and the magnetic accuracy is low or
+            // unreliable, the numbers and source details are hidden so the
+            // screen never shows a misleading confident reading.
+            val lowAccuracy = magneticField.accuracy == AccuracyLevel.LOW ||
+                magneticField.accuracy == AccuracyLevel.UNRELIABLE
+            val hideNumbers = settings.autoHideDetailsOnLowAccuracy && lowAccuracy
+
+            if (settings.showHeadingReadout && !hideNumbers) {
                 HeadingReadout(heading = heading)
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -159,7 +166,7 @@ fun CompassScreen(
                 style = settings.compassStyle,
                 showCardinalLabels = settings.showCardinalLabels,
                 showDegreeTicks = settings.showDegreeTicks,
-                showDegreeNumbers = settings.showDegreeNumbers,
+                showDegreeNumbers = settings.showDegreeNumbers && !hideNumbers,
                 qiblaBearingDegrees = if (settings.qiblaEnabled && settings.showQiblaOnCompass) {
                     qiblaState.bearingInDeviceReferenceDegrees
                 } else {
@@ -260,7 +267,7 @@ fun CompassScreen(
                 }
             }
 
-            if (settings.showCompassDetails) {
+            if (settings.showCompassDetails && !hideNumbers) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = stringResource(R.string.compass_source, sourceLabel(heading.source)),

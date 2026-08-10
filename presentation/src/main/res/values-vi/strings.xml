@@ -249,4 +249,5 @@
     <string name="level_mode_horizontal">Ngang</string>
     <string name="level_mode_vertical">Dọc</string>
     <string name="level_vertical_deviation">Độ lệch dọc</string>
+    <string name="settings_compass_auto_hide_low_accuracy">Ẩn số khi độ chính xác thấp</string>
 </resources>

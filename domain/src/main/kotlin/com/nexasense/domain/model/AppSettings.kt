@@ -26,6 +26,13 @@ data class AppSettings(
     val showNorthReferenceBadge: Boolean = true,
     val showCompassDetails: Boolean = true,
     val showAccuracyPanel: Boolean = true,
+
+    /**
+     * When enabled, the heading numbers, degree numbers and source details
+     * are hidden automatically while the magnetic accuracy is low or
+     * unreliable (showing a confident number would be misleading).
+     */
+    val autoHideDetailsOnLowAccuracy: Boolean = false,
 ) {
     companion object {
         val DEFAULT: AppSettings = AppSettings()

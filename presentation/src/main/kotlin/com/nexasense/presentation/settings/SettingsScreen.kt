@@ -293,6 +293,11 @@ fun SettingsScreen(
                         checked = settings.showAccuracyPanel,
                         onCheckedChange = viewModel::setShowAccuracyPanel,
                     )
+                    ToggleSetting(
+                        label = stringResource(R.string.settings_compass_auto_hide_low_accuracy),
+                        checked = settings.autoHideDetailsOnLowAccuracy,
+                        onCheckedChange = viewModel::setAutoHideDetailsOnLowAccuracy,
+                    )
                 }
             }
 

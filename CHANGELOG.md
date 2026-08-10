@@ -7,6 +7,10 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Auto-hide numbers at low accuracy** — a new Compass setting that, when
+  enabled, automatically hides the heading readout, the dial degree numbers
+  and the source/declination details while the magnetic accuracy is low or
+  unreliable, so the screen never shows a misleading confident reading.
 - **Automatic level modes** — the Level screen now switches by itself based
   on how the device is held: flat (|pitch| < 45°) shows the two-axis bubble
   level with four directions (pitch + roll); held upright shows a

@@ -263,4 +263,5 @@
     <string name="level_mode_horizontal">Horizontal</string>
     <string name="level_mode_vertical">Vertikal</string>
     <string name="level_vertical_deviation">Vertikale Abweichung</string>
+    <string name="settings_compass_auto_hide_low_accuracy">Zahlen bei geringer Genauigkeit ausblenden</string>
 </resources>

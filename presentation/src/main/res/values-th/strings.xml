@@ -249,4 +249,5 @@
     <string name="level_mode_horizontal">แนวนอน</string>
     <string name="level_mode_vertical">แนวตั้ง</string>
     <string name="level_vertical_deviation">ค่าเบี่ยงเบนแนวตั้ง</string>
+    <string name="settings_compass_auto_hide_low_accuracy">ซ่อนตัวเลขเมื่อความแม่นยำต่ำ</string>
 </resources>

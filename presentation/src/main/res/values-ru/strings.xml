@@ -249,4 +249,5 @@
     <string name="level_mode_horizontal">Горизонтально</string>
     <string name="level_mode_vertical">Вертикально</string>
     <string name="level_vertical_deviation">Вертикальное отклонение</string>
+    <string name="settings_compass_auto_hide_low_accuracy">Скрывать цифры при низкой точности</string>
 </resources>

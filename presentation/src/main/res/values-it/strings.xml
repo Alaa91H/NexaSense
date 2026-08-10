@@ -249,4 +249,5 @@
     <string name="level_mode_horizontal">Orizzontale</string>
     <string name="level_mode_vertical">Verticale</string>
     <string name="level_vertical_deviation">Deviazione verticale</string>
+    <string name="settings_compass_auto_hide_low_accuracy">Nascondi i numeri se precisione bassa</string>
 </resources>

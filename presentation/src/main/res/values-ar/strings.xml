@@ -263,4 +263,5 @@
     <string name="level_mode_horizontal">أفقي</string>
     <string name="level_mode_vertical">عمودي</string>
     <string name="level_vertical_deviation">انحراف عن العمودي</string>
+    <string name="settings_compass_auto_hide_low_accuracy">إخفاء الأرقام تلقائيًا عند ضعف الدقة</string>
 </resources>

@@ -69,6 +69,7 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
         val SHOW_NORTH_REFERENCE_BADGE = booleanPreferencesKey("show_north_reference_badge")
         val SHOW_COMPASS_DETAILS = booleanPreferencesKey("show_compass_details")
         val SHOW_ACCURACY_PANEL = booleanPreferencesKey("show_accuracy_panel")
+        val AUTO_HIDE_DETAILS_LOW_ACCURACY = booleanPreferencesKey("auto_hide_details_low_accuracy")
     }
 
     override val settings: Flow<AppSettings> = context.settingsDataStore.data
@@ -101,6 +102,7 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
             prefs[Keys.SHOW_NORTH_REFERENCE_BADGE] = next.showNorthReferenceBadge
             prefs[Keys.SHOW_COMPASS_DETAILS] = next.showCompassDetails
             prefs[Keys.SHOW_ACCURACY_PANEL] = next.showAccuracyPanel
+            prefs[Keys.AUTO_HIDE_DETAILS_LOW_ACCURACY] = next.autoHideDetailsOnLowAccuracy
         }
     }
 
@@ -130,6 +132,7 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
         showNorthReferenceBadge = this[Keys.SHOW_NORTH_REFERENCE_BADGE] ?: true,
         showCompassDetails = this[Keys.SHOW_COMPASS_DETAILS] ?: true,
         showAccuracyPanel = this[Keys.SHOW_ACCURACY_PANEL] ?: true,
+        autoHideDetailsOnLowAccuracy = this[Keys.AUTO_HIDE_DETAILS_LOW_ACCURACY] ?: false,
     )
 
     private fun Preferences.northReferenceOrLegacy(): NorthReference {

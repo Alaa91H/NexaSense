@@ -249,4 +249,5 @@
     <string name="level_mode_horizontal">افقی</string>
     <string name="level_mode_vertical">عمودی</string>
     <string name="level_vertical_deviation">انحراف از عمود</string>
+    <string name="settings_compass_auto_hide_low_accuracy">مخفی کردن اعداد هنگام دقت پایین</string>
 </resources>

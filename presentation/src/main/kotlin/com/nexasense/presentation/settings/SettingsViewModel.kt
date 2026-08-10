@@ -70,6 +70,9 @@ class SettingsViewModel(container: AppContainer) : ViewModel() {
 
     fun setShowAccuracyPanel(enabled: Boolean) = update { it.copy(showAccuracyPanel = enabled) }
 
+    fun setAutoHideDetailsOnLowAccuracy(enabled: Boolean) =
+        update { it.copy(autoHideDetailsOnLowAccuracy = enabled) }
+
     fun setHaptics(enabled: Boolean) = update { it.copy(hapticsEnabled = enabled) }
 
     fun setKeepScreenOn(enabled: Boolean) = update { it.copy(keepScreenOn = enabled) }

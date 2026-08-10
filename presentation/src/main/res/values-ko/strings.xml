@@ -249,4 +249,5 @@
     <string name="level_mode_horizontal">수평</string>
     <string name="level_mode_vertical">수직</string>
     <string name="level_vertical_deviation">수직 편차</string>
+    <string name="settings_compass_auto_hide_low_accuracy">정확도가 낮을 때 숫자 숨기기</string>
 </resources>

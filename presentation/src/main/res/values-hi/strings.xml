@@ -249,4 +249,5 @@
     <string name="level_mode_horizontal">क्षैतिज</string>
     <string name="level_mode_vertical">ऊर्ध्वाधर</string>
     <string name="level_vertical_deviation">ऊर्ध्वाधर विचलन</string>
+    <string name="settings_compass_auto_hide_low_accuracy">कम सटीकता पर संख्याएँ छिपाएँ</string>
 </resources>
