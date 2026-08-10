@@ -66,8 +66,8 @@ class LevelViewModel(
     data class HapticPulse(val id: Long, val strength: Float, val centered: Boolean)
 
     /**
-     * Emits a pulse when the level needs attention: in the vertical mode the
-     * strength ramps up in bands as the device approaches plumb (a graded
+     * Emits a pulse when the level needs attention: the strength ramps up in
+     * bands as the device approaches level/plumb in both modes (a graded
      * "getting closer" feel), and both modes fire a final strong pulse when
      * the centered zone is entered — the user can level a surface without
      * watching the screen (standard bubble-level UX).
@@ -77,7 +77,7 @@ class LevelViewModel(
 
     private var lastCentered = false
     private var lastCenteredHapticAtMillis = 0L
-    private var lastPlumbBand = -1
+    private var lastProximityBand = -1
     private var lastBandPulseAtMillis = 0L
     private var pulseId = 0L
 
@@ -103,10 +103,17 @@ class LevelViewModel(
     ) {
         val pitchDeviation = verticalDeviation(orientation.pitch)
 
-        // Vertical mode: grade the pulse strength by how close the device is
-        // to plumb — each band crossed inward fires a stronger pulse.
-        if (vertical && currentSettings.hapticsEnabled) {
-            maybeFirePlumbBandPulse(pitchDeviation, orientation.roll)
+        // Grade the pulse strength by how close the device is to level/plumb
+        // — each proximity band crossed inward fires a stronger pulse. Works
+        // in both modes: vertical uses the deviation-from-upright + roll,
+        // flat uses pitch + roll (both 0 exactly at level).
+        if (currentSettings.hapticsEnabled) {
+            maybeFireProximityBandPulse(
+                deviation = max(
+                    abs(if (vertical) pitchDeviation else orientation.pitch),
+                    abs(orientation.roll),
+                ),
+            )
         }
 
         val centered = if (vertical) {
@@ -131,26 +138,26 @@ class LevelViewModel(
     /**
      * Fires a pulse when the device crosses inward through a proximity band
      * (8° → 5° → 3° → 2° → 1.5° → 1° → 0.5°), with the strength scaling with
-     * how close the band is to plumb. Crossing outward never refires until
-     * the device leaves the outer band, so hovering near plumb doesn't spam.
+     * how close the band is to level/plumb. Crossing outward never refires
+     * until the device leaves the outer band, so hovering near level doesn't
+     * spam.
      */
-    private fun maybeFirePlumbBandPulse(pitchDeviation: Float, roll: Float) {
-        val deviation = max(abs(pitchDeviation), abs(roll))
+    private fun maybeFireProximityBandPulse(deviation: Float) {
         var band = -1
-        for (i in PLUMB_HAPTIC_BANDS.indices) {
-            if (deviation < PLUMB_HAPTIC_BANDS[i]) band = i
+        for (i in PROXIMITY_HAPTIC_BANDS.indices) {
+            if (deviation < PROXIMITY_HAPTIC_BANDS[i]) band = i
         }
         if (band < 0) {
-            lastPlumbBand = -1
+            lastProximityBand = -1
             return
         }
-        if (band <= lastPlumbBand) return
+        if (band <= lastProximityBand) return
         val now = System.currentTimeMillis()
         if (now - lastBandPulseAtMillis < BAND_PULSE_MIN_GAP_MILLIS) return
         lastBandPulseAtMillis = now
-        lastPlumbBand = band
+        lastProximityBand = band
         firePulse(
-            strength = (band + 1) / PLUMB_HAPTIC_BANDS.size.toFloat(),
+            strength = (band + 1) / PROXIMITY_HAPTIC_BANDS.size.toFloat(),
             centered = false,
         )
     }
@@ -180,11 +187,11 @@ class LevelViewModel(
         const val VERTICAL_MODE_THRESHOLD_DEGREES = 45f
 
         /**
-         * Proximity bands for the graded vertical-mode haptic, outermost
+         * Proximity bands for the graded haptic (both level modes), outermost
          * first. Crossing inward through a band fires a pulse whose strength
          * scales with the band index (closest band = strongest pulse).
          */
-        val PLUMB_HAPTIC_BANDS = floatArrayOf(8f, 5f, 3f, 2f, 1.5f, 1f, 0.5f)
+        val PROXIMITY_HAPTIC_BANDS = floatArrayOf(8f, 5f, 3f, 2f, 1.5f, 1f, 0.5f)
 
         /** Minimum gap between band pulses, to avoid boundary flutter. */
         const val BAND_PULSE_MIN_GAP_MILLIS = 250L

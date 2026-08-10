@@ -29,6 +29,11 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Changed
 
+- **Graded haptic in both level modes** — the proximity-based haptic ramp
+  (bands 8° → 0.5°, strength scaling with closeness, final strong pulse on
+  center) now applies to the flat circular level as well as the vertical
+  plumb mode. Leveling a surface in any hold feels the same: pulses get
+  stronger as the device approaches level.
 - **Fixed bottom details in closed cards** — the compass's bottom area
   (field strength, accuracy pill, calibration status, source/declination)
   now sits in matching closed cards, with the µT value in a fixed-width
