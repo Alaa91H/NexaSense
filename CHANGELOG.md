@@ -29,6 +29,12 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Changed
 
+- **Fixed bottom details in closed cards** — the compass's bottom area
+  (field strength, accuracy pill, calibration status, source/declination)
+  now sits in matching closed cards, with the µT value in a fixed-width
+  slot so its digits changing never shift the accuracy pill. Combined with
+  the readout cards, the bottom text below both the compass and the level
+  stays fixed in place no matter the sensor values.
 - **Fixed readout text in closed cards** — the compass heading and the
   level's angle readouts now render inside closed cards (rounded, bordered,
   semi-transparent), and every numeric readout sits in a fixed-width slot

@@ -204,84 +204,120 @@ fun CompassScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             if (settings.showAccuracyPanel) {
-                // Magnetic field strength.
-                Row(
+                // Bottom details in a closed card; the µT value renders in a
+                // fixed-width slot (invisible widest-value placeholder) so its
+                // digits changing never shift the accuracy pill to the right.
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                    border = BorderStroke(
+                        1.dp,
+                        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                    ),
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Column {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                        // Magnetic field strength.
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Column {
+                                Text(
+                                    stringResource(R.string.compass_field_strength),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Box {
+                                    Text(
+                                        stringResource(R.string.compass_field_microtesla, "888.8"),
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        color = Color.Transparent,
+                                        maxLines = 1,
+                                    )
+                                    Text(
+                                        stringResource(
+                                            R.string.compass_field_microtesla,
+                                            formatFloat(magneticField.magnitudeMicroTesla),
+                                        ),
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        maxLines = 1,
+                                    )
+                                }
+                            }
+                            StatusPill(
+                                available = magneticField.accuracy != AccuracyLevel.UNRELIABLE,
+                                label = stringResource(accuracyLabel(magneticField.accuracy)),
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // Accuracy + calibration status.
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.accuracy_label, stringResource(accuracyLabel(magneticField.accuracy))),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            TextButton(onClick = viewModel::resetCalibration) {
+                                Text(stringResource(R.string.reset))
+                            }
+                        }
                         Text(
-                            stringResource(R.string.compass_field_strength),
-                            style = MaterialTheme.typography.labelLarge,
+                            text = if (liveCalibration.isCalibrated) {
+                                stringResource(R.string.compass_calibration_status, stringResource(R.string.compass_calibration_complete))
+                            } else {
+                                stringResource(
+                                    R.string.compass_calibration_status,
+                                    stringResource(
+                                        R.string.compass_calibration_in_progress,
+                                        (liveCalibration.coverage * 100).toInt(),
+                                    ),
+                                )
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        Text(
-                            stringResource(
-                                R.string.compass_field_microtesla,
-                                formatFloat(magneticField.magnitudeMicroTesla),
-                            ),
-                            style = MaterialTheme.typography.headlineMedium,
-                        )
+                        if (magneticField.accuracy == AccuracyLevel.LOW || magneticField.accuracy == AccuracyLevel.UNRELIABLE) {
+                            Text(
+                                text = stringResource(R.string.accuracy_calibration_recommended),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                        }
                     }
-                    StatusPill(
-                        available = magneticField.accuracy != AccuracyLevel.UNRELIABLE,
-                        label = stringResource(accuracyLabel(magneticField.accuracy)),
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Accuracy + calibration status.
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Text(
-                        text = stringResource(R.string.accuracy_label, stringResource(accuracyLabel(magneticField.accuracy))),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    TextButton(onClick = viewModel::resetCalibration) {
-                        Text(stringResource(R.string.reset))
-                    }
-                }
-                Text(
-                    text = if (liveCalibration.isCalibrated) {
-                        stringResource(R.string.compass_calibration_status, stringResource(R.string.compass_calibration_complete))
-                    } else {
-                        stringResource(
-                            R.string.compass_calibration_status,
-                            stringResource(
-                                R.string.compass_calibration_in_progress,
-                                (liveCalibration.coverage * 100).toInt(),
-                            ),
-                        )
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                if (magneticField.accuracy == AccuracyLevel.LOW || magneticField.accuracy == AccuracyLevel.UNRELIABLE) {
-                    Text(
-                        text = stringResource(R.string.accuracy_calibration_recommended),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
-                    )
                 }
             }
 
             if (settings.showCompassDetails && !hideNumbers) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.compass_source, sourceLabel(heading.source)),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                if (heading.mode == HeadingMode.TRUE && heading.declinationDegrees != null) {
-                    Text(
-                        text = stringResource(R.string.compass_declination, formatFloat(heading.declinationDegrees!!)),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                // Source/declination details in a matching closed card.
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                    border = BorderStroke(
+                        1.dp,
+                        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                        Text(
+                            text = stringResource(R.string.compass_source, sourceLabel(heading.source)),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        if (heading.mode == HeadingMode.TRUE && heading.declinationDegrees != null) {
+                            Text(
+                                text = stringResource(R.string.compass_declination, formatFloat(heading.declinationDegrees!!)),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
