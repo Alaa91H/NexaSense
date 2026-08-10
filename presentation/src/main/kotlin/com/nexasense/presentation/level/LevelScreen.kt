@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -108,6 +109,7 @@ fun LevelScreen(
                 pitch = orientation.pitch,
                 roll = orientation.roll,
                 modifier = Modifier
+                    .widthIn(max = 480.dp)
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .semantics {

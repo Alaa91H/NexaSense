@@ -108,6 +108,9 @@ class CompassEngineImpl(
     @Volatile
     private var active = false
 
+    @Volatile
+    private var displayRotationDegrees = 0
+
     private var source = HeadingSource.UNAVAILABLE
     private var lastRawHeading: Float? = null
     private var samplesSinceSave = 0
@@ -123,6 +126,12 @@ class CompassEngineImpl(
 
     override fun resetSmoothing() {
         smoother = SmoothingFilters.AngleSmoother(settings.smoothing.alpha)
+    }
+
+    override fun setDisplayRotation(rotationDegrees: Int) {
+        if (this.displayRotationDegrees == rotationDegrees) return
+        this.displayRotationDegrees = rotationDegrees
+        lastRawHeading?.let { _heading.value = composeHeading(it, source) }
     }
 
     override fun resetCalibration() {
@@ -261,15 +270,20 @@ class CompassEngineImpl(
         val d = declination
         val effective = NorthReferenceResolver.effective(requested, declinationAvailable = d != null)
 
-        val trueHeadingDegrees = d?.let { DeclinationEngine.trueHeading(smoothedDegrees, it) }
+        // Sensors report azimuth in the device's natural frame; rotate it into
+        // the display frame so the reading matches the screen top (the dial's
+        // fixed marker) when the user rotates the device (auto-rotate).
+        val displayDegrees = AngleMath.normalizeTo360(smoothedDegrees - displayRotationDegrees)
+
+        val trueHeadingDegrees = d?.let { DeclinationEngine.trueHeading(displayDegrees, it) }
 
         val mode = when (effective) {
             NorthReference.TRUE_NORTH -> HeadingMode.TRUE
             else -> HeadingMode.MAGNETIC
         }
         val degrees = when (mode) {
-            HeadingMode.TRUE -> trueHeadingDegrees ?: smoothedDegrees
-            HeadingMode.MAGNETIC -> smoothedDegrees
+            HeadingMode.TRUE -> trueHeadingDegrees ?: displayDegrees
+            HeadingMode.MAGNETIC -> displayDegrees
         }
         val normalized = AngleMath.normalizeDegrees(degrees)
 

@@ -61,6 +61,11 @@ class CompassViewModel(
         qiblaEngine.setActive(active)
     }
 
+    /** Keeps the heading in the user's frame across display rotations. */
+    fun setDisplayRotation(rotationDegrees: Int) {
+        compassEngine.setDisplayRotation(rotationDegrees)
+    }
+
     fun resetCalibration() = magneticMonitor.resetCalibration()
 
     fun refresh() {

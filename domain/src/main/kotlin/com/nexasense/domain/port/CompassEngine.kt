@@ -26,6 +26,13 @@ interface CompassEngine {
 
     /** Resets the internal heading smoother (e.g. after a settings change). */
     fun resetSmoothing()
+
+    /**
+     * Sets the display rotation in degrees (0/90/180/270) so the reported
+     * heading is relative to the screen top, not the device's natural
+     * orientation (mirrors [LevelEngine.setDisplayRotation]).
+     */
+    fun setDisplayRotation(rotationDegrees: Int)
 }
 
 /**

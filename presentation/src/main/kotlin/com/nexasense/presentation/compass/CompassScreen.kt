@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
@@ -77,6 +79,14 @@ fun CompassScreen(
     val hapticTick by viewModel.hapticTick.collectAsStateWithLifecycle()
 
     EngineLifecycleEffect(active = true, onStateChanged = viewModel::setActive)
+
+    // Keep the heading in the user's frame of reference across display
+    // rotations (auto-rotate): sensors report in the device's natural frame.
+    val view = LocalView.current
+    val rotationDegrees = (view.display?.rotation ?: 0) * 90
+    LaunchedEffect(rotationDegrees) {
+        viewModel.setDisplayRotation(rotationDegrees)
+    }
 
     val hapticFeedback = LocalHapticFeedback.current
     LaunchedEffect(hapticTick) {
@@ -126,6 +136,7 @@ fun CompassScreen(
             CompassDial(
                 headingDegrees = heading.degrees,
                 modifier = Modifier
+                    .widthIn(max = 480.dp)
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 contentDescription = stringResource(

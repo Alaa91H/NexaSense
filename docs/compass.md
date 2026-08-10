@@ -40,6 +40,17 @@ roll    = atan2(-R[2][0], R[2][2])
 `azimuth` is the heading of the device's **top axis**, 0 at magnetic north,
 increasing clockwise (0°, 90° E, 180° S, 270° W), normalized to [0, 360).
 
+## Display rotation
+
+Sensors report azimuth in the device's **natural** frame (portrait), but the
+user reads the heading off the screen top. With auto-rotate enabled the two
+frames differ, so the engine converts via
+`displayDegrees = normalize360(deviceDegrees − displayRotationDegrees)`, where
+`displayRotationDegrees = Display.getRotation() × 90`. The sign matches the
+level engine's validated `mapToDisplay` frame rotation. The Qibla relative
+bearing and the dial's Qibla marker stay consistent automatically because
+both derive from the same (display-frame) heading.
+
 ## Smoothing & jitter
 
 `AngleSmoother` operates in the continuous angular domain so the needle never

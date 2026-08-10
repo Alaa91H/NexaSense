@@ -33,6 +33,13 @@ All notable changes to NexaSense are documented here. The format is based on
 
 - **F-Droid publishing** — `fastlane` store metadata (en-US, ar, fa, ur) and
   a submission guide in `docs/fdroid.md`.
+- **Display-rotation compensation** — the compass heading now stays in the
+  user's frame of reference with auto-rotate enabled (sensors report in the
+  device's natural frame), matching the level engine. The Qibla marker stays
+  consistent automatically.
+- **Large-screen sizing** — the compass dial and bubble level are capped at
+  480 dp so they stay comfortable on tablets and in landscape instead of
+  stretching full-width.
 
 ### Added
 
