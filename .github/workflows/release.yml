@@ -32,13 +32,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Install Android SDK
-        run: |
-          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
-          SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
-          if [ ! -x "$SDKMANAGER" ]; then
-            SDKMANAGER="$(find "$SDK_ROOT" -name sdkmanager -type f 2>/dev/null | head -1)"
-          fi
-          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0" >/dev/null
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
 
       - name: Write release keystore from secrets (if configured)
         shell: bash
