@@ -29,6 +29,10 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Changed
 
+- **Stable settings text** — the settings screen is now a keyed LazyColumn,
+  so expanding or collapsing an accordion card never makes the visible text
+  jump: the scroll anchors to the first visible item and keeps it in place
+  as the content above it grows or shrinks.
 - **Pulsing plumb indicator** — the perfect-plumb dot's glow now breathes
   with a slow, gentle pulse (radius + alpha oscillate together) while the
   device is plumb, so the centered state is unmistakable at a glance and
