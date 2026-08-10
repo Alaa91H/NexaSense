@@ -326,14 +326,20 @@ private fun TubeLevel(
         }
     }
 
-    // The raw roll arrives at sensor rate (up to 50 Hz at GAME rate) and
-    // jumps sample to sample, which makes the mercury bubble snap between
-    // positions. Animate its normalized position with a short tween so the
-    // bubble glides smoothly, like a real liquid, instead of jumping.
+    // The raw sensor values arrive at up to 50 Hz (GAME rate) and jump
+    // sample to sample, which makes the mercury bubble and the plumb needle
+    // snap between positions. Animate both with the same short tween so the
+    // whole vertical mode glides smoothly, like a real liquid, instead of
+    // jumping.
     val animatedBubbleFactor by animateFloatAsState(
         targetValue = (roll / 30f).coerceIn(-1f, 1f),
-        animationSpec = tween(durationMillis = TUBE_BUBBLE_ANIMATION_MILLIS),
+        animationSpec = tween(durationMillis = PLUMB_ANIMATION_MILLIS),
         label = "tubeBubble",
+    )
+    val animatedNeedleDegrees by animateFloatAsState(
+        targetValue = pitchDeviation.coerceIn(-50f, 50f),
+        animationSpec = tween(durationMillis = PLUMB_ANIMATION_MILLIS),
+        label = "plumbNeedle",
     )
 
     Canvas(modifier = modifier) {
@@ -429,11 +435,12 @@ private fun TubeLevel(
             }
         }
 
-        // The needle: rotates away from the reference by the deviation from
-        // vertical. Green (primary) when plumb (within ±2°), red otherwise.
-        val aligned = abs(pitchDeviation) <= PLUMB_ALIGNED_DEGREES
+        // The needle: rotates away from the reference by the (animated)
+        // deviation from vertical. Green (primary) when plumb (within ±2°),
+        // red otherwise.
+        val aligned = abs(animatedNeedleDegrees) <= PLUMB_ALIGNED_DEGREES
         val needleColor = if (aligned) primaryColor else errorColor
-        val needleEnd = plumbPoint(pivot, needleLength, pitchDeviation.coerceIn(-50f, 50f))
+        val needleEnd = plumbPoint(pivot, needleLength, animatedNeedleDegrees)
         drawLine(
             color = needleColor,
             start = pivot,
@@ -450,8 +457,8 @@ private fun TubeLevel(
     }
 }
 
-/** Duration of the mercury bubble's smooth glide (ms). */
-private const val TUBE_BUBBLE_ANIMATION_MILLIS = 180
+/** Duration of the vertical mode's smooth glide (ms) — bubble and needle. */
+private const val PLUMB_ANIMATION_MILLIS = 180
 
 /** Point at [degrees] clockwise from straight-down, [length] from [pivot]. */
 private fun plumbPoint(pivot: Offset, length: Float, degrees: Float): Offset {

@@ -7,6 +7,10 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Smooth plumb needle** — the vertical-mode plumb gauge's needle now
+  animates with the same 180 ms tween as the mercury bubble, so the whole
+  vertical level glides consistently (bubble + needle) instead of the needle
+  snapping while the bubble glides.
 - **Smooth mercury bubble** — the tube level's bubble no longer snaps
   between positions at sensor rate; its position animates over 180 ms, so it
   glides like a real liquid while staying responsive to tilts (the plumb
