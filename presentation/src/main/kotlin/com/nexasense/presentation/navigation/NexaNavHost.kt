@@ -1,5 +1,9 @@
 package com.nexasense.presentation.navigation
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Explore
@@ -12,10 +16,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -39,6 +45,19 @@ fun NexaNavHost(container: AppContainer) {
     val navController: NavHostController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
+
+    // Only the compass is portrait-locked; the level and settings screens are
+    // free to rotate with the device. Adjust the activity's requested
+    // orientation whenever the destination changes.
+    val activity = LocalContext.current.findActivity()
+    DisposableEffect(currentRoute) {
+        activity?.requestedOrientation = if (currentRoute == Routes.COMPASS) {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
+        onDispose {}
+    }
 
     Scaffold(
         // Transparent so the theme's sky gradient shows behind the content.
@@ -87,6 +106,13 @@ fun NexaNavHost(container: AppContainer) {
             }
         }
     }
+}
+
+/** Walks context wrappers to the hosting [Activity], or null. */
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
 
 /** Switches to a tab, keeping a single instance and preserving state. */

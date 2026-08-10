@@ -5,6 +5,13 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ## [Unreleased]
 
+### Changed
+
+- **Per-screen orientation** — the portrait lock now applies to the compass
+  screen only (it stays vertical no matter how the phone is held); the level
+  and settings screens rotate freely with the device. The lock follows the
+  active tab, so returning to the compass snaps it back to portrait.
+
 ### Added
 
 - **Perfect-plumb indicator** — the plumb gauge's pivot now hosts a small dot
