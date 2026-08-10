@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">เข็มทิศ</string>
     <string name="app_title">NexaSense — ชุดเครื่องมือเซนเซอร์ AOSP</string>
     <string name="app_description">เข็มทิศ ระดับน้ำ และการวินิจฉัยเซนเซอร์ระดับมืออาชีพสำหรับ AOSP และ ROM แบบกำหนดเอง</string>
     <string name="app_version">เวอร์ชัน %1$s</string>

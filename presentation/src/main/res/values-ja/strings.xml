@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">コンパス</string>
     <string name="app_title">NexaSense — AOSPセンサースイート</string>
     <string name="app_description">AOSPおよびカスタムROM向けの本格的なコンパス、水準器、センサー診断。</string>
     <string name="app_version">バージョン %1$s</string>

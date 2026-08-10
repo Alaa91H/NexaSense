@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">قطب نما</string>
     <string name="app_title">NexaSense — AOSP سینسر سوٹ</string>
     <string name="app_description">AOSP اور کسٹم ROM کے لیے پیشہ ور قطب نما، سطح اور سینسر تشخیص۔</string>
     <string name="app_version">ورژن %1$s</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">La bàn</string>
     <string name="app_title">NexaSense — Bộ công cụ cảm biến AOSP</string>
     <string name="app_description">La bàn, thước thủy và chẩn đoán cảm biến chuyên nghiệp cho AOSP và ROM tùy chỉnh.</string>
     <string name="app_version">Phiên bản %1$s</string>

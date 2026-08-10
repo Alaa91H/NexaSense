@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">나침반</string>
     <string name="app_title">NexaSense — AOSP 센서 제품군</string>
     <string name="app_description">AOSP 및 커스텀 ROM용 전문 나침반, 수평계, 센서 진단 도구.</string>
     <string name="app_version">버전 %1$s</string>

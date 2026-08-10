@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">Brújula</string>
     <string name="app_title">NexaSense — Suite de sensores AOSP</string>
     <string name="app_description">Brújula, nivel y diagnóstico de sensores profesionales para AOSP y ROM personalizadas.</string>
     <string name="app_version">Versión %1$s</string>

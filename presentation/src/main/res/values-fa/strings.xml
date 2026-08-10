@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">قطبنما</string>
     <string name="app_title">NexaSense — مجموعه سنسورهای AOSP</string>
     <string name="app_description">قطب‌نما، تراز و تشخیص سنسور حرفه‌ای برای AOSP و رام‌های سفارشی.</string>
     <string name="app_version">نسخه %1$s</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">البوصلة</string>
     <string name="app_title">NexaSense — حزمة الحساسات لنظام AOSP</string>
     <string name="app_description">بوصلة وميزان وتشخيص حساسات احترافية لأنظمة AOSP والرومات المخصصة.</string>
     <string name="app_version">الإصدار %1$s</string>

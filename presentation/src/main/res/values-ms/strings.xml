@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">Kompas</string>
     <string name="app_title">NexaSense — Set Sensor AOSP</string>
     <string name="app_description">Kompas, aras dan diagnostik sensor profesional untuk AOSP dan ROM tersuai.</string>
     <string name="app_version">Versi %1$s</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">Kompas</string>
     <string name="app_title">NexaSense — AOSP-sensorpakket</string>
     <string name="app_description">Professioneel kompas, waterpas en sensordiagnose voor AOSP en aangepaste ROM\'s.</string>
     <string name="app_version">Versie %1$s</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">Kompas</string>
     <string name="app_title">NexaSense — zestaw czujników AOSP</string>
     <string name="app_description">Profesjonalny kompas, poziomica i diagnostyka czujników dla AOSP i niestandardowych ROM-ów.</string>
     <string name="app_version">Wersja %1$s</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">指南针</string>
     <string name="app_title">NexaSense — AOSP 传感器套件</string>
     <string name="app_description">适用于 AOSP 和自定义 ROM 的专业指南针、水平仪和传感器诊断工具。</string>
     <string name="app_version">版本 %1$s</string>

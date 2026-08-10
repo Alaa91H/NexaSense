@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">কম্পাস</string>
     <string name="app_title">NexaSense — AOSP সেন্সর স্যুট</string>
     <string name="app_description">AOSP এবং কাস্টম ROM-এর জন্য পেশাদার কম্পাস, লেভেল এবং সেন্সর নির্ণয়।</string>
     <string name="app_version">সংস্করণ %1$s</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">कम्पास</string>
     <string name="app_title">NexaSense — AOSP सेंसर सुइट</string>
     <string name="app_description">AOSP और कस्टम ROM के लिए पेशेवर कम्पास, लेवल और सेंसर निदान।</string>
     <string name="app_version">संस्करण %1$s</string>

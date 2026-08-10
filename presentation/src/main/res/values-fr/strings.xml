@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">Boussole</string>
     <string name="app_title">NexaSense — Suite de capteurs AOSP</string>
     <string name="app_description">Boussole, niveau et diagnostics de capteurs professionnels pour AOSP et ROM personnalisées.</string>
     <string name="app_version">Version %1$s</string>

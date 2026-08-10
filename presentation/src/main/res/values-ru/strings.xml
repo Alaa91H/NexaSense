@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NexaSense</string>
+    <string name="app_name">Компас</string>
     <string name="app_title">NexaSense — набор датчиков AOSP</string>
     <string name="app_description">Профессиональный компас, уровень и диагностика датчиков для AOSP и кастомных прошивок.</string>
     <string name="app_version">Версия %1$s</string>
