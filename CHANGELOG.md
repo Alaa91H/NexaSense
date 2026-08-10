@@ -7,6 +7,10 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Smooth flat bubble** — the horizontal (circular) bubble level now animates
+  its position with the same 180 ms glide as the vertical mode, so every
+  bubble in the app moves consistently (drifts naturally instead of snapping
+  at sensor rate), including a smooth green/red transition at the center.
 - **Smooth plumb needle** — the vertical-mode plumb gauge's needle now
   animates with the same 180 ms tween as the mercury bubble, so the whole
   vertical level glides consistently (bubble + needle) instead of the needle

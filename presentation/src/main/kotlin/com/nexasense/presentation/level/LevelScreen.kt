@@ -249,6 +249,19 @@ private fun BubbleLevel(
     val primaryColor = MaterialTheme.colorScheme.primary
     val errorColor = MaterialTheme.colorScheme.error
 
+    // Same smooth glide as the vertical mode: animate the bubble's normalized
+    // position so it drifts naturally instead of snapping at sensor rate.
+    val animatedXFactor by animateFloatAsState(
+        targetValue = (roll / 45f).coerceIn(-1f, 1f),
+        animationSpec = tween(durationMillis = LEVEL_ANIMATION_MILLIS),
+        label = "bubbleX",
+    )
+    val animatedYFactor by animateFloatAsState(
+        targetValue = (-pitch / 45f).coerceIn(-1f, 1f),
+        animationSpec = tween(durationMillis = LEVEL_ANIMATION_MILLIS),
+        label = "bubbleY",
+    )
+
     Canvas(modifier = modifier) {
         val radius = min(size.width, size.height) / 2f
         val center = this.center
@@ -284,11 +297,12 @@ private fun BubbleLevel(
             style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx()),
         )
 
-        // Bubble: rolls right when the device rolls, pitches up when pitched.
+        // Bubble: rolls right when the device rolls, pitches up when pitched,
+        // following the animated position so it glides smoothly.
         val maxOffset = radius * 0.55f
         val bubbleRadius = radius * 0.22f
-        val x = (roll / 45f).coerceIn(-1f, 1f) * maxOffset
-        val y = (-pitch / 45f).coerceIn(-1f, 1f) * maxOffset
+        val x = animatedXFactor * maxOffset
+        val y = animatedYFactor * maxOffset
         val isLevel = abs(x) < 0.03f * maxOffset && abs(y) < 0.03f * maxOffset
 
         drawCircle(
@@ -333,12 +347,12 @@ private fun TubeLevel(
     // jumping.
     val animatedBubbleFactor by animateFloatAsState(
         targetValue = (roll / 30f).coerceIn(-1f, 1f),
-        animationSpec = tween(durationMillis = PLUMB_ANIMATION_MILLIS),
+        animationSpec = tween(durationMillis = LEVEL_ANIMATION_MILLIS),
         label = "tubeBubble",
     )
     val animatedNeedleDegrees by animateFloatAsState(
         targetValue = pitchDeviation.coerceIn(-50f, 50f),
-        animationSpec = tween(durationMillis = PLUMB_ANIMATION_MILLIS),
+        animationSpec = tween(durationMillis = LEVEL_ANIMATION_MILLIS),
         label = "plumbNeedle",
     )
 
@@ -457,8 +471,8 @@ private fun TubeLevel(
     }
 }
 
-/** Duration of the vertical mode's smooth glide (ms) — bubble and needle. */
-private const val PLUMB_ANIMATION_MILLIS = 180
+/** Duration of the level's smooth glide (ms) — bubbles and plumb needle. */
+private const val LEVEL_ANIMATION_MILLIS = 180
 
 /** Point at [degrees] clockwise from straight-down, [length] from [pivot]. */
 private fun plumbPoint(pivot: Offset, length: Float, degrees: Float): Offset {
