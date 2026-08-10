@@ -7,6 +7,12 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Always-portrait compass** — `MainActivity` is locked to portrait
+  (`screenOrientation="portrait"`), so the compass and the whole app stay
+  vertical and never flip to landscape when the device rotates (the
+  display-rotation compensation then stays at 0°, which is exactly what the
+  dial expects). Verified on-device: with landscape forcibly requested, the
+  display remains ROTATION_0 while the app is focused.
 - **Automatic night mode with blue sky gradient** — dark mode follows the
   device automatically (System theme, the default), and the whole app now
   sits on a deep-navy **night-sky gradient** (top `#070E20` → bottom
