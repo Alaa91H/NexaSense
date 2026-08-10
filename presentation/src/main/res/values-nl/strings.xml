@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">%1$s° naar links</string>
     <string name="qibla_aligned">Uitgelijnd</string>
     <string name="qibla_distance_to_kaaba">Afstand tot de Kaäba: %1$s km</string>
+    <string name="qibla_sun_position">Zon: azimut %1$s°, hoogte %2$s°</string>
+    <string name="qibla_sun_aligned">Zon uitgelijnd met de qibla — schaduwen wijzen van de qibla af</string>
     <string name="qibla_location_accuracy">Locatienauwkeurigheid: %1$s</string>
     <string name="qibla_compass_accuracy">Kompasnauwkeurigheid: %1$s</string>
     <string name="qibla_grant_permission">Locatietoestemming verlenen</string>

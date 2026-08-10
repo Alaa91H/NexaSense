@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">%1$s° बाईं ओर</string>
     <string name="qibla_aligned">संरेखित</string>
     <string name="qibla_distance_to_kaaba">काबा से दूरी: %1$s किमी</string>
+    <string name="qibla_sun_position">सूर्य: अज़ीमुथ %1$s°, ऊँचाई %2$s°</string>
+    <string name="qibla_sun_aligned">सूर्य क़िबला के अनुरूप — परछाईं क़िबला के विपरीत दिशा में</string>
     <string name="qibla_location_accuracy">स्थान सटीकता: %1$s</string>
     <string name="qibla_compass_accuracy">कम्पास सटीकता: %1$s</string>
     <string name="qibla_grant_permission">स्थान अनुमति दें</string>

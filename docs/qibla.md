@@ -103,6 +103,22 @@ Entering the aligned zone from left or right fires **one short haptic pulse**
 (with a 3 s cooldown) when haptics are enabled; there is no continuous
 vibration.
 
+### 5. Compass-free verification: the sun-over-Kaaba shadow
+
+`SolarPositionCalculator` implements the NOAA solar position algorithm in
+pure Kotlin (accurate to ≈1°), giving the sun's azimuth/elevation for the
+current location and time — no network, no compass. When the sun transits
+over the Kaaba (twice a year, ≈28 May and ≈16 July at ~09:18/09:26 UTC),
+the azimuth to the sun equals the Qibla bearing from *any* location, so a
+vertical object's shadow points exactly away from Qibla. The Qibla card
+shows the current solar azimuth/elevation and, when the sun is within 3° of
+the Qibla bearing and above the horizon, displays the "sun aligned" hint —
+a magnetic-interference-proof way to verify the direction.
+
+The algorithm was validated against an independent Python implementation
+and the transit event: Berlin 136.9° vs Qibla 136.5° and New York 58.6° vs
+58.4° at 2026-05-28 09:18 UTC (unit tests assert this end-to-end).
+
 ## North Reference
 
 `NorthReference` has three values — `AUTOMATIC` (default), `TRUE_NORTH`,

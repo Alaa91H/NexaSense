@@ -382,6 +382,31 @@ private fun QiblaCard(
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
+                // Solar position: when the sun is (nearly) aligned with the
+                // Qibla bearing, shadows point exactly away from Qibla — a
+                // compass-free verification, immune to magnetic interference.
+                state.sunAzimuthDegrees?.let { sunAzimuth ->
+                    Text(
+                        text = stringResource(
+                            R.string.qibla_sun_position,
+                            formatFloat(sunAzimuth),
+                            formatFloat(state.sunElevationDegrees ?: 0f),
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                    val sunElevation = state.sunElevationDegrees ?: 0f
+                    val qiblaBearing = state.bearingDegrees
+                    if (sunElevation > 0f && qiblaBearing != null &&
+                        AngleMath.angularDistance(qiblaBearing, sunAzimuth) <= SUN_QIBLA_ALIGNMENT_DEGREES
+                    ) {
+                        Text(
+                            text = stringResource(R.string.qibla_sun_aligned),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
+                    }
+                }
                 // Location accuracy and compass accuracy are reported separately.
                 Text(
                     text = stringResource(
@@ -541,6 +566,9 @@ private fun UnavailablePanel(title: String, message: String) {
         )
     }
 }
+
+/** Sun azimuth tolerance for the "sun aligned with Qibla" hint. */
+private const val SUN_QIBLA_ALIGNMENT_DEGREES = 3f
 
 private fun accuracyLabel(accuracy: AccuracyLevel): Int = when (accuracy) {
     AccuracyLevel.HIGH -> R.string.accuracy_high

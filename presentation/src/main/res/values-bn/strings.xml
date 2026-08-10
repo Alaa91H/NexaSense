@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">%1$s° বামদিকে</string>
     <string name="qibla_aligned">সারিবদ্ধ</string>
     <string name="qibla_distance_to_kaaba">কাবা থেকে দূরত্ব: %1$s কিমি</string>
+    <string name="qibla_sun_position">সূর্য: আজিমুথ %1$s°, উচ্চতা %2$s°</string>
+    <string name="qibla_sun_aligned">সূর্য কেবলার সাথে সারিবদ্ধ — ছায়া কেবলার বিপরীত দিকে</string>
     <string name="qibla_location_accuracy">অবস্থান নির্ভুলতা: %1$s</string>
     <string name="qibla_compass_accuracy">কম্পাস নির্ভুলতা: %1$s</string>
     <string name="qibla_grant_permission">অবস্থান অনুমতি দিন</string>

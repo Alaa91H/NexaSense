@@ -38,6 +38,17 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Sun-over-Kaaba Qibla verification** — `SolarPositionCalculator` (NOAA
+  algorithm, pure Kotlin, ≈1° accuracy) shows the current solar
+  azimuth/elevation on the Qibla card and flags the twice-yearly moment when
+  the sun aligns with the Qibla bearing, enabling compass-free shadow
+  verification. Validated against the 2026-05-28/07-16 transit events
+  (Berlin 136.9° vs 136.5°, New York 58.6° vs 58.4°) and a randomized
+  end-to-end alignment sweep; the sweep caught and fixed a sign bug in
+  western-longitude solar-time arithmetic (Kotlin `%` keeps the dividend's
+  sign).
+- **Predictive back (Android 13+)** — `enableOnBackInvokedCallback` is
+  declared, so the system back-gesture animation is used.
 - **System language picker (Android 13+)** — the app now declares
   `android:localeConfig` with all 24 locales, so it appears in the system
   per-app language settings.

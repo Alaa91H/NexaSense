@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">向左轉 %1$s°</string>
     <string name="qibla_aligned">已對準</string>
     <string name="qibla_distance_to_kaaba">距天房的距離：%1$s 公里</string>
+    <string name="qibla_sun_position">太陽：方位角 %1$s°，仰角 %2$s°</string>
+    <string name="qibla_sun_aligned">太陽與朝拜方向對齊 — 陰影指向相反方向</string>
     <string name="qibla_location_accuracy">位置精確度：%1$s</string>
     <string name="qibla_compass_accuracy">指南針精確度：%1$s</string>
     <string name="qibla_grant_permission">授予位置權限</string>

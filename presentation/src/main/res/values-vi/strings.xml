@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">Rẽ trái %1$s°</string>
     <string name="qibla_aligned">Đã thẳng hướng</string>
     <string name="qibla_distance_to_kaaba">Khoảng cách đến Kaaba: %1$s km</string>
+    <string name="qibla_sun_position">Mặt trời: góc phương vị %1$s°, độ cao %2$s°</string>
+    <string name="qibla_sun_aligned">Mặt trời thẳng hướng Qibla — bóng đổ về hướng ngược lại</string>
     <string name="qibla_location_accuracy">Độ chính xác vị trí: %1$s</string>
     <string name="qibla_compass_accuracy">Độ chính xác la bàn: %1$s</string>
     <string name="qibla_grant_permission">Cấp quyền truy cập vị trí</string>

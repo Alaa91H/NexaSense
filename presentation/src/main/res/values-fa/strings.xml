@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">%1$s° به چپ</string>
     <string name="qibla_aligned">هم‌راستا</string>
     <string name="qibla_distance_to_kaaba">فاصله تا کعبه: %1$s کیلومتر</string>
+    <string name="qibla_sun_position">خورشید: سمت %1$s°، ارتفاع %2$s°</string>
+    <string name="qibla_sun_aligned">خورشید با قبله هم‌راستاست — سایه‌ها در جهت مخالف قبله‌اند</string>
     <string name="qibla_location_accuracy">دقت موقعیت مکانی: %1$s</string>
     <string name="qibla_compass_accuracy">دقت قطب‌نما: %1$s</string>
     <string name="qibla_grant_permission">اعطای اجازه موقعیت مکانی</string>

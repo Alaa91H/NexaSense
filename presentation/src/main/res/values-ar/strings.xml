@@ -87,6 +87,8 @@
     <string name="qibla_turn_left">أدر %1$s° إلى اليسار</string>
     <string name="qibla_aligned">متوافق مع اتجاه القبلة</string>
     <string name="qibla_distance_to_kaaba">المسافة إلى الكعبة: %1$s كم</string>
+    <string name="qibla_sun_position">الشمس: السمت %1$s°، الارتفاع %2$s°</string>
+    <string name="qibla_sun_aligned">الشمس محاذية للقبلة — الظلال تشير بعيدًا عن القبلة</string>
     <string name="qibla_location_accuracy">دقة الموقع: %1$s</string>
     <string name="qibla_compass_accuracy">دقة البوصلة: %1$s</string>
     <string name="qibla_grant_permission">منح إذن الموقع</string>

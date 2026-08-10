@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">左に %1$s°</string>
     <string name="qibla_aligned">合致</string>
     <string name="qibla_distance_to_kaaba">カアバ神殿までの距離：%1$s km</string>
+    <string name="qibla_sun_position">太陽: 方位角 %1$s°、仰角 %2$s°</string>
+    <string name="qibla_sun_aligned">太陽がキブラと一致 — 影はキブラと反対方向を指します</string>
     <string name="qibla_location_accuracy">位置情報の精度：%1$s</string>
     <string name="qibla_compass_accuracy">コンパスの精度：%1$s</string>
     <string name="qibla_grant_permission">位置情報の権限を許可</string>

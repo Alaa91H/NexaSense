@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">%1$s° ke kiri</string>
     <string name="qibla_aligned">Sejajar</string>
     <string name="qibla_distance_to_kaaba">Jarak ke Kakbah: %1$s km</string>
+    <string name="qibla_sun_position">Matahari: azimuth %1$s°, elevasi %2$s°</string>
+    <string name="qibla_sun_aligned">Matahari sejajar kiblat — bayangan menunjuk arah sebaliknya</string>
     <string name="qibla_location_accuracy">Akurasi lokasi: %1$s</string>
     <string name="qibla_compass_accuracy">Akurasi kompas: %1$s</string>
     <string name="qibla_grant_permission">Beri izin lokasi</string>

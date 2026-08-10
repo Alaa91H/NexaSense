@@ -2,6 +2,7 @@ package com.nexasense.data.sensor
 
 import com.nexasense.domain.engine.DeclinationCache
 import com.nexasense.domain.engine.QiblaCalculator
+import com.nexasense.domain.engine.SolarPositionCalculator
 import com.nexasense.domain.model.AccuracyLevel
 import com.nexasense.domain.model.AppSettings
 import com.nexasense.domain.model.Heading
@@ -184,6 +185,14 @@ class QiblaEngineImpl(
         val compassAccuracy = magneticField.value.accuracy
         val currentHeading = heading.value
 
+        // Current solar position (pure local math; enables the "sun aligned
+        // with Qibla" shadow check without any compass).
+        val sun = SolarPositionCalculator.positionAt(
+            fix.latitudeDegrees,
+            fix.longitudeDegrees,
+            System.currentTimeMillis(),
+        )
+
         val deviceTrue = QiblaCalculator.deviceHeadingInTrueReference(currentHeading, declination)
         val relative = deviceTrue?.let {
             QiblaCalculator.relativeQibla(it, bearing.bearingDegrees)
@@ -219,6 +228,8 @@ class QiblaEngineImpl(
             declinationDegrees = declination,
             locationAccuracy = locationAccuracy,
             compassAccuracy = compassAccuracy,
+            sunAzimuthDegrees = sun.azimuthDegrees.toFloat(),
+            sunElevationDegrees = sun.elevationDegrees.toFloat(),
         )
     }
 

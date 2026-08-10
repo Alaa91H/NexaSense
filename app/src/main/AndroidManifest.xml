@@ -19,6 +19,7 @@
         android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.NexaSense"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
 
         <activity

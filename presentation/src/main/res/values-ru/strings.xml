@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">%1$s° влево</string>
     <string name="qibla_aligned">Совмещено</string>
     <string name="qibla_distance_to_kaaba">Расстояние до Каабы: %1$s км</string>
+    <string name="qibla_sun_position">Солнце: азимут %1$s°, высота %2$s°</string>
+    <string name="qibla_sun_aligned">Солнце на линии киблы — тени указывают в противоположную сторону</string>
     <string name="qibla_location_accuracy">Точность местоположения: %1$s</string>
     <string name="qibla_compass_accuracy">Точность компаса: %1$s</string>
     <string name="qibla_grant_permission">Разрешить доступ к местоположению</string>

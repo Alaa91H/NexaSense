@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">%1$s° بائیں</string>
     <string name="qibla_aligned">مطابق</string>
     <string name="qibla_distance_to_kaaba">کعبہ سے فاصلہ: %1$s کلومیٹر</string>
+    <string name="qibla_sun_position">سورج: سمت %1$s°، بلندی %2$s°</string>
+    <string name="qibla_sun_aligned">سورج قبلہ کے مطابق ہے — سایے قبلہ کے مخالف سمت میں ہیں</string>
     <string name="qibla_location_accuracy">مقام کی درستگی: %1$s</string>
     <string name="qibla_compass_accuracy">قطب نما کی درستگی: %1$s</string>
     <string name="qibla_grant_permission">مقام کی اجازت دیں</string>

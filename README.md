@@ -24,7 +24,7 @@ unavailable — nothing is simulated, estimated, or "borrowed" from GPS.
 | --- | --- |
 | 🧭 **Compass** | 360° dial, magnetic heading, smooth wrap-around transitions, adaptive interference detection, hardware calibration (hard/soft iron). |
 | 🧭 **North Reference** | Automatic / True North / Magnetic North. True North uses the current official **WMM2025** geomagnetic model (pure-Kotlin, NOAA-verified to < 0.005°), computed on-device from a location fix. Automatic falls back to Magnetic North when no declination is available — the effective reference is always shown. |
-| 🕋 **Qibla Direction** | Offline, local **WGS84 geodesic** bearing to the Kaaba (Vincenty inverse formula, spherical fallback), relative turn guidance (±2° alignment threshold), optional distance, haptics on alignment, fully optional and disabled by default. |
+| 🕋 **Qibla Direction** | Offline, local **WGS84 geodesic** bearing to the Kaaba (Vincenty inverse formula, spherical fallback), relative turn guidance (±2° alignment threshold), optional distance, haptics on alignment, plus a **sun-over-Kaaba shadow check** (NOAA solar position; twice a year the sun aligns with Qibla and shadows point the way — compass-free), fully optional and disabled by default. |
 | 📏 **Level** | Bubble level from the accelerometer alone (no gyroscope required), portrait/landscape aware, zero-point calibration. |
 | 📡 **Sensor discovery** | Full runtime discovery: accelerometer, gyroscope, magnetometer, rotation vectors, pressure, light, proximity, step counters, humidity, temperature and every other sensor the HAL exposes. |
 | 🔬 **Diagnostics** | Capability detection, per-sensor raw values, *measured* sampling rate, accuracy, HAL metadata, shareable diagnostic report (no personal data). |

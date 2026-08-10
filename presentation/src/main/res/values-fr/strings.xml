@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">%1$s° vers la gauche</string>
     <string name="qibla_aligned">Aligné</string>
     <string name="qibla_distance_to_kaaba">Distance de la Kaaba : %1$s km</string>
+    <string name="qibla_sun_position">Soleil : azimut %1$s°, élévation %2$s°</string>
+    <string name="qibla_sun_aligned">Soleil aligné avec la qibla — les ombres pointent à l\'opposé</string>
     <string name="qibla_location_accuracy">Précision de la position : %1$s</string>
     <string name="qibla_compass_accuracy">Précision de la boussole : %1$s</string>
     <string name="qibla_grant_permission">Accorder l\'autorisation de position</string>

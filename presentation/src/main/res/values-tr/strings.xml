@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">Sola %1$s°</string>
     <string name="qibla_aligned">Hizalandı</string>
     <string name="qibla_distance_to_kaaba">Kabe\'ye uzaklık: %1$s km</string>
+    <string name="qibla_sun_position">Güneş: azimut %1$s°, yükseklik %2$s°</string>
+    <string name="qibla_sun_aligned">Güneş kıbleyle hizalı — gölgeler kıblenin tersini gösterir</string>
     <string name="qibla_location_accuracy">Konum doğruluğu: %1$s</string>
     <string name="qibla_compass_accuracy">Pusula doğruluğu: %1$s</string>
     <string name="qibla_grant_permission">Konum izni ver</string>

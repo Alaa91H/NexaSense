@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">왼쪽으로 %1$s°</string>
     <string name="qibla_aligned">정렬됨</string>
     <string name="qibla_distance_to_kaaba">카바까지의 거리: %1$s km</string>
+    <string name="qibla_sun_position">태양: 방위각 %1$s°, 고도 %2$s°</string>
+    <string name="qibla_sun_aligned">태양이 키블라와 정렬됨 — 그림자는 키블라 반대 방향</string>
     <string name="qibla_location_accuracy">위치 정확도: %1$s</string>
     <string name="qibla_compass_accuracy">나침반 정확도: %1$s</string>
     <string name="qibla_grant_permission">위치 권한 부여</string>

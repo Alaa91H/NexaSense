@@ -69,6 +69,10 @@ data class QiblaState(
     val declinationDegrees: Float? = null,
     val locationAccuracy: LocationAccuracyLevel? = null,
     val compassAccuracy: AccuracyLevel? = null,
+    /** Current solar azimuth (clockwise from true north), if a fix exists. */
+    val sunAzimuthDegrees: Float? = null,
+    /** Current solar elevation above the horizon, if a fix exists. */
+    val sunElevationDegrees: Float? = null,
 ) {
     val isReady: Boolean get() = status == QiblaStatus.READY || status == QiblaStatus.ALIGNED
 }

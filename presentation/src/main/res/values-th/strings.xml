@@ -82,6 +82,8 @@
     <string name="qibla_turn_left">เลี้ยวซ้าย %1$s°</string>
     <string name="qibla_aligned">อยู่ในแนวเดียวกัน</string>
     <string name="qibla_distance_to_kaaba">ระยะทางถึงกะอบะฮ์: %1$s กม.</string>
+    <string name="qibla_sun_position">ดวงอาทิตย์: มุมแอซิมัท %1$s° ความสูง %2$s°</string>
+    <string name="qibla_sun_aligned">ดวงอาทิตย์ตรงกับกิบลัต — เงาชี้ไปทิศตรงข้าม</string>
     <string name="qibla_location_accuracy">ความแม่นยำของตำแหน่ง: %1$s</string>
     <string name="qibla_compass_accuracy">ความแม่นยำของเข็มทิศ: %1$s</string>
     <string name="qibla_grant_permission">ให้สิทธิ์เข้าถึงตำแหน่ง</string>
