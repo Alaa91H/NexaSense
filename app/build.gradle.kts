@@ -97,7 +97,19 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
+    // Explicit coroutines-test for androidTest: compose-ui-test pulls it in
+    // transitively, but its META-INF/services exception-handler registration
+    // is only packaged when declared directly (otherwise instrumented tests
+    // fail with "Exception handler was not found via a ServiceLoader").
+    androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
+    // kotlinx-coroutines-test registers its exception collector via
+    // META-INF/services. The instrumented-test process resolves services from
+    // the main APK's classloader, which only sees coroutines-android's handler
+    // — so the test handler must also be packaged into the (debug) app APK,
+    // where AGP merges the service files of both AARs. Without this, Compose
+    // UI tests fail with "Exception handler was not found via a ServiceLoader".
+    debugImplementation(libs.kotlinx.coroutines.test)
 }

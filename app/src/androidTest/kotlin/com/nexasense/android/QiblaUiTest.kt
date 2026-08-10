@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -20,7 +21,9 @@ import org.junit.runner.RunWith
 /**
  * UI tests for the North Reference and Qibla settings. The location
  * permission is granted for these tests so the Qibla flow can be exercised
- * end-to-end; every test starts from a reset settings state.
+ * end-to-end; every test starts from a reset settings state. Settings
+ * sections are collapsed by default (accordion), so each test expands the
+ * section it needs.
  */
 @RunWith(AndroidJUnit4::class)
 class QiblaUiTest {
@@ -34,8 +37,7 @@ class QiblaUiTest {
 
     @Before
     fun resetSettings() {
-        rule.onAllNodesWithText("Settings").onFirst().performClick()
-        rule.waitForIdle()
+        openSettings()
         rule.onNodeWithText("Reset settings").performScrollTo().performClick()
         rule.waitForIdle()
         rule.onNodeWithText("OK").performClick()
@@ -44,11 +46,20 @@ class QiblaUiTest {
         rule.waitForIdle()
     }
 
-    @Test
-    fun settingsShowsNorthReferenceOptions() {
+    /** Opens the dashboard via the compass menu button, then the settings screen. */
+    private fun openSettings() {
+        rule.onNodeWithContentDescription("Home").performClick()
+        rule.waitForIdle()
         rule.onAllNodesWithText("Settings").onFirst().performClick()
         rule.waitForIdle()
-        rule.onNodeWithText("North Reference").assertIsDisplayed()
+    }
+
+    @Test
+    fun settingsShowsNorthReferenceOptions() {
+        openSettings()
+        // Sections start collapsed: expand North Reference to reveal the options.
+        rule.onNodeWithText("North Reference").performScrollTo().performClick()
+        rule.waitForIdle()
         rule.onNodeWithText("Automatic").assertIsDisplayed()
         rule.onNodeWithText("True North").assertIsDisplayed()
         rule.onNodeWithText("Magnetic North").assertIsDisplayed()
@@ -56,9 +67,9 @@ class QiblaUiTest {
 
     @Test
     fun qiblaIsDisabledByDefault() {
-        rule.onAllNodesWithText("Settings").onFirst().performClick()
+        openSettings()
+        rule.onNodeWithText("Qibla Direction").performScrollTo().performClick()
         rule.waitForIdle()
-        rule.onNodeWithText("Qibla Direction").assertIsDisplayed()
         rule.onNodeWithText("Enable Qibla").assertIsOff()
         // Sub-options are hidden until Qibla is enabled.
         rule.onNodeWithText("Show on Compass").assertDoesNotExist()
@@ -67,7 +78,8 @@ class QiblaUiTest {
 
     @Test
     fun enablingQiblaRevealsSubOptions() {
-        rule.onAllNodesWithText("Settings").onFirst().performClick()
+        openSettings()
+        rule.onNodeWithText("Qibla Direction").performScrollTo().performClick()
         rule.waitForIdle()
         rule.onNodeWithText("Enable Qibla").performClick()
         rule.waitForIdle()
@@ -79,7 +91,8 @@ class QiblaUiTest {
 
     @Test
     fun disablingQiblaHidesSubOptions() {
-        rule.onAllNodesWithText("Settings").onFirst().performClick()
+        openSettings()
+        rule.onNodeWithText("Qibla Direction").performScrollTo().performClick()
         rule.waitForIdle()
         rule.onNodeWithText("Enable Qibla").performClick()
         rule.waitForIdle()

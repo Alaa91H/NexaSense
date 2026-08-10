@@ -22,13 +22,19 @@ fun NexaNavHost(container: AppContainer) {
     val navController: NavHostController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Routes.HOME,
+        // The compass is always the app's home screen.
+        startDestination = Routes.COMPASS,
     ) {
         composable(Routes.HOME) {
             HomeScreen(container = container, onNavigate = navController::navigate)
         }
         composable(Routes.COMPASS) {
-            CompassScreen(container = container, onBack = navController::navigateUp)
+            CompassScreen(
+                container = container,
+                // Hide the back arrow when the compass is the start destination.
+                onBack = navController.previousBackStackEntry?.let { { navController.navigateUp() } },
+                onOpenMenu = { navController.navigate(Routes.HOME) },
+            )
         }
         composable(Routes.LEVEL) {
             LevelScreen(container = container, onBack = navController::navigateUp)

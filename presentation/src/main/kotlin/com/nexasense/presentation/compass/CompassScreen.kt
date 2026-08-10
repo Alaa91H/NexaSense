@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -61,7 +62,8 @@ import java.util.Locale
 @Composable
 fun CompassScreen(
     container: AppContainer,
-    onBack: () -> Unit,
+    onBack: (() -> Unit)? = null,
+    onOpenMenu: () -> Unit = {},
 ) {
     val viewModel: CompassViewModel = viewModel(initializer = {
         CompassViewModel(
@@ -104,6 +106,11 @@ fun CompassScreen(
         title = stringResource(R.string.compass_title),
         onBack = onBack,
         actions = {
+            // The compass is the app's home screen: a menu button opens the
+            // dashboard with the other tools and settings.
+            IconButton(onClick = onOpenMenu) {
+                Icon(Icons.Outlined.Menu, contentDescription = stringResource(R.string.nav_home))
+            }
             IconButton(onClick = viewModel::refresh) {
                 Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.refresh))
             }

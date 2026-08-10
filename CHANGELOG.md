@@ -5,8 +5,23 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ## [Unreleased]
 
+### Changed
+
+- **Compass is always the home screen** — the app now opens directly on the
+  compass, which acts as the app's home page. A menu button in the compass
+  top bar opens the dashboard (Level, Sensors, Diagnostics, Settings, About);
+  the back arrow is hidden when the compass is the start destination.
+- **Settings accordion** — every settings section now starts collapsed and
+  only one section is open at a time: tapping a header expands it and
+  collapses the previously open one. The screen stays compact and the reset /
+  about buttons remain always visible.
+
 ### Fixed
 
+- **Instrumented Compose UI tests** — declared `kotlinx-coroutines-test`
+  explicitly (androidTest + debug) so its `META-INF/services` exception-
+  handler registration is packaged; without it, `runTest` fails with
+  "Exception handler was not found via a ServiceLoader" on every device.
 - **Critical launch crash (FC) on every release APK** — the app crashed
   instantly on open for two independent reasons that unit tests never caught:
   1. `CompassEngineImpl` read `AppSettings.northReference` in a field
