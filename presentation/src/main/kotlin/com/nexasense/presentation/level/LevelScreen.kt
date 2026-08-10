@@ -462,11 +462,29 @@ private fun TubeLevel(
             strokeWidth = 3.dp.toPx(),
         )
         drawCircle(color = needleColor, radius = 5.dp.toPx(), center = needleEnd)
+
+        // Perfect-plumb indicator on the reference line: a small dot at the
+        // pivot that lights up (filled primary + soft glow) exactly when the
+        // device is perfectly plumb — the same threshold the level's haptic
+        // uses, so the light and the vibration are always in sync.
+        val perfectlyPlumb = abs(pitchDeviation) < PLUMB_CENTERED_THRESHOLD_DEGREES &&
+            abs(roll) < PLUMB_CENTERED_THRESHOLD_DEGREES
+        if (perfectlyPlumb) {
+            drawCircle(
+                color = primaryColor.copy(alpha = 0.22f),
+                radius = 10.dp.toPx(),
+                center = pivot,
+            )
+        }
         drawCircle(
-            color = surfaceColor.copy(alpha = 0.55f),
-            radius = 4.dp.toPx(),
+            color = if (perfectlyPlumb) primaryColor else surfaceColor.copy(alpha = 0.55f),
+            radius = 4.5.dp.toPx(),
             center = pivot,
-            style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx()),
+            style = if (perfectlyPlumb) {
+                androidx.compose.ui.graphics.drawscope.Fill
+            } else {
+                androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx())
+            },
         )
     }
 }
@@ -485,6 +503,12 @@ private fun plumbPoint(pivot: Offset, length: Float, degrees: Float): Offset {
 
 /** Deviation within which the plumb needle reads as aligned. */
 private const val PLUMB_ALIGNED_DEGREES = 2f
+
+/**
+ * Threshold for the perfect-plumb indicator, matching the level's haptic
+ * centered zone (both axes) so the light and the vibration are in sync.
+ */
+private const val PLUMB_CENTERED_THRESHOLD_DEGREES = 1.5f
 
 @Composable
 private fun LevelCalibrationDialog(

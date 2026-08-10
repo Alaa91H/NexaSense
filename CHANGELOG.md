@@ -7,6 +7,10 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Perfect-plumb indicator** — the plumb gauge's pivot now hosts a small dot
+  that lights up (filled primary + soft glow) when the device is perfectly
+  plumb on both axes, using the exact same threshold as the level's haptic
+  pulse, so the light and the vibration are always in sync.
 - **Smooth flat bubble** — the horizontal (circular) bubble level now animates
   its position with the same 180 ms glide as the vertical mode, so every
   bubble in the app moves consistently (drifts naturally instead of snapping
