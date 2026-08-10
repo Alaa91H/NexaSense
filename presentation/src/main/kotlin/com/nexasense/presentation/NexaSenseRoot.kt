@@ -1,21 +1,27 @@
 package com.nexasense.presentation
 
+import android.app.Activity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nexasense.domain.model.AppSettings
 import com.nexasense.domain.model.LanguagePreference
 import com.nexasense.domain.model.ThemePreference
 import com.nexasense.presentation.navigation.NexaNavHost
+import com.nexasense.presentation.theme.NexaSenseGradients
 import com.nexasense.presentation.theme.NexaSenseTheme
 
 /**
@@ -52,8 +58,22 @@ fun NexaSenseRoot(
         }
     }
 
+    // Paint the app's sky gradient behind every screen, and keep the system
+    // status/navigation bar icons readable against the resolved theme (dark
+    // navy needs light icons even when the device itself is in light mode).
+    val context = LocalContext.current
+    SideEffect {
+        val window = (context as? Activity)?.window ?: return@SideEffect
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+        WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme
+    }
+
     NexaSenseTheme(darkTheme = darkTheme) {
-        Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(if (darkTheme) NexaSenseGradients.NightSky else NexaSenseGradients.DaySky),
+        ) {
             CompositionLocalProvider(
                 LocalAppContainer provides container,
             ) {

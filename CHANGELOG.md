@@ -7,6 +7,15 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Automatic night mode with blue sky gradient** — dark mode follows the
+  device automatically (System theme, the default), and the whole app now
+  sits on a deep-navy **night-sky gradient** (top `#070E20` → bottom
+  `#123052`) with a blue-tinted dark palette (background `#0A1220`, surfaces
+  `#0D1626`, blue-gray variants) that matches it. Light mode gets a soft
+  pale-blue daylight gradient. The scaffold is transparent so the gradient
+  shows on every screen, and the status/navigation-bar icon colors follow
+  the *resolved* theme (light icons on navy even if the device itself is in
+  light mode).
 - **Kaaba emoji Qibla marker** — the drawn Kaaba icon on the compass dial is
   replaced by the 🕋 emoji, rendered upright (never tilted with the dial) and
   positioned just outside the ring at the Qibla bearing.

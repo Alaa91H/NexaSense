@@ -2,6 +2,7 @@ package com.nexasense.presentation.theme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 /**
@@ -13,6 +14,9 @@ import androidx.compose.ui.graphics.Color
  * (interference, alignment, accuracy) come from the scheme's error/success
  * roles and are never the only signal — see the accessibility notes in the
  * README.
+ *
+ * The dark scheme uses a deep-navy "night sky" palette so the app reads as a
+ * blue-gradient night instrument, matching [NexaSenseGradients.NightSky].
  */
 object NexaSenseColors {
 
@@ -44,16 +48,16 @@ object NexaSenseColors {
         outlineVariant = Color(0xFFC2C7CF),
     )
 
-    // Dark scheme (fallback, non-dynamic).
+    // Dark scheme (fallback, non-dynamic) — deep-navy "night sky" tones.
     val Dark = darkColorScheme(
-        primary = Color(0xFF96CBFF),
-        onPrimary = Color(0xFF003351),
-        primaryContainer = Color(0xFF004A72),
-        onPrimaryContainer = Color(0xFFCEE5FF),
+        primary = Color(0xFF8FC7FF),
+        onPrimary = Color(0xFF003355),
+        primaryContainer = Color(0xFF124872),
+        onPrimaryContainer = Color(0xFFCFE7FF),
         secondary = Color(0xFFB7C8DA),
-        onSecondary = Color(0xFF21313F),
-        secondaryContainer = Color(0xFF394756),
-        onSecondaryContainer = Color(0xFFD6E4F7),
+        onSecondary = Color(0xFF1F2F40),
+        secondaryContainer = Color(0xFF24354E),
+        onSecondaryContainer = Color(0xFFD8E6FA),
         tertiary = Color(0xFFD4BFE6),
         onTertiary = Color(0xFF392A49),
         tertiaryContainer = Color(0xFF504060),
@@ -62,16 +66,42 @@ object NexaSenseColors {
         onError = Color(0xFF690005),
         errorContainer = Color(0xFF93000A),
         onErrorContainer = Color(0xFFFFDAD6),
-        background = Color(0xFF111418),
-        onBackground = Color(0xFFE1E2E8),
-        surface = Color(0xFF111418),
-        onSurface = Color(0xFFE1E2E8),
-        surfaceVariant = Color(0xFF42474E),
-        onSurfaceVariant = Color(0xFFC2C7CF),
-        outline = Color(0xFF8C9199),
-        outlineVariant = Color(0xFF42474E),
+        background = Color(0xFF0A1220),
+        onBackground = Color(0xFFDCE4F0),
+        surface = Color(0xFF0D1626),
+        onSurface = Color(0xFFDCE4F0),
+        surfaceVariant = Color(0xFF1C2740),
+        onSurfaceVariant = Color(0xFFB0BDD2),
+        outline = Color(0xFF7F8CA3),
+        outlineVariant = Color(0xFF2A3852),
     )
 
     /** Functional accent used for the Qibla marker on the compass dial. */
     val QiblaMarker = Color(0xFF2E7D32)
+}
+
+/**
+ * Background gradients for the app.
+ *
+ * The root composable paints these behind every screen, so the whole app gets
+ * a calm sky gradient — deep navy at night, a pale blue-washed sky by day.
+ */
+object NexaSenseGradients {
+
+    /** Deep-navy night sky used when the app resolves to dark mode. */
+    val NightSky = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFF070E20),
+            Color(0xFF0C1B38),
+            Color(0xFF123052),
+        ),
+    )
+
+    /** Soft pale-blue daylight used when the app resolves to light mode. */
+    val DaySky = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFF8FBFF),
+            Color(0xFFE7F1FC),
+        ),
+    )
 }
