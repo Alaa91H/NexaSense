@@ -104,3 +104,28 @@ rolling deviation estimate. A reading is flagged as interference when:
 
 The compass UI shows `Magnetic interference detected — move the phone away
 from magnetic objects.`
+
+## Dial styles & customization
+
+The dial renders in three styles, switchable from Settings → Compass:
+
+- **Classic** — 2° minor + 30° major ticks and the full 8-point cardinal
+  labels (the original design).
+- **Azimuth** — a numbered military/aviation dial: degree values every 30°
+  (0–330) with the four main cardinal points inside the number ring.
+- **Minimal** — clean and uncluttered: only the 4 main cardinal points and
+  30° major ticks, relying on the digital readout.
+
+Each style can be fine-tuned with per-element toggles (all persisted):
+
+- `showCardinalLabels` — N/E/S/W (and intercardinals in Classic) on the dial.
+- `showDegreeTicks` — the tick ring (the azimuth style always keeps its
+  numbered ring, which is its defining feature).
+- `showDegreeNumbers` — 0/30/60… numbers on Classic/Minimal dials.
+- `showHeadingReadout` — the large degrees + cardinal text above the dial.
+- `showNorthReferenceBadge` — the True/Magnetic North pill.
+- `showCompassDetails` — the sensor-source and declination lines.
+- `showAccuracyPanel` — field strength, accuracy and calibration status.
+
+All options default to the original behavior, so existing installs are
+unchanged until the user customizes.

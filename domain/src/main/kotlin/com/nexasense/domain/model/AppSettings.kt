@@ -15,6 +15,17 @@ data class AppSettings(
     val hapticsEnabled: Boolean = true,
     val keepScreenOn: Boolean = false,
     val developerMode: Boolean = false,
+
+    // Compass appearance and granular visibility controls. Defaults preserve
+    // the original (classic) look so existing installs are unchanged.
+    val compassStyle: CompassStyle = CompassStyle.CLASSIC,
+    val showCardinalLabels: Boolean = true,
+    val showDegreeTicks: Boolean = true,
+    val showDegreeNumbers: Boolean = false,
+    val showHeadingReadout: Boolean = true,
+    val showNorthReferenceBadge: Boolean = true,
+    val showCompassDetails: Boolean = true,
+    val showAccuracyPanel: Boolean = true,
 ) {
     companion object {
         val DEFAULT: AppSettings = AppSettings()
@@ -72,4 +83,20 @@ enum class SensorRatePreference(val delayMicros: Long, val labelKey: String) {
     NORMAL(200_000L, "settings_rate_normal"),
     UI(60_000L, "settings_rate_ui"),
     GAME(20_000L, "settings_rate_game"),
+}
+
+/**
+ * Compass dial rendering style.
+ *
+ * - [CLASSIC]: 2° minor + 30° major ticks and the full 8-point cardinal
+ *   labels, matching the original design.
+ * - [AZIMUTH]: numbered dial with degree values every 30° (0–330) and a
+ *   prominent N — the classic military/aviation style.
+ * - [MINIMAL]: clean, uncluttered dial with only the 4 main cardinal points
+ *   and major ticks, relying on the digital readout.
+ */
+enum class CompassStyle {
+    CLASSIC,
+    AZIMUTH,
+    MINIMAL,
 }

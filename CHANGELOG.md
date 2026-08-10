@@ -7,6 +7,12 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **Compass styles & granular customization** — three professional dial
+  styles (Classic, Azimuth with a numbered degree ring, Minimal) switchable
+  from Settings, plus per-element toggles: cardinal labels, degree ticks,
+  degree numbers, the heading readout, the north-reference badge, the
+  source/declination details and the accuracy/calibration panel. All 13 new
+  settings are localized in all 24 languages and persist via DataStore.
 - **Heading accessibility** — the compass dial's live region announces the
   heading (cardinal direction) to TalkBack exactly when it changes, without
   spamming at sensor rate.

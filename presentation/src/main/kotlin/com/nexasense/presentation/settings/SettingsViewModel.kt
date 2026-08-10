@@ -3,6 +3,7 @@ package com.nexasense.presentation.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nexasense.domain.model.AppSettings
+import com.nexasense.domain.model.CompassStyle
 import com.nexasense.domain.model.LanguagePreference
 import com.nexasense.domain.model.NorthReference
 import com.nexasense.domain.model.SensorRatePreference
@@ -52,6 +53,22 @@ class SettingsViewModel(container: AppContainer) : ViewModel() {
     fun setSmoothing(smoothing: SmoothingPreference) = update { it.copy(smoothing = smoothing) }
 
     fun setSensorRate(rate: SensorRatePreference) = update { it.copy(sensorRate = rate) }
+
+    fun setCompassStyle(style: CompassStyle) = update { it.copy(compassStyle = style) }
+
+    fun setShowCardinalLabels(enabled: Boolean) = update { it.copy(showCardinalLabels = enabled) }
+
+    fun setShowDegreeTicks(enabled: Boolean) = update { it.copy(showDegreeTicks = enabled) }
+
+    fun setShowDegreeNumbers(enabled: Boolean) = update { it.copy(showDegreeNumbers = enabled) }
+
+    fun setShowHeadingReadout(enabled: Boolean) = update { it.copy(showHeadingReadout = enabled) }
+
+    fun setShowNorthReferenceBadge(enabled: Boolean) = update { it.copy(showNorthReferenceBadge = enabled) }
+
+    fun setShowCompassDetails(enabled: Boolean) = update { it.copy(showCompassDetails = enabled) }
+
+    fun setShowAccuracyPanel(enabled: Boolean) = update { it.copy(showAccuracyPanel = enabled) }
 
     fun setHaptics(enabled: Boolean) = update { it.copy(hapticsEnabled = enabled) }
 

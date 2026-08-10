@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nexasense.domain.model.CompassStyle
 import com.nexasense.domain.model.LanguagePreference
 import com.nexasense.domain.model.NorthReference
 import com.nexasense.domain.model.SensorRatePreference
@@ -187,6 +188,68 @@ fun SettingsScreen(
                     ),
                     selected = settings.sensorRate,
                     onSelect = viewModel::setSensorRate,
+                )
+            }
+
+            SectionHeader(text = stringResource(R.string.settings_compass))
+            GroupCard {
+                Text(
+                    text = stringResource(R.string.settings_compass_style),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                )
+                RadioSetting(
+                    options = listOf(
+                        CompassStyle.CLASSIC to stringResource(R.string.settings_compass_style_classic),
+                        CompassStyle.AZIMUTH to stringResource(R.string.settings_compass_style_azimuth),
+                        CompassStyle.MINIMAL to stringResource(R.string.settings_compass_style_minimal),
+                    ),
+                    selected = settings.compassStyle,
+                    onSelect = viewModel::setCompassStyle,
+                )
+            }
+            Text(
+                text = stringResource(R.string.settings_compass_style_desc),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            )
+            GroupCard {
+                ToggleSetting(
+                    label = stringResource(R.string.settings_compass_show_cardinal_labels),
+                    checked = settings.showCardinalLabels,
+                    onCheckedChange = viewModel::setShowCardinalLabels,
+                )
+                ToggleSetting(
+                    label = stringResource(R.string.settings_compass_show_ticks),
+                    checked = settings.showDegreeTicks,
+                    onCheckedChange = viewModel::setShowDegreeTicks,
+                )
+                ToggleSetting(
+                    label = stringResource(R.string.settings_compass_show_degree_numbers),
+                    checked = settings.showDegreeNumbers,
+                    onCheckedChange = viewModel::setShowDegreeNumbers,
+                )
+                ToggleSetting(
+                    label = stringResource(R.string.settings_compass_show_heading_readout),
+                    checked = settings.showHeadingReadout,
+                    onCheckedChange = viewModel::setShowHeadingReadout,
+                )
+                ToggleSetting(
+                    label = stringResource(R.string.settings_compass_show_north_reference_badge),
+                    checked = settings.showNorthReferenceBadge,
+                    onCheckedChange = viewModel::setShowNorthReferenceBadge,
+                )
+                ToggleSetting(
+                    label = stringResource(R.string.settings_compass_show_details),
+                    checked = settings.showCompassDetails,
+                    onCheckedChange = viewModel::setShowCompassDetails,
+                )
+                ToggleSetting(
+                    label = stringResource(R.string.settings_compass_show_accuracy_panel),
+                    checked = settings.showAccuracyPanel,
+                    onCheckedChange = viewModel::setShowAccuracyPanel,
                 )
             }
 

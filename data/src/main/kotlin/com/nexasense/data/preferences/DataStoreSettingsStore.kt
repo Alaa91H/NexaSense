@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.nexasense.core.logging.NexaLogger
 import com.nexasense.domain.model.AppSettings
+import com.nexasense.domain.model.CompassStyle
 import com.nexasense.domain.model.LanguagePreference
 import com.nexasense.domain.model.NorthReference
 import com.nexasense.domain.model.SensorRatePreference
@@ -58,6 +59,16 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
         val HAPTICS = booleanPreferencesKey("haptics")
         val KEEP_SCREEN_ON = booleanPreferencesKey("keep_screen_on")
         val DEVELOPER_MODE = booleanPreferencesKey("developer_mode")
+
+        // Compass appearance.
+        val COMPASS_STYLE = stringPreferencesKey("compass_style")
+        val SHOW_CARDINAL_LABELS = booleanPreferencesKey("show_cardinal_labels")
+        val SHOW_DEGREE_TICKS = booleanPreferencesKey("show_degree_ticks")
+        val SHOW_DEGREE_NUMBERS = booleanPreferencesKey("show_degree_numbers")
+        val SHOW_HEADING_READOUT = booleanPreferencesKey("show_heading_readout")
+        val SHOW_NORTH_REFERENCE_BADGE = booleanPreferencesKey("show_north_reference_badge")
+        val SHOW_COMPASS_DETAILS = booleanPreferencesKey("show_compass_details")
+        val SHOW_ACCURACY_PANEL = booleanPreferencesKey("show_accuracy_panel")
     }
 
     override val settings: Flow<AppSettings> = context.settingsDataStore.data
@@ -82,6 +93,14 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
             prefs[Keys.HAPTICS] = next.hapticsEnabled
             prefs[Keys.KEEP_SCREEN_ON] = next.keepScreenOn
             prefs[Keys.DEVELOPER_MODE] = next.developerMode
+            prefs[Keys.COMPASS_STYLE] = next.compassStyle.name
+            prefs[Keys.SHOW_CARDINAL_LABELS] = next.showCardinalLabels
+            prefs[Keys.SHOW_DEGREE_TICKS] = next.showDegreeTicks
+            prefs[Keys.SHOW_DEGREE_NUMBERS] = next.showDegreeNumbers
+            prefs[Keys.SHOW_HEADING_READOUT] = next.showHeadingReadout
+            prefs[Keys.SHOW_NORTH_REFERENCE_BADGE] = next.showNorthReferenceBadge
+            prefs[Keys.SHOW_COMPASS_DETAILS] = next.showCompassDetails
+            prefs[Keys.SHOW_ACCURACY_PANEL] = next.showAccuracyPanel
         }
     }
 
@@ -103,6 +122,14 @@ class DataStoreSettingsStore(private val context: Context) : SettingsStore {
         hapticsEnabled = this[Keys.HAPTICS] ?: true,
         keepScreenOn = this[Keys.KEEP_SCREEN_ON] ?: false,
         developerMode = this[Keys.DEVELOPER_MODE] ?: false,
+        compassStyle = enumValueOr<CompassStyle>(this[Keys.COMPASS_STYLE], CompassStyle.CLASSIC),
+        showCardinalLabels = this[Keys.SHOW_CARDINAL_LABELS] ?: true,
+        showDegreeTicks = this[Keys.SHOW_DEGREE_TICKS] ?: true,
+        showDegreeNumbers = this[Keys.SHOW_DEGREE_NUMBERS] ?: false,
+        showHeadingReadout = this[Keys.SHOW_HEADING_READOUT] ?: true,
+        showNorthReferenceBadge = this[Keys.SHOW_NORTH_REFERENCE_BADGE] ?: true,
+        showCompassDetails = this[Keys.SHOW_COMPASS_DETAILS] ?: true,
+        showAccuracyPanel = this[Keys.SHOW_ACCURACY_PANEL] ?: true,
     )
 
     private fun Preferences.northReferenceOrLegacy(): NorthReference {
