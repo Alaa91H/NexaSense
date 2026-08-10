@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.NexaSense" parent="android:Theme.Material.NoActionBar">
+    <!--
+        AppCompatActivity requires a Theme.AppCompat descendant — a platform
+        Material theme throws "You need to use a Theme.AppCompat theme" at
+        setContentView. This night variant mirrors values/themes.xml so the
+        activity never crashes in dark mode either.
+    -->
+    <style name="Theme.NexaSense" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 </resources>

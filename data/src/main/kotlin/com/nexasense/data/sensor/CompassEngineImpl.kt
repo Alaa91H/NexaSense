@@ -74,6 +74,14 @@ class CompassEngineImpl(
     private val declinationCache: DeclinationCache = DeclinationCache(),
 ) : CompassEngine, MagneticFieldMonitor {
 
+    // IMPORTANT: this must be declared BEFORE _heading — the _heading
+    // initializer calls unavailableHeading(), which reads settings.
+    // Kotlin runs instance-field initializers in declaration order, so a
+    // settings field declared below would still be null there and crash the
+    // constructor (the launch-time FC that shipped in v1.0.0-v1.0.2).
+    @Volatile
+    private var settings = AppSettings.DEFAULT
+
     private val _heading = MutableStateFlow(unavailableHeading())
     override val heading: StateFlow<Heading> = _heading.asStateFlow()
 
@@ -96,9 +104,6 @@ class CompassEngineImpl(
 
     @Volatile
     private var smoother = SmoothingFilters.AngleSmoother(SmoothingPreference.MEDIUM.alpha)
-
-    @Volatile
-    private var settings = AppSettings.DEFAULT
 
     @Volatile
     private var calibration = MagnetometerCalibration.NONE

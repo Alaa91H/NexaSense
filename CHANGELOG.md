@@ -3,6 +3,26 @@
 All notable changes to NexaSense are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- **Critical launch crash (FC) on every release APK** — the app crashed
+  instantly on open for two independent reasons that unit tests never caught:
+  1. `CompassEngineImpl` read `AppSettings.northReference` in a field
+     initializer before the `settings` field was assigned (Kotlin field-order
+     NPE), crashing `AppContainerImpl` construction during
+     `Application.onCreate`. Field order fixed, and a new construction
+     regression test (`CompassEngineConstructionTest`) guarantees it stays
+     fixed.
+  2. The **night theme** (`values-night/themes.xml`) still descended from
+     `android:Theme.Material.NoActionBar`, which throws
+     "You need to use a Theme.AppCompat theme" inside `AppCompatActivity` —
+     so dark-mode devices crashed at `setContentView` even after fix 1. Both
+     day and night themes now descend from `Theme.AppCompat.DayNight.NoActionBar`.
+  Verified live on a POCO F5 (marble) via adb: the app now launches, stays
+  in the foreground, and produces zero FATAL logcat entries.
+
 ## [1.0.2] - 2026-08-10
 
 ### Added
