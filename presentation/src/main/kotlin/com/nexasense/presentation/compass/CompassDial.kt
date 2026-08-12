@@ -3,9 +3,13 @@ package com.nexasense.presentation.compass
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -13,16 +17,19 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nexasense.domain.model.CompassStyle
 import kotlin.math.cos
 import kotlin.math.min
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 /**
@@ -77,91 +84,98 @@ fun CompassDial(
     val measuredNumbers = remember(textMeasurer, numberStyle) {
         degreeNumbers.associate { (degree, label) -> degree to textMeasurer.measure(label, numberStyle) }
     }
-    // The Kaaba emoji is the Qibla marker: more recognizable than any drawn
-    // icon. It is rendered upright (never tilted with the dial).
-    val kaabaStyle = remember { TextStyle(fontSize = 26.sp) }
-    val measuredKaaba = remember(textMeasurer, kaabaStyle) {
-        textMeasurer.measure("\uD83D\uDD4B", kaabaStyle)
-    }
 
-    Canvas(
+    BoxWithConstraints(
         modifier = modifier.semantics { this.contentDescription = contentDescription },
+        contentAlignment = Alignment.Center,
     ) {
-        val radius = min(size.width, size.height) / 2f
-        val center = this.center
-        // The dial ring is 80% of the canvas so the Qibla Kaaba fits outside.
-        val dialRadius = radius * 0.80f
+        val density = LocalDensity.current
+        // Dial geometry in pixels, shared by the canvas and the emoji overlay.
+        val dialRadiusPx = with(density) { minOf(maxWidth, maxHeight).toPx() / 2f * 0.80f }
 
-        drawCircle(color = dialColor, radius = dialRadius)
-        drawCircle(
-            color = tickColor.copy(alpha = 0.35f),
-            radius = dialRadius * 0.97f,
-            style = Stroke(width = 1.dp.toPx()),
-        )
+        Canvas(modifier = Modifier.matchParentSize()) {
+            val radius = min(size.width, size.height) / 2f
+            val center = this.center
+            // The dial ring is 80% of the canvas so the Qibla Kaaba fits outside.
+            val dialRadius = radius * 0.80f
 
-        rotate(degrees = -animatedHeading, pivot = center) {
-            if (showDegreeTicks) {
-                drawTicks(center, dialRadius, tickColor, style)
-            }
-            // The azimuth style is defined by its numbered ring; the other
-            // styles show numbers only when explicitly enabled.
-            if (style == CompassStyle.AZIMUTH || showDegreeNumbers) {
-                degreeNumbers.forEach { (degree, _) ->
-                    val position = polar(center, dialRadius * numberRadius(style), degree.toFloat())
-                    rotate(degrees = animatedHeading, pivot = position) {
-                        val measured = measuredNumbers[degree] ?: return@rotate
-                        drawText(
-                            textLayoutResult = measured,
-                            topLeft = Offset(
-                                position.x - measured.size.width / 2f,
-                                position.y - measured.size.height / 2f,
-                            ),
-                        )
+            drawCircle(color = dialColor, radius = dialRadius)
+            drawCircle(
+                color = tickColor.copy(alpha = 0.35f),
+                radius = dialRadius * 0.97f,
+                style = Stroke(width = 1.dp.toPx()),
+            )
+
+            rotate(degrees = -animatedHeading, pivot = center) {
+                if (showDegreeTicks) {
+                    drawTicks(center, dialRadius, tickColor, style)
+                }
+                // The azimuth style is defined by its numbered ring; the other
+                // styles show numbers only when explicitly enabled.
+                if (style == CompassStyle.AZIMUTH || showDegreeNumbers) {
+                    degreeNumbers.forEach { (degree, _) ->
+                        val position = polar(center, dialRadius * numberRadius(style), degree.toFloat())
+                        rotate(degrees = animatedHeading, pivot = position) {
+                            val measured = measuredNumbers[degree] ?: return@rotate
+                            drawText(
+                                textLayoutResult = measured,
+                                topLeft = Offset(
+                                    position.x - measured.size.width / 2f,
+                                    position.y - measured.size.height / 2f,
+                                ),
+                            )
+                        }
+                    }
+                }
+                if (showCardinalLabels) {
+                    labels.forEach { (degree, _) ->
+                        val position = polar(center, dialRadius * labelRadius(style), degree.toFloat())
+                        rotate(degrees = animatedHeading, pivot = position) {
+                            val measured = measuredLabels[degree] ?: return@rotate
+                            drawText(
+                                textLayoutResult = measured,
+                                topLeft = Offset(
+                                    position.x - measured.size.width / 2f,
+                                    position.y - measured.size.height / 2f,
+                                ),
+                            )
+                        }
                     }
                 }
             }
-            if (showCardinalLabels) {
-                labels.forEach { (degree, _) ->
-                    val position = polar(center, dialRadius * labelRadius(style), degree.toFloat())
-                    rotate(degrees = animatedHeading, pivot = position) {
-                        val measured = measuredLabels[degree] ?: return@rotate
-                        drawText(
-                            textLayoutResult = measured,
-                            topLeft = Offset(
-                                position.x - measured.size.width / 2f,
-                                position.y - measured.size.height / 2f,
-                            ),
-                        )
-                    }
-                }
+
+            // Fixed marker showing the device heading at the top.
+            val marker = Path().apply {
+                moveTo(center.x - 10.dp.toPx(), center.y - dialRadius * 0.78f)
+                lineTo(center.x + 10.dp.toPx(), center.y - dialRadius * 0.78f)
+                lineTo(center.x, center.y - dialRadius * 0.66f)
+                close()
             }
+            drawPath(path = marker, color = markerColor)
+
+            // Center hub.
+            drawCircle(color = markerColor, radius = 5.dp.toPx(), center = center)
         }
 
-        // Fixed marker showing the device heading at the top.
-        val marker = Path().apply {
-            moveTo(center.x - 10.dp.toPx(), center.y - dialRadius * 0.78f)
-            lineTo(center.x + 10.dp.toPx(), center.y - dialRadius * 0.78f)
-            lineTo(center.x, center.y - dialRadius * 0.66f)
-            close()
-        }
-        drawPath(path = marker, color = markerColor)
-
-        // Center hub.
-        drawCircle(color = markerColor, radius = 5.dp.toPx(), center = center)
-
-        // Qibla marker: the Kaaba emoji sits just outside the dial ring at
-        // the bearing. Its position tracks the rotating dial (bearing minus
-        // the heading), but the emoji itself is drawn upright — it never tilts
-        // with the dial. The bearing must already be in the heading's north
-        // reference.
+        // Qibla marker: the Kaaba emoji sits just outside the dial ring at the
+        // bearing. It is drawn as a real Text composable (not Canvas drawText,
+        // which skips the emoji font on many devices) so the color emoji
+        // reliably renders. Its position tracks the rotating dial (bearing
+        // minus the heading), but the emoji itself stays upright — it never
+        // tilts with the dial. The bearing must already be in the heading's
+        // north reference. The Box centers the Text, and the offset moves its
+        // center to the marker position.
         qiblaBearingDegrees?.let { bearing ->
-            val position = polar(center, dialRadius * 1.16f, bearing - animatedHeading)
-            drawText(
-                textLayoutResult = measuredKaaba,
-                topLeft = Offset(
-                    position.x - measuredKaaba.size.width / 2f,
-                    position.y - measuredKaaba.size.height / 2f,
-                ),
+            val angleRadians = Math.toRadians((bearing - animatedHeading).toDouble())
+            Text(
+                text = KAABA_EMOJI,
+                fontSize = 26.sp,
+                modifier = Modifier.offset {
+                    IntOffset(
+                        x = (dialRadiusPx * 1.16f * cos(angleRadians)).roundToInt(),
+                        y = (dialRadiusPx * 1.16f * sin(angleRadians)).roundToInt(),
+                    )
+                },
             )
         }
     }
@@ -205,6 +219,9 @@ private fun DrawScope.polar(center: Offset, radius: Float, degrees: Float): Offs
         y = center.y + radius * sin(radians).toFloat(),
     )
 }
+
+/** The Kaaba emoji (🕋), the Qibla marker on the dial. */
+private const val KAABA_EMOJI = "\uD83D\uDD4B"
 
 private val cardinalLabels8: List<Pair<Int, String>> = listOf(
     0 to "N",

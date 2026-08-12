@@ -29,6 +29,24 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Changed
 
+- **Google 2026 design language** — the app now follows Google's current
+  design direction: the deprecated Material Icons are replaced by the modern
+  **Material Symbols** icon set (Google's official 2026 icons, fetched from
+  the google/material-design-icons repo as vector drawables), and every
+  screen shares one set of Google-settings-style components.
+- **Settings redesigned (Google Settings pattern)** — single-choice options
+  (Theme, Language, North Reference, Smoothing, Sensor rate, Compass style)
+  are now compact rows showing the current value and open a Google-style
+  radio dialog on tap, instead of long inline lists (the Language list alone
+  was 26 rows). Every group/row carries a Material Symbol in a tonal rounded
+  container, switch rows toggle on whole-row tap, and rows are separated by
+  subtle dividers. Qibla keeps its master-switch group with hidden-until-
+  enabled sub-options.
+- **Unified settings components** — new shared components in `Components.kt`
+  (`SettingsListItem`, `SettingsSwitchRow`, `SettingsValueRow`, `SettingsIcon`,
+  `SettingsOptionDialog`) are used by the settings screen, navigation bar,
+  top bars and reset flow, so lists, options and properties look and behave
+  identically across the whole project.
 - **Graded haptic in both level modes** — the proximity-based haptic ramp
   (bands 8° → 0.5°, strength scaling with closeness, final strong pulse on
   center) now applies to the flat circular level as well as the vertical
@@ -182,6 +200,12 @@ All notable changes to NexaSense are documented here. The format is based on
      day and night themes now descend from `Theme.AppCompat.DayNight.NoActionBar`.
   Verified live on a POCO F5 (marble) via adb: the app now launches, stays
   in the foreground, and produces zero FATAL logcat entries.
+- **Kaaba emoji Qibla marker not rendering** — the 🕋 marker was drawn
+  through the Canvas low-level text path (`TextMeasurer` + `drawText`),
+  which skips the emoji font on many devices, so it showed nothing at the
+  Qibla bearing. It is now a real `Text` composable overlaid on the dial:
+  the color emoji renders reliably everywhere, stays upright (never tilts
+  with the dial) and still tracks the rotating dial at the Qibla bearing.
 
 ## [1.0.2] - 2026-08-10
 

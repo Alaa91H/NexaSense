@@ -5,10 +5,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Explore
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -20,8 +16,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -72,19 +68,19 @@ fun NexaNavHost(container: AppContainer) {
                 NavigationBarItem(
                     selected = currentRoute == Routes.COMPASS,
                     onClick = { navController.selectTab(Routes.COMPASS) },
-                    icon = { Icon(Icons.Outlined.Explore, contentDescription = null) },
+                    icon = { Icon(painterResource(R.drawable.ic_explore), contentDescription = null) },
                     label = { Text(stringResource(R.string.nav_compass)) },
                 )
                 NavigationBarItem(
                     selected = currentRoute == Routes.LEVEL,
                     onClick = { navController.selectTab(Routes.LEVEL) },
-                    icon = { Icon(Icons.Outlined.Straighten, contentDescription = null) },
+                    icon = { Icon(painterResource(R.drawable.ic_straighten), contentDescription = null) },
                     label = { Text(stringResource(R.string.nav_level)) },
                 )
                 NavigationBarItem(
                     selected = currentRoute == Routes.SETTINGS,
                     onClick = { navController.selectTab(Routes.SETTINGS) },
-                    icon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
+                    icon = { Icon(painterResource(R.drawable.ic_settings), contentDescription = null) },
                     label = { Text(stringResource(R.string.nav_settings)) },
                 )
             }

@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -109,7 +107,10 @@ fun CompassScreen(
         onBack = onBack,
         actions = {
             IconButton(onClick = viewModel::refresh) {
-                Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.refresh))
+                Icon(
+                    painter = androidx.compose.ui.res.painterResource(R.drawable.ic_refresh),
+                    contentDescription = stringResource(R.string.refresh),
+                )
             }
         },
     ) {

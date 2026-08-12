@@ -16,13 +16,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -37,6 +35,8 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,6 +51,11 @@ import com.nexasense.presentation.AppContainer
 import com.nexasense.presentation.R
 import com.nexasense.presentation.components.GroupCard
 import com.nexasense.presentation.components.ScreenScaffold
+import com.nexasense.presentation.components.SettingsIcon
+import com.nexasense.presentation.components.SettingsListItem
+import com.nexasense.presentation.components.SettingsOptionDialog
+import com.nexasense.presentation.components.SettingsSwitchRow
+import com.nexasense.presentation.components.SettingsValueRow
 import com.nexasense.presentation.components.StatusPill
 
 @Composable
@@ -63,6 +68,9 @@ fun SettingsScreen(
     val locationPermissionGranted by viewModel.locationPermissionGranted.collectAsStateWithLifecycle()
 
     var showResetDialog by remember { mutableStateOf(false) }
+    // Which single-choice picker is open (null = none). Options open as
+    // Google-style dialogs instead of long inline lists.
+    var picker by remember { mutableStateOf<Picker?>(null) }
     // Accordion state: every section starts collapsed and only one is open at
     // a time — expanding a section collapses the previous one.
     var expandedSection by remember { mutableStateOf<String?>(null) }
@@ -86,83 +94,38 @@ fun SettingsScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 24.dp),
         ) {
-            item(key = Section.THEME) {
-                ExpandableSettingsSection(
-                    title = stringResource(R.string.settings_theme),
-                    expanded = expandedSection == Section.THEME,
-                    onClick = { expandedSection = toggle(Section.THEME, expandedSection) },
-                ) {
-                    GroupCard {
-                        RadioSetting(
-                            options = listOf(
-                                ThemePreference.SYSTEM to stringResource(R.string.settings_theme_system),
-                                ThemePreference.LIGHT to stringResource(R.string.settings_theme_light),
-                                ThemePreference.DARK to stringResource(R.string.settings_theme_dark),
-                            ),
-                            selected = settings.theme,
-                            onSelect = viewModel::setTheme,
-                        )
-                    }
-                }
+            item(key = "general_label") {
+                SettingsSectionLabel(stringResource(R.string.settings_section_general))
             }
 
-            item(key = Section.LANGUAGE) {
-                ExpandableSettingsSection(
-                    title = stringResource(R.string.settings_language),
-                    expanded = expandedSection == Section.LANGUAGE,
-                    onClick = { expandedSection = toggle(Section.LANGUAGE, expandedSection) },
-                ) {
-                    GroupCard {
-                        RadioSetting(
-                            options = LanguagePreference.entries.map { language ->
-                                language to stringResource(languageLabel(language))
-                            },
-                            selected = settings.language,
-                            onSelect = viewModel::setLanguage,
-                        )
-                    }
-                }
-            }
-
-            item(key = Section.NORTH_REFERENCE) {
-                ExpandableSettingsSection(
-                    title = stringResource(R.string.settings_north_reference),
-                    expanded = expandedSection == Section.NORTH_REFERENCE,
-                    onClick = { expandedSection = toggle(Section.NORTH_REFERENCE, expandedSection) },
-                ) {
-                    GroupCard {
-                        RadioSetting(
-                            options = listOf(
-                                NorthReference.AUTOMATIC to stringResource(R.string.settings_north_reference_automatic),
-                                NorthReference.TRUE_NORTH to stringResource(R.string.settings_north_reference_true),
-                                NorthReference.MAGNETIC_NORTH to stringResource(R.string.settings_north_reference_magnetic),
-                            ),
-                            selected = settings.northReference,
-                            onSelect = viewModel::setNorthReference,
-                        )
-                    }
-                    Text(
-                        text = when (settings.northReference) {
-                            NorthReference.AUTOMATIC -> stringResource(R.string.settings_north_reference_automatic_desc)
-                            NorthReference.TRUE_NORTH -> stringResource(R.string.settings_north_reference_true_desc)
-                            NorthReference.MAGNETIC_NORTH -> stringResource(R.string.settings_north_reference_magnetic)
-                        },
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            item(key = "general") {
+                GroupCard {
+                    SettingsValueRow(
+                        icon = painterResource(R.drawable.ic_palette),
+                        title = stringResource(R.string.settings_theme),
+                        value = stringResource(themeLabel(settings.theme)),
+                        onClick = { picker = Picker.THEME },
+                    )
+                    SettingsDivider()
+                    SettingsValueRow(
+                        icon = painterResource(R.drawable.ic_translate),
+                        title = stringResource(R.string.settings_language),
+                        value = stringResource(languageLabel(settings.language)),
+                        onClick = { picker = Picker.LANGUAGE },
                     )
                 }
             }
 
             item(key = Section.QIBLA) {
                 ExpandableSettingsSection(
+                    icon = painterResource(R.drawable.ic_mosque),
                     title = stringResource(R.string.settings_qibla),
                     expanded = expandedSection == Section.QIBLA,
                     onClick = { expandedSection = toggle(Section.QIBLA, expandedSection) },
                 ) {
                     GroupCard {
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_qibla_enable),
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_qibla_enable),
                             checked = settings.qiblaEnabled,
                             onCheckedChange = { enabled ->
                                 if (enabled && !locationPermissionGranted) {
@@ -173,210 +136,181 @@ fun SettingsScreen(
                             },
                         )
                         if (settings.qiblaEnabled) {
-                            ToggleSetting(
-                                label = stringResource(R.string.settings_qibla_show_on_compass),
+                            SettingsDivider()
+                            SettingsSwitchRow(
+                                title = stringResource(R.string.settings_qibla_show_on_compass),
                                 checked = settings.showQiblaOnCompass,
                                 onCheckedChange = viewModel::setShowQiblaOnCompass,
                             )
-                            ToggleSetting(
-                                label = stringResource(R.string.settings_qibla_show_card),
+                            SettingsDivider()
+                            SettingsSwitchRow(
+                                title = stringResource(R.string.settings_qibla_show_card),
                                 checked = settings.showQiblaCard,
                                 onCheckedChange = viewModel::setShowQiblaCard,
                             )
-                            ToggleSetting(
-                                label = stringResource(R.string.settings_qibla_show_distance),
+                            SettingsDivider()
+                            SettingsSwitchRow(
+                                title = stringResource(R.string.settings_qibla_show_distance),
                                 checked = settings.showQiblaDistance,
                                 onCheckedChange = viewModel::setShowQiblaDistance,
                             )
-                            ToggleSetting(
-                                label = stringResource(R.string.settings_qibla_haptic),
+                            SettingsDivider()
+                            SettingsSwitchRow(
+                                title = stringResource(R.string.settings_qibla_haptic),
                                 checked = settings.qiblaHapticFeedback,
                                 onCheckedChange = viewModel::setQiblaHapticFeedback,
                             )
                         }
                     }
-                    Text(
-                        text = stringResource(R.string.settings_qibla_enable_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                    )
-                }
-            }
-
-            item(key = Section.SMOOTHING) {
-                ExpandableSettingsSection(
-                    title = stringResource(R.string.settings_smoothing),
-                    expanded = expandedSection == Section.SMOOTHING,
-                    onClick = { expandedSection = toggle(Section.SMOOTHING, expandedSection) },
-                ) {
-                    GroupCard {
-                        RadioSetting(
-                            options = listOf(
-                                SmoothingPreference.NONE to stringResource(R.string.settings_smoothing_none),
-                                SmoothingPreference.LIGHT to stringResource(R.string.settings_smoothing_light),
-                                SmoothingPreference.MEDIUM to stringResource(R.string.settings_smoothing_medium),
-                                SmoothingPreference.STRONG to stringResource(R.string.settings_smoothing_strong),
-                            ),
-                            selected = settings.smoothing,
-                            onSelect = viewModel::setSmoothing,
-                        )
-                    }
-                }
-            }
-
-            item(key = Section.SENSOR_RATE) {
-                ExpandableSettingsSection(
-                    title = stringResource(R.string.settings_sensor_rate),
-                    expanded = expandedSection == Section.SENSOR_RATE,
-                    onClick = { expandedSection = toggle(Section.SENSOR_RATE, expandedSection) },
-                ) {
-                    GroupCard {
-                        RadioSetting(
-                            options = listOf(
-                                SensorRatePreference.NORMAL to stringResource(R.string.settings_rate_normal),
-                                SensorRatePreference.UI to stringResource(R.string.settings_rate_ui),
-                                SensorRatePreference.GAME to stringResource(R.string.settings_rate_game),
-                            ),
-                            selected = settings.sensorRate,
-                            onSelect = viewModel::setSensorRate,
-                        )
-                    }
+                    SettingsDescription(stringResource(R.string.settings_qibla_enable_desc))
                 }
             }
 
             item(key = Section.COMPASS) {
                 ExpandableSettingsSection(
+                    icon = painterResource(R.drawable.ic_compass_calibration),
                     title = stringResource(R.string.settings_compass),
                     expanded = expandedSection == Section.COMPASS,
                     onClick = { expandedSection = toggle(Section.COMPASS, expandedSection) },
                 ) {
                     GroupCard {
-                        Text(
-                            text = stringResource(R.string.settings_compass_style),
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        SettingsValueRow(
+                            icon = painterResource(R.drawable.ic_explore),
+                            title = stringResource(R.string.settings_compass_style),
+                            value = stringResource(compassStyleLabel(settings.compassStyle)),
+                            onClick = { picker = Picker.COMPASS_STYLE },
                         )
-                        RadioSetting(
-                            options = listOf(
-                                CompassStyle.CLASSIC to stringResource(R.string.settings_compass_style_classic),
-                                CompassStyle.AZIMUTH to stringResource(R.string.settings_compass_style_azimuth),
-                                CompassStyle.MINIMAL to stringResource(R.string.settings_compass_style_minimal),
-                            ),
-                            selected = settings.compassStyle,
-                            onSelect = viewModel::setCompassStyle,
-                        )
-                    }
-                    Text(
-                        text = stringResource(R.string.settings_compass_style_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                    )
-                    GroupCard {
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_compass_show_cardinal_labels),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_compass_show_cardinal_labels),
                             checked = settings.showCardinalLabels,
                             onCheckedChange = viewModel::setShowCardinalLabels,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_compass_show_ticks),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_compass_show_ticks),
                             checked = settings.showDegreeTicks,
                             onCheckedChange = viewModel::setShowDegreeTicks,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_compass_show_degree_numbers),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_compass_show_degree_numbers),
                             checked = settings.showDegreeNumbers,
                             onCheckedChange = viewModel::setShowDegreeNumbers,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_compass_show_heading_readout),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_compass_show_heading_readout),
                             checked = settings.showHeadingReadout,
                             onCheckedChange = viewModel::setShowHeadingReadout,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_compass_show_north_reference_badge),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_compass_show_north_reference_badge),
                             checked = settings.showNorthReferenceBadge,
                             onCheckedChange = viewModel::setShowNorthReferenceBadge,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_compass_show_details),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_compass_show_details),
                             checked = settings.showCompassDetails,
                             onCheckedChange = viewModel::setShowCompassDetails,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_compass_show_accuracy_panel),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_compass_show_accuracy_panel),
                             checked = settings.showAccuracyPanel,
                             onCheckedChange = viewModel::setShowAccuracyPanel,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_compass_auto_hide_low_accuracy),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            title = stringResource(R.string.settings_compass_auto_hide_low_accuracy),
                             checked = settings.autoHideDetailsOnLowAccuracy,
                             onCheckedChange = viewModel::setAutoHideDetailsOnLowAccuracy,
                         )
                     }
+                    SettingsDescription(stringResource(R.string.settings_compass_style_desc))
+                }
+            }
+
+            item(key = "compass_options") {
+                GroupCard {
+                    SettingsValueRow(
+                        icon = painterResource(R.drawable.ic_north_east),
+                        title = stringResource(R.string.settings_north_reference),
+                        value = stringResource(northReferenceLabel(settings.northReference)),
+                        onClick = { picker = Picker.NORTH_REFERENCE },
+                    )
+                    SettingsDivider()
+                    SettingsValueRow(
+                        icon = painterResource(R.drawable.ic_tune),
+                        title = stringResource(R.string.settings_smoothing),
+                        value = stringResource(smoothingLabel(settings.smoothing)),
+                        onClick = { picker = Picker.SMOOTHING },
+                    )
+                    SettingsDivider()
+                    SettingsValueRow(
+                        icon = painterResource(R.drawable.ic_sensors),
+                        title = stringResource(R.string.settings_sensor_rate),
+                        value = stringResource(sensorRateLabel(settings.sensorRate)),
+                        onClick = { picker = Picker.SENSOR_RATE },
+                    )
                 }
             }
 
             item(key = Section.LOCATION_PERMISSION) {
                 ExpandableSettingsSection(
+                    icon = painterResource(R.drawable.ic_location_on),
                     title = stringResource(R.string.settings_location_permission),
                     expanded = expandedSection == Section.LOCATION_PERMISSION,
                     onClick = { expandedSection = toggle(Section.LOCATION_PERMISSION, expandedSection) },
                 ) {
                     GroupCard {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = stringResource(R.string.settings_location_permission),
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.weight(1f),
-                            )
-                            StatusPill(
-                                available = locationPermissionGranted,
-                                label = stringResource(
-                                    if (locationPermissionGranted) {
-                                        R.string.settings_location_permission_granted
-                                    } else {
-                                        R.string.settings_location_permission_denied
-                                    },
-                                ),
-                            )
-                        }
+                        SettingsListItem(
+                            title = stringResource(R.string.settings_location_permission),
+                            trailing = {
+                                StatusPill(
+                                    available = locationPermissionGranted,
+                                    label = stringResource(
+                                        if (locationPermissionGranted) {
+                                            R.string.settings_location_permission_granted
+                                        } else {
+                                            R.string.settings_location_permission_denied
+                                        },
+                                    ),
+                                )
+                            },
+                        )
                     }
-                    Text(
-                        text = stringResource(R.string.settings_location_permission_note),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                    )
+                    SettingsDescription(stringResource(R.string.settings_location_permission_note))
                 }
             }
 
             item(key = Section.STATUS) {
                 ExpandableSettingsSection(
+                    icon = painterResource(R.drawable.ic_vibration),
                     title = stringResource(R.string.status),
                     expanded = expandedSection == Section.STATUS,
                     onClick = { expandedSection = toggle(Section.STATUS, expandedSection) },
                 ) {
                     GroupCard {
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_haptics),
+                        SettingsSwitchRow(
+                            icon = painterResource(R.drawable.ic_vibration),
+                            title = stringResource(R.string.settings_haptics),
                             checked = settings.hapticsEnabled,
                             onCheckedChange = viewModel::setHaptics,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_level_sound),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            icon = painterResource(R.drawable.ic_volume_up),
+                            title = stringResource(R.string.settings_level_sound),
                             checked = settings.levelSoundEnabled,
                             onCheckedChange = viewModel::setLevelSound,
                         )
-                        ToggleSetting(
-                            label = stringResource(R.string.settings_keep_screen_on),
+                        SettingsDivider()
+                        SettingsSwitchRow(
+                            icon = painterResource(R.drawable.ic_screen_lock_portrait),
+                            title = stringResource(R.string.settings_keep_screen_on),
                             checked = settings.keepScreenOn,
                             onCheckedChange = viewModel::setKeepScreenOn,
                         )
@@ -386,15 +320,91 @@ fun SettingsScreen(
 
             item(key = "reset") {
                 Spacer(modifier = Modifier.height(12.dp))
-                TextButton(
-                    onClick = { showResetDialog = true },
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                ) {
-                    Text(stringResource(R.string.settings_reset))
+                GroupCard {
+                    SettingsListItem(
+                        icon = painterResource(R.drawable.ic_restart_alt),
+                        title = stringResource(R.string.settings_reset),
+                        onClick = { showResetDialog = true },
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
+    }
+
+    when (picker) {
+        Picker.THEME -> SettingsOptionDialog(
+            title = stringResource(R.string.settings_theme),
+            options = listOf(
+                ThemePreference.SYSTEM to stringResource(R.string.settings_theme_system),
+                ThemePreference.LIGHT to stringResource(R.string.settings_theme_light),
+                ThemePreference.DARK to stringResource(R.string.settings_theme_dark),
+            ),
+            selected = settings.theme,
+            onSelect = viewModel::setTheme,
+            onDismiss = { picker = null },
+        )
+
+        Picker.LANGUAGE -> SettingsOptionDialog(
+            title = stringResource(R.string.settings_language),
+            options = LanguagePreference.entries.map { language ->
+                language to stringResource(languageLabel(language))
+            },
+            selected = settings.language,
+            onSelect = viewModel::setLanguage,
+            onDismiss = { picker = null },
+        )
+
+        Picker.NORTH_REFERENCE -> SettingsOptionDialog(
+            title = stringResource(R.string.settings_north_reference),
+            options = listOf(
+                NorthReference.AUTOMATIC to stringResource(R.string.settings_north_reference_automatic),
+                NorthReference.TRUE_NORTH to stringResource(R.string.settings_north_reference_true),
+                NorthReference.MAGNETIC_NORTH to stringResource(R.string.settings_north_reference_magnetic),
+            ),
+            selected = settings.northReference,
+            onSelect = viewModel::setNorthReference,
+            onDismiss = { picker = null },
+        )
+
+        Picker.SMOOTHING -> SettingsOptionDialog(
+            title = stringResource(R.string.settings_smoothing),
+            options = listOf(
+                SmoothingPreference.NONE to stringResource(R.string.settings_smoothing_none),
+                SmoothingPreference.LIGHT to stringResource(R.string.settings_smoothing_light),
+                SmoothingPreference.MEDIUM to stringResource(R.string.settings_smoothing_medium),
+                SmoothingPreference.STRONG to stringResource(R.string.settings_smoothing_strong),
+            ),
+            selected = settings.smoothing,
+            onSelect = viewModel::setSmoothing,
+            onDismiss = { picker = null },
+        )
+
+        Picker.SENSOR_RATE -> SettingsOptionDialog(
+            title = stringResource(R.string.settings_sensor_rate),
+            options = listOf(
+                SensorRatePreference.NORMAL to stringResource(R.string.settings_rate_normal),
+                SensorRatePreference.UI to stringResource(R.string.settings_rate_ui),
+                SensorRatePreference.GAME to stringResource(R.string.settings_rate_game),
+            ),
+            selected = settings.sensorRate,
+            onSelect = viewModel::setSensorRate,
+            onDismiss = { picker = null },
+        )
+
+        Picker.COMPASS_STYLE -> SettingsOptionDialog(
+            title = stringResource(R.string.settings_compass_style),
+            options = listOf(
+                CompassStyle.CLASSIC to stringResource(R.string.settings_compass_style_classic),
+                CompassStyle.AZIMUTH to stringResource(R.string.settings_compass_style_azimuth),
+                CompassStyle.MINIMAL to stringResource(R.string.settings_compass_style_minimal),
+            ),
+            selected = settings.compassStyle,
+            onSelect = viewModel::setCompassStyle,
+            onDismiss = { picker = null },
+        )
+
+        null -> Unit
     }
 
     if (showResetDialog) {
@@ -421,14 +431,19 @@ fun SettingsScreen(
     }
 }
 
+/** Single-choice pickers opened from the settings rows. */
+private enum class Picker {
+    THEME,
+    LANGUAGE,
+    NORTH_REFERENCE,
+    SMOOTHING,
+    SENSOR_RATE,
+    COMPASS_STYLE,
+}
+
 /** Stable section keys for the settings accordion. */
 private object Section {
-    const val THEME = "theme"
-    const val LANGUAGE = "language"
-    const val NORTH_REFERENCE = "north_reference"
     const val QIBLA = "qibla"
-    const val SMOOTHING = "smoothing"
-    const val SENSOR_RATE = "sensor_rate"
     const val COMPASS = "compass"
     const val LOCATION_PERMISSION = "location_permission"
     const val STATUS = "status"
@@ -437,6 +452,37 @@ private object Section {
 /** Collapsed-by-default accordion: expanding a section collapses the previous one. */
 private fun toggle(section: String, current: String?): String? =
     if (current == section) null else section
+
+/** Small primary label above a settings group (Google Settings style). */
+@Composable
+private fun SettingsSectionLabel(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+    )
+}
+
+/** Subtle divider between rows inside a settings group. */
+@Composable
+private fun SettingsDivider() {
+    HorizontalDivider(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+    )
+}
+
+/** Supporting text below a settings group. */
+@Composable
+private fun SettingsDescription(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
+    )
+}
 
 /**
  * A tappable section header whose body animates open/closed when toggled.
@@ -449,6 +495,7 @@ private fun toggle(section: String, current: String?): String? =
  */
 @Composable
 private fun ExpandableSettingsSection(
+    icon: Painter,
     title: String,
     expanded: Boolean,
     onClick: () -> Unit,
@@ -466,10 +513,12 @@ private fun ExpandableSettingsSection(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            SettingsIcon(icon)
+            Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f),
             )
             ExpandIndicator(expanded = expanded)
@@ -511,6 +560,37 @@ private fun ExpandIndicator(expanded: Boolean) {
     }
 }
 
+private fun themeLabel(theme: ThemePreference): Int = when (theme) {
+    ThemePreference.SYSTEM -> R.string.settings_theme_system
+    ThemePreference.LIGHT -> R.string.settings_theme_light
+    ThemePreference.DARK -> R.string.settings_theme_dark
+}
+
+private fun northReferenceLabel(reference: NorthReference): Int = when (reference) {
+    NorthReference.AUTOMATIC -> R.string.settings_north_reference_automatic
+    NorthReference.TRUE_NORTH -> R.string.settings_north_reference_true
+    NorthReference.MAGNETIC_NORTH -> R.string.settings_north_reference_magnetic
+}
+
+private fun smoothingLabel(smoothing: SmoothingPreference): Int = when (smoothing) {
+    SmoothingPreference.NONE -> R.string.settings_smoothing_none
+    SmoothingPreference.LIGHT -> R.string.settings_smoothing_light
+    SmoothingPreference.MEDIUM -> R.string.settings_smoothing_medium
+    SmoothingPreference.STRONG -> R.string.settings_smoothing_strong
+}
+
+private fun sensorRateLabel(rate: SensorRatePreference): Int = when (rate) {
+    SensorRatePreference.NORMAL -> R.string.settings_rate_normal
+    SensorRatePreference.UI -> R.string.settings_rate_ui
+    SensorRatePreference.GAME -> R.string.settings_rate_game
+}
+
+private fun compassStyleLabel(style: CompassStyle): Int = when (style) {
+    CompassStyle.CLASSIC -> R.string.settings_compass_style_classic
+    CompassStyle.AZIMUTH -> R.string.settings_compass_style_azimuth
+    CompassStyle.MINIMAL -> R.string.settings_compass_style_minimal
+}
+
 private fun languageLabel(language: LanguagePreference): Int = when (language) {
     LanguagePreference.SYSTEM -> R.string.settings_language_system
     LanguagePreference.ENGLISH -> R.string.settings_language_english
@@ -537,57 +617,4 @@ private fun languageLabel(language: LanguagePreference): Int = when (language) {
     LanguagePreference.KOREAN -> R.string.settings_language_korean
     LanguagePreference.VIETNAMESE -> R.string.settings_language_vietnamese
     LanguagePreference.THAI -> R.string.settings_language_thai
-}
-
-@Composable
-private fun <T> RadioSetting(
-    options: List<Pair<T, String>>,
-    selected: T,
-    onSelect: (T) -> Unit,
-) {
-    options.forEach { (value, label) ->
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .selectable(
-                    selected = value == selected,
-                    onClick = { onSelect(value) },
-                )
-                .padding(horizontal = 16.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            RadioButton(selected = value == selected, onClick = { onSelect(value) })
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 8.dp),
-            )
-        }
-    }
-}
-
-@Composable
-private fun ToggleSetting(
-    label: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .toggleable(
-                value = checked,
-                role = androidx.compose.ui.semantics.Role.Switch,
-                onValueChange = onCheckedChange,
-            )
-            .padding(horizontal = 16.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.weight(1f),
-        )
-        Switch(checked = checked, onCheckedChange = null)
-    }
 }
