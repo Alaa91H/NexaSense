@@ -4,6 +4,7 @@
 
 ### Highlights
 
+- ✨ **Google 2026 design language** — every icon is now a **Material Symbol** (Google's official 2026 icon set) instead of the deprecated Material Icons, and the whole app shares one set of Google-settings-style components: compact rows with a colored tonal icon container, a current-value label and a chevron that open a Google-style radio dialog on tap. Options, menus and properties look and behave identically on every screen.
 - 🧭 **Compass** with a 360° dial, smooth wrap-around heading, adaptive magnetic-interference detection and in-app magnetometer calibration (hard/soft iron). Three professional dial styles (**Classic / Azimuth / Minimal**) switchable from Settings, with granular per-element toggles (cardinal labels, degree ticks, degree numbers, heading readout, north-reference badge, source/declination details, accuracy panel) and an **auto-hide** option that hides the numbers whenever the magnetic accuracy is low. All readouts and bottom details sit in **closed cards with fixed-width numeric slots**, so the digits changing as you move the phone never shift the text.
 - 🌙 **Automatic night mode** — follows the device (System theme by default) with a deep-navy **sky gradient** background and a blue-tinted dark palette; light mode gets a soft daylight gradient. The app stays **always portrait**.
 - 🕋 **Qibla Direction** — fully local WGS84 geodesic bearing to the Kaaba (Vincenty inverse formula on the WGS84 ellipsoid, spherical fallback), 🕋 marker on the dial (always upright), turn guidance with a ±2° alignment threshold, optional distance and haptics, plus a **sun-over-Kaaba shadow check**: when the sun transits the Kaaba (twice a year) the solar azimuth equals the Qibla bearing, so shadows verify the direction compass-free. Disabled by default; location is requested only while enabled and never leaves the device.
@@ -16,7 +17,7 @@
 - Magnetic declination from the current official **WMM2025** model (pure-Kotlin, NOAA-verified to < 0.005°), cached by location/time — never per sensor event.
 - Adaptive interference thresholds, no single worldwide constant.
 - Three-screen bottom navigation (**Compass / Level / Settings**) — one instance per tab, state preserved.
-- Settings: theme (System/Light/Dark + dynamic color), language (24 languages, system per-app language picker on Android 13+), North Reference, Qibla options, compass style & appearance toggles, smoothing, sensor rate, haptics, level confirmation sound, keep-screen-on, reset. Accordion sections stay collapsed by default (opening one closes the previous) and the list is a keyed LazyColumn so expanding/collapsing never makes the visible text jump.
+- Settings redesigned on the **Google Settings pattern**: single-choice options (Theme, Language, North Reference, Smoothing, Sensor rate, Compass style) are compact rows showing the current value and open a radio dialog on tap instead of long inline lists; every group and row carries a Material Symbol in a tonal rounded container, switch rows toggle on whole-row tap, and rows are separated by subtle dividers. Qibla keeps its master-switch group with sub-options hidden until enabled. Also: 24 languages (system per-app language picker on Android 13+), Qibla options, compass appearance toggles, haptics, level confirmation sound, keep-screen-on, reset.
 - Startup is hardened against broken/partial sensor HALs (common on custom ROMs) — discovery and the per-app locale call degrade gracefully instead of crashing, and a stuck/blocked sensor (Sensors Off toggle, per-app sensor permission) is detected and explained.
 - Sensors registered only while a screen is visible — no background collection; non-wake-up sensors preferred.
 - Heading stays in the user's frame across display rotations (compensation), and the dial/level cap at 480 dp on large screens.
@@ -36,7 +37,7 @@ English, العربية, Deutsch, Français, Español, Português, Italiano, Tü
 
 ### UI
 
-Material 3 design system (centralized color/shape/typography/dimensions), dynamic color on Android 12+, light/dark/system themes with the night-sky and daylight gradients, a new Google-2026-style launcher icon (diagonal blue gradient, white compass mark, monochrome themed-icon variant for Android 13+), edge-to-edge on Android 15/16, predictive-back support, TalkBack-friendly content descriptions with a heading live region, and 48 dp touch targets. **Per-screen orientation**: the compass stays portrait always, while the level and settings rotate freely with the device.
+Material 3 design system (centralized color/shape/typography/dimensions), dynamic color on Android 12+, light/dark/system themes with the night-sky and daylight gradients, **Material Symbols** icon set throughout, a new Google-2026-style launcher icon (diagonal blue gradient, white compass mark, monochrome themed-icon variant for Android 13+), edge-to-edge on Android 15/16, predictive-back support, TalkBack-friendly content descriptions with a heading live region, and 48 dp touch targets. **Per-screen orientation**: the compass stays portrait always, while the level and settings rotate freely with the device.
 
 ### Privacy
 
