@@ -319,6 +319,10 @@ fun CompassScreen(
  * fixed-width slot sized by an invisible placeholder (the widest value,
  * "888°"), so the digits changing as the compass moves never re-measure
  * and shift the text — it stays fixed in place no matter the heading.
+ *
+ * The number uses displayMedium (45 sp) — one step below displayLarge, so
+ * it stays the hero readout of the card while sitting proportionately
+ * above the dial, matching the Qibla card's bearing readout.
  */
 @Composable
 private fun HeadingReadout(heading: Heading) {
@@ -332,13 +336,13 @@ private fun HeadingReadout(heading: Heading) {
                 // value, keeping the real readout fixed-width and centered.
                 Text(
                     text = "888°",
-                    style = MaterialTheme.typography.displayLarge,
+                    style = MaterialTheme.typography.displayMedium,
                     color = Color.Transparent,
                     maxLines = 1,
                 )
                 Text(
                     text = "${heading.degrees.toInt()}°",
-                    style = MaterialTheme.typography.displayLarge,
+                    style = MaterialTheme.typography.displayMedium,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                 )

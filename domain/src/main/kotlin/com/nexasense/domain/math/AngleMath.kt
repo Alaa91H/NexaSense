@@ -3,6 +3,8 @@ package com.nexasense.domain.math
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 /** Angle helpers shared by every engine. */
 object AngleMath {
@@ -61,4 +63,23 @@ object AngleMath {
     /** Shortest signed difference `target - current` in (-180, 180] degrees. */
     fun shortestAngularDifference(target: Float, current: Float): Float =
         angularDifference(target, current)
+
+    /**
+     * Position of a compass point on a circle using the compass-rose
+     * convention: [degrees] is measured clockwise from north, so 0° sits at
+     * the top, 90° at the right, 180° at the bottom and 270° at the left.
+     * Compose's y axis points down, hence the `-cos` y term.
+     *
+     * The rose lives in physical screen coordinates (not layout direction),
+     * so it renders identically in LTR and RTL — a compass must not mirror.
+     */
+    fun roseOffset(centerX: Float, centerY: Float, radius: Float, degrees: Float): Pair<Float, Float> {
+        val radians = Math.toRadians(degrees.toDouble())
+        val s = sin(radians)
+        val c = cos(radians)
+        return Pair(
+            centerX + (radius * s).toFloat(),
+            centerY - (radius * c).toFloat(),
+        )
+    }
 }

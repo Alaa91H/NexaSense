@@ -26,11 +26,10 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nexasense.domain.math.AngleMath
 import com.nexasense.domain.model.CompassStyle
-import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.roundToInt
-import kotlin.math.sin
 
 /**
  * A large compass dial with a fixed top marker. The dial rotates opposite to
@@ -44,6 +43,11 @@ import kotlin.math.sin
  * degree dial, military/aviation style) and minimal (clean, only the 4 main
  * cardinal points). The granular flags [showCardinalLabels], [showDegreeTicks]
  * and [showDegreeNumbers] fine-tune what each style draws.
+ *
+ * All geometry uses the physical compass rose (0° = top of the screen,
+ * clockwise) from [AngleMath.roseOffset]. The rose is layout-direction
+ * independent, so the dial and the Qibla marker render identically in LTR
+ * and RTL layouts — a compass must not mirror.
  */
 @Composable
 fun CompassDial(
@@ -165,15 +169,22 @@ fun CompassDial(
         // tilts with the dial. The bearing must already be in the heading's
         // north reference. The Box centers the Text, and the offset moves its
         // center to the marker position.
+        //
+        // Both the marker and the dial ticks use the same physical compass
+        // rose ([AngleMath.roseOffset]) — 0° = top, clockwise — which is
+        // layout-direction independent, so the dial renders identically in
+        // LTR and RTL: a compass must not mirror.
         qiblaBearingDegrees?.let { bearing ->
-            val angleRadians = Math.toRadians((bearing - animatedHeading).toDouble())
+            val (markerX, markerY) = AngleMath.roseOffset(
+                0f, 0f, dialRadiusPx * 1.16f, bearing - animatedHeading,
+            )
             Text(
                 text = KAABA_EMOJI,
                 fontSize = 26.sp,
                 modifier = Modifier.offset {
                     IntOffset(
-                        x = (dialRadiusPx * 1.16f * cos(angleRadians)).roundToInt(),
-                        y = (dialRadiusPx * 1.16f * sin(angleRadians)).roundToInt(),
+                        x = markerX.roundToInt(),
+                        y = markerY.roundToInt(),
                     )
                 },
             )
@@ -213,11 +224,8 @@ private fun numberRadius(style: CompassStyle): Float = when (style) {
 }
 
 private fun DrawScope.polar(center: Offset, radius: Float, degrees: Float): Offset {
-    val radians = Math.toRadians(degrees.toDouble())
-    return Offset(
-        x = center.x + radius * cos(radians).toFloat(),
-        y = center.y + radius * sin(radians).toFloat(),
-    )
+    val (x, y) = AngleMath.roseOffset(center.x, center.y, radius, degrees)
+    return Offset(x, y)
 }
 
 /** The Kaaba emoji (🕋), the Qibla marker on the dial. */

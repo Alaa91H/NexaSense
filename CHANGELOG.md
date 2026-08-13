@@ -146,6 +146,25 @@ All notable changes to NexaSense are documented here. The format is based on
   and settings screens rotate freely with the device. The lock follows the
   active tab, so returning to the compass snaps it back to portrait.
 
+### Fixed
+
+- **Compass heading readout size** — the degree number above the dial now
+  uses `displayMedium` (45 sp) instead of `displayLarge` (57 sp): it stays
+  the hero readout of its card but sits proportionately above the dial,
+  matching the Qibla card's bearing readout.
+- **Compass/Qibla direction error (90°)** — the dial ticks, cardinal labels,
+  degree numbers and the Kaaba marker were placed with a coordinate
+  convention that rotated the whole compass rose 90° clockwise: with the
+  device pointing north the **N** label sat at the right instead of the top,
+  and a Qibla on the user's right rendered on the left — so tilting the
+  device toward the marker visibly moved it **away** instead of bringing it
+  to the top (the "turn right/left" hints were already correct and now agree
+  with the dial). All dial geometry now uses a single physical compass-rose
+  helper ([`AngleMath.roseOffset`], 0° = top, clockwise) shared by the ticks
+  and the marker, so the frame is right-side-up **and** identical in LTR and
+  RTL layouts (a compass must not mirror). Regression-pinned by 8 new
+  `CompassRoseTest` unit tests.
+
 ### Added
 
 - **Perfect-plumb indicator** — the plumb gauge's pivot now hosts a small dot

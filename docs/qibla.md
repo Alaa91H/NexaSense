@@ -88,6 +88,16 @@ device = 120°, qibla = 138°  →  +18° (right)
 device = 350°, qibla =  10°  →  +20° (right, short way, not −340°)
 ```
 
+**Display frame.** On the compass dial the Kaaba marker is drawn at the rose
+angle `bearing − device` and the dial ticks at `bearing − device` too, using
+the single physical compass-rose helper `AngleMath.roseOffset` (0° = top of
+the screen, clockwise — the same convention a paper compass uses). The rose
+lives in physical screen coordinates, so the dial and the marker render
+identically in LTR and RTL layouts: a compass must not mirror. The marker
+angle therefore agrees with the turn hints above — a Qibla that reads
+“+18° (right)” sits on the right side of the dial, and turning right brings
+it to the top.
+
 ### 4. Alignment
 
 With the default threshold of **±2°** (configurable constant in
