@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">รายงานมีเฉพาะข้อมูลฮาร์ดแวร์และการกำหนดค่า</string>
     <string name="diagnostics_missing_sensor">อุปกรณ์นี้ไม่มีเซนเซอร์ฮาร์ดแวร์ที่จำเป็น</string>
     <string name="settings_title">การตั้งค่า</string>
+    <string name="settings_section_general">ทั่วไป</string>
     <string name="settings_theme">ธีม</string>
     <string name="settings_theme_system">ระบบ</string>
     <string name="settings_theme_light">สว่าง</string>

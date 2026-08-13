@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">رپورٹ میں صرف ہارڈویئر اور کنفیگریشن معلومات ہوتی ہیں۔</string>
     <string name="diagnostics_missing_sensor">یہ ڈیوائس مطلوبہ ہارڈویئر سینسر فراہم نہیں کرتا۔</string>
     <string name="settings_title">ترتیبات</string>
+    <string name="settings_section_general">عمومی</string>
     <string name="settings_theme">تھیم</string>
     <string name="settings_theme_system">سسٹم</string>
     <string name="settings_theme_light">روشن</string>

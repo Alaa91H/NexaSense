@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">Laporan hanya berisi informasi perangkat keras dan konfigurasi.</string>
     <string name="diagnostics_missing_sensor">Perangkat ini tidak menyediakan sensor perangkat keras yang diperlukan.</string>
     <string name="settings_title">Pengaturan</string>
+    <string name="settings_section_general">Umum</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_system">Sistem</string>
     <string name="settings_theme_light">Terang</string>

@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">रिपोर्ट में केवल हार्डवेयर और कॉन्फ़िगरेशन जानकारी होती है।</string>
     <string name="diagnostics_missing_sensor">यह डिवाइस आवश्यक हार्डवेयर सेंसर प्रदान नहीं करता।</string>
     <string name="settings_title">सेटिंग्स</string>
+    <string name="settings_section_general">सामान्य</string>
     <string name="settings_theme">थीम</string>
     <string name="settings_theme_system">सिस्टम</string>
     <string name="settings_theme_light">हल्का</string>

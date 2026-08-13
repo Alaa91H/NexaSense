@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">報告僅包含硬體與設定資訊。</string>
     <string name="diagnostics_missing_sensor">此裝置未提供所需的硬體感測器。</string>
     <string name="settings_title">設定</string>
+    <string name="settings_section_general">一般</string>
     <string name="settings_theme">主題</string>
     <string name="settings_theme_system">跟隨系統</string>
     <string name="settings_theme_light">淺色</string>

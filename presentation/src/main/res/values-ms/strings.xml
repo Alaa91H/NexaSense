@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">Laporan hanya mengandungi maklumat perkakasan dan konfigurasi.</string>
     <string name="diagnostics_missing_sensor">Peranti ini tidak menyediakan penderia perkakasan yang diperlukan.</string>
     <string name="settings_title">Tetapan</string>
+    <string name="settings_section_general">Umum</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_system">Sistem</string>
     <string name="settings_theme_light">Cerah</string>

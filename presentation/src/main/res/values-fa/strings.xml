@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">گزارش فقط حاوی اطلاعات سخت‌افزار و پیکربندی است.</string>
     <string name="diagnostics_missing_sensor">این دستگاه سنسور سخت‌افزاری لازم را ارائه نمی‌دهد.</string>
     <string name="settings_title">تنظیمات</string>
+    <string name="settings_section_general">عمومی</string>
     <string name="settings_theme">پوسته</string>
     <string name="settings_theme_system">سیستم</string>
     <string name="settings_theme_light">روشن</string>

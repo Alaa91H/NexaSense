@@ -169,6 +169,7 @@
     <string name="diagnostics_missing_sensor">لا يكشف هذا الجهاز عن الحساس المطلوب.</string>
 
     <string name="settings_title">الإعدادات</string>
+    <string name="settings_section_general">عام</string>
     <string name="settings_theme">المظهر</string>
     <string name="settings_theme_system">النظام</string>
     <string name="settings_theme_light">فاتح</string>

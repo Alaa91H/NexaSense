@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">보고서에는 하드웨어 및 구성 정보만 포함됩니다.</string>
     <string name="diagnostics_missing_sensor">이 기기에는 필요한 하드웨어 센서가 없습니다.</string>
     <string name="settings_title">설정</string>
+    <string name="settings_section_general">일반</string>
     <string name="settings_theme">테마</string>
     <string name="settings_theme_system">시스템</string>
     <string name="settings_theme_light">라이트</string>

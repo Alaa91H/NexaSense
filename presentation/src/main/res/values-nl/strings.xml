@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">Het rapport bevat alleen hardware- en configuratie-informatie.</string>
     <string name="diagnostics_missing_sensor">Dit apparaat biedt de vereiste hardwaresensor niet.</string>
     <string name="settings_title">Instellingen</string>
+    <string name="settings_section_general">Algemeen</string>
     <string name="settings_theme">Thema</string>
     <string name="settings_theme_system">Systeem</string>
     <string name="settings_theme_light">Licht</string>

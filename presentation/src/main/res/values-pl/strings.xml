@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">Raport zawiera wyłącznie informacje o sprzęcie i konfiguracji.</string>
     <string name="diagnostics_missing_sensor">To urządzenie nie udostępnia wymaganego czujnika sprzętowego.</string>
     <string name="settings_title">Ustawienia</string>
+    <string name="settings_section_general">Ogólne</string>
     <string name="settings_theme">Motyw</string>
     <string name="settings_theme_system">Systemowy</string>
     <string name="settings_theme_light">Jasny</string>

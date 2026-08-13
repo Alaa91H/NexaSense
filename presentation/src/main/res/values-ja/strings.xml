@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">レポートにはハードウェアと設定情報のみが含まれます。</string>
     <string name="diagnostics_missing_sensor">この端末には必要なハードウェアセンサーがありません。</string>
     <string name="settings_title">設定</string>
+    <string name="settings_section_general">一般</string>
     <string name="settings_theme">テーマ</string>
     <string name="settings_theme_system">システム</string>
     <string name="settings_theme_light">ライト</string>

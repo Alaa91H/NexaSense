@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The LevelScreen plays graded haptics through the system Vibrator. The
+  VIBRATE permission is also declared in the app module manifest (where the
+  final APK is assembled); declaring it here lets lint see it when checking
+  this library module and keeps the permission co-located with the code that
+  needs it.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+</manifest>

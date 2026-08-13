@@ -157,6 +157,7 @@
     <string name="diagnostics_no_personal_data">Il rapporto contiene solo informazioni su hardware e configurazione.</string>
     <string name="diagnostics_missing_sensor">Questo dispositivo non espone il sensore hardware richiesto.</string>
     <string name="settings_title">Impostazioni</string>
+    <string name="settings_section_general">Generale</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_system">Sistema</string>
     <string name="settings_theme_light">Chiaro</string>
