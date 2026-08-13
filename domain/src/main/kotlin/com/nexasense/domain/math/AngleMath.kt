@@ -82,4 +82,24 @@ object AngleMath {
             centerY - (radius * c).toFloat(),
         )
     }
+
+    /**
+     * Position of a plumb-gauge point [length] from the pivot at [degrees]
+     * measured from straight-down on a y-down screen: 0° = directly below
+     * the pivot, positive degrees = toward the RIGHT (+x), negative = LEFT.
+     *
+     * This is a pure coordinate mapping in physical screen space — it takes
+     * no layout-direction input, so the gauge renders identically in LTR
+     * and RTL (a level must not mirror). The magnitude (|degrees|) is the
+     * deviation-from-vertical; the sign follows the hemisphere convention
+     * of [com.nexasense.domain.engine.LevelCalculator.verticalDeviation]
+     * (top-up tilts read negative → left, bottom-up positive → right).
+     */
+    fun plumbOffset(length: Float, degrees: Float): Pair<Float, Float> {
+        val radians = Math.toRadians(degrees.toDouble())
+        return Pair(
+            (length * sin(radians)).toFloat(),
+            (length * cos(radians)).toFloat(),
+        )
+    }
 }

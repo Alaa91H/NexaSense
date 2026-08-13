@@ -320,9 +320,9 @@ fun CompassScreen(
  * "888°"), so the digits changing as the compass moves never re-measure
  * and shift the text — it stays fixed in place no matter the heading.
  *
- * The number uses displayMedium (45 sp) — one step below displayLarge, so
- * it stays the hero readout of the card while sitting proportionately
- * above the dial, matching the Qibla card's bearing readout.
+ * The number uses headlineLarge (32 sp) — the same size as every other
+ * angle readout in the app (level screen, Qibla card), so all degree
+ * readouts are visually uniform and none overshadows the dial.
  */
 @Composable
 private fun HeadingReadout(heading: Heading) {
@@ -336,13 +336,13 @@ private fun HeadingReadout(heading: Heading) {
                 // value, keeping the real readout fixed-width and centered.
                 Text(
                     text = "888°",
-                    style = MaterialTheme.typography.displayMedium,
+                    style = MaterialTheme.typography.headlineLarge,
                     color = Color.Transparent,
                     maxLines = 1,
                 )
                 Text(
                     text = "${heading.degrees.toInt()}°",
-                    style = MaterialTheme.typography.displayMedium,
+                    style = MaterialTheme.typography.headlineLarge,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                 )
@@ -426,11 +426,25 @@ private fun QiblaCard(
                 state.status == QiblaStatus.LOCATION_ACCURACY_LOW || state.status == QiblaStatus.CALIBRATION_REQUIRED
             ) {
                 state.bearingDegrees?.let {
-                    Text(
-                        text = "${it.toInt()}°",
-                        style = MaterialTheme.typography.displayMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    )
+                    // Fixed-width slot (invisible widest-value placeholder):
+                    // the bearing digits never re-measure and shift the text
+                    // when the value changes (location update, north-reference
+                    // switch). Same headlineLarge size and technique as every
+                    // other angle readout in the app.
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "888°",
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = Color.Transparent,
+                            maxLines = 1,
+                        )
+                        Text(
+                            text = "${it.toInt()}°",
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            maxLines = 1,
+                        )
+                    }
                 }
                 val relative = state.relativeQiblaDegrees
                 Text(

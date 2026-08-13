@@ -2,6 +2,7 @@ package com.nexasense.presentation.level
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nexasense.domain.engine.LevelCalculator
 import com.nexasense.domain.model.AppSettings
 import com.nexasense.domain.model.LevelCalibration
 import com.nexasense.domain.model.OrientationAngles
@@ -101,7 +102,7 @@ class LevelViewModel(
         currentSettings: AppSettings,
         vertical: Boolean,
     ) {
-        val pitchDeviation = verticalDeviation(orientation.pitch)
+        val pitchDeviation = LevelCalculator.verticalDeviation(orientation.pitch)
 
         // Grade the pulse strength by how close the device is to level/plumb
         // — each proximity band crossed inward fires a stronger pulse. Works
@@ -169,14 +170,6 @@ class LevelViewModel(
             centered = centered,
         )
     }
-
-    /**
-     * Deviation of the device from the upright position, in degrees. Pitch is
-     * ±90° when the device is vertical (top up / bottom up), so the deviation
-     * is 0 exactly at vertical.
-     */
-    private fun verticalDeviation(pitch: Float): Float =
-        if (pitch >= 0f) pitch - 90f else pitch + 90f
 
     private companion object {
         /** Matches the bubble's visual "level" zone on the canvas. */

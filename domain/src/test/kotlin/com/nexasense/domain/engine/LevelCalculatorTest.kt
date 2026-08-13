@@ -113,4 +113,73 @@ class LevelCalculatorTest {
         )
         assertEquals(165f, corrected.pitch, eps)
     }
+
+    @Test
+    fun `vertical deviation is zero exactly at upright`() {
+        assertEquals(0f, LevelCalculator.verticalDeviation(90f), 0f)
+        assertEquals(0f, LevelCalculator.verticalDeviation(-90f), 0f)
+    }
+
+    @Test
+    fun `vertical deviation is negative in the top-up hemisphere and positive in the bottom-up hemisphere`() {
+        // Top-up: pitch is above +90° off flat, so the deviation is negative
+        // (the plumb needle leans left). Bottom-up: positive (leans right).
+        assertEquals(-30f, LevelCalculator.verticalDeviation(60f), eps)
+        assertEquals(-10f, LevelCalculator.verticalDeviation(80f), eps)
+        assertEquals(30f, LevelCalculator.verticalDeviation(-60f), eps)
+        assertEquals(10f, LevelCalculator.verticalDeviation(-80f), eps)
+    }
+
+    @Test
+    fun `bubble moves right when the left edge is lowered`() {
+        // Positive roll (left lowered / right edge raised) drives the
+        // indicator toward the raised end: +x (right).
+        val (x, y) = LevelCalculator.bubbleFactors(0f, 30f, 45f)
+        assertEquals(30f / 45f, x, eps)
+        assertEquals(0f, y, 0f)
+    }
+
+    @Test
+    fun `bubble moves up when the top edge is raised`() {
+        // Positive pitch (top raised) drives the indicator up (−y).
+        val (x, y) = LevelCalculator.bubbleFactors(30f, 0f, 45f)
+        assertEquals(0f, x, 0f)
+        assertEquals(-30f / 45f, y, eps)
+    }
+
+    @Test
+    fun `bubble saturates at the rim beyond the scale`() {
+        val (x, y) = LevelCalculator.bubbleFactors(0f, 60f, 45f)
+        assertEquals(1f, x, 0f)
+        assertEquals(0f, y, 0f)
+    }
+
+    @Test
+    fun `plumb offset points straight down at zero degrees`() {
+        val (dx, dy) = com.nexasense.domain.math.AngleMath.plumbOffset(100f, 0f)
+        assertEquals(0f, dx, 0f)
+        assertEquals(100f, dy, eps)
+    }
+
+    @Test
+    fun `plumb offset positive degrees point right and negative left`() {
+        // +90° from straight-down = toward the right edge (+x, level y);
+        // -90° = toward the left edge (−x).
+        val (rightX, rightY) = com.nexasense.domain.math.AngleMath.plumbOffset(100f, 90f)
+        assertEquals(100f, rightX, eps)
+        assertEquals(0f, rightY, eps)
+
+        val (leftX, leftY) = com.nexasense.domain.math.AngleMath.plumbOffset(100f, -90f)
+        assertEquals(-100f, leftX, eps)
+        assertEquals(0f, leftY, eps)
+    }
+
+    @Test
+    fun `plumb offset magnitude equals the deviation angle`() {
+        // At 45° the point sits at 45° from straight-down, equidistant in x
+        // and y (sin45 = cos45).
+        val (dx, dy) = com.nexasense.domain.math.AngleMath.plumbOffset(100f, 45f)
+        assertEquals(70.71f, dx, 0.1f)
+        assertEquals(70.71f, dy, 0.1f)
+    }
 }

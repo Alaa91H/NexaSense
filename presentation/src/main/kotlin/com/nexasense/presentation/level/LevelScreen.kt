@@ -67,11 +67,11 @@ import com.nexasense.presentation.components.EmptyState
 import com.nexasense.presentation.components.EngineLifecycleEffect
 import com.nexasense.presentation.components.ScreenScaffold
 import com.nexasense.presentation.components.StatusPill
+import com.nexasense.domain.engine.LevelCalculator
+import com.nexasense.domain.math.AngleMath
 import java.util.Locale
 import kotlin.math.abs
-import kotlin.math.cos
 import kotlin.math.min
-import kotlin.math.sin
 
 @Composable
 fun LevelScreen(
@@ -176,7 +176,7 @@ fun LevelScreen(
         // In vertical (plumb) mode the pitch is re-based to the deviation from
         // upright: the tube bubble centers when the device is exactly vertical.
         val pitchDeviation = if (verticalMode) {
-            if (orientation.pitch >= 0f) orientation.pitch - 90f else orientation.pitch + 90f
+            LevelCalculator.verticalDeviation(orientation.pitch)
         } else {
             orientation.pitch
         }
@@ -321,13 +321,18 @@ private fun BubbleLevel(
 
     // Same smooth glide as the vertical mode: animate the bubble's normalized
     // position so it drifts naturally instead of snapping at sensor rate.
+    // Normalized bubble displacement via the pure domain mapping — the
+    // physical rule "the indicator moves toward the raised end": roll → x,
+    // pitch → y. Pure coordinate math in physical screen space, so the
+    // bubble behaves identically in LTR and RTL (a level must not mirror).
+    val (targetXFactor, targetYFactor) = LevelCalculator.bubbleFactors(pitch, roll, 45f)
     val animatedXFactor by animateFloatAsState(
-        targetValue = (roll / 45f).coerceIn(-1f, 1f),
+        targetValue = targetXFactor,
         animationSpec = tween(durationMillis = LEVEL_ANIMATION_MILLIS),
         label = "bubbleX",
     )
     val animatedYFactor by animateFloatAsState(
-        targetValue = (-pitch / 45f).coerceIn(-1f, 1f),
+        targetValue = targetYFactor,
         animationSpec = tween(durationMillis = LEVEL_ANIMATION_MILLIS),
         label = "bubbleY",
     )
@@ -453,8 +458,11 @@ private fun TubeLevel(
     // snap between positions. Animate both with the same short tween so the
     // whole vertical mode glides smoothly, like a real liquid, instead of
     // jumping.
+    // The tube bubble travels left-right with roll only; the pure domain
+    // mapping saturates at 30° for the vertical tube.
+    val (tubeBubbleTarget, _) = LevelCalculator.bubbleFactors(0f, roll, 30f)
     val animatedBubbleFactor by animateFloatAsState(
-        targetValue = (roll / 30f).coerceIn(-1f, 1f),
+        targetValue = tubeBubbleTarget,
         animationSpec = tween(durationMillis = LEVEL_ANIMATION_MILLIS),
         label = "tubeBubble",
     )
@@ -616,13 +624,17 @@ private fun TubeLevel(
 /** Duration of the level's smooth glide (ms) — bubbles and plumb needle. */
 private const val LEVEL_ANIMATION_MILLIS = 180
 
-/** Point at [degrees] clockwise from straight-down, [length] from [pivot]. */
+/**
+ * Point [length] from [pivot] at [degrees] from straight-down (0° = directly
+ * below the pivot, positive degrees = toward the RIGHT). Thin adapter over
+ * the pure domain geometry [AngleMath.plumbOffset] — the math lives in the
+ * domain layer so the gauge's convention is pinned in one place. The gauge
+ * is drawn in physical screen coordinates: it must not mirror, so it renders
+ * identically in LTR and RTL.
+ */
 private fun plumbPoint(pivot: Offset, length: Float, degrees: Float): Offset {
-    val radians = Math.toRadians(degrees.toDouble())
-    return Offset(
-        x = pivot.x + length * sin(radians).toFloat(),
-        y = pivot.y + length * cos(radians).toFloat(),
-    )
+    val (dx, dy) = AngleMath.plumbOffset(length, degrees)
+    return Offset(pivot.x + dx, pivot.y + dy)
 }
 
 /** Deviation within which the plumb needle reads as aligned. */

@@ -221,3 +221,8 @@ The math is pure Kotlin and fully unit-tested (no hardware):
   behavior (freshness, movement, staleness, clear).
 - instrumented UI tests cover the Settings flow: North Reference options,
   Qibla disabled by default, enabling/disabling reveals/hides sub-options.
+- instrumented UI test `CompassDialQiblaMarkerTest` verifies the dial's
+  Kaaba marker sits on the same physical side as the "turn right/turn left"
+  hint (both driven by `QiblaCalculator.relativeQibla`), and that the
+  geometry is identical in LTR and RTL — a compass must not mirror. Run with
+  `:presentation:connectedDebugAndroidTest`.

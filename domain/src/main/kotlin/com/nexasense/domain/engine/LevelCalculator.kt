@@ -53,4 +53,37 @@ object LevelCalculator {
             roll = AngleMath.normalizeTo180(angles.roll - calibration.rollOffsetDegrees),
         )
     }
+
+    /**
+     * Deviation of the device from the upright position, in degrees. Pitch
+     * is ±90° when the device is vertical (top up / bottom up), so the
+     * deviation is 0 exactly at vertical.
+     *
+     * Sign convention (hemisphere): with the device top-up the deviation is
+     * **negative** (the needle leans left), with the device bottom-up it is
+     * **positive** (the needle leans right). Because the level is
+     * accelerometer-only, the forward/backward lean from vertical is not
+     * distinguishable — only its magnitude and the hemisphere are — so the
+     * direction is a fixed, deterministic stylization that always agrees
+     * with the signed readout.
+     */
+    fun verticalDeviation(pitch: Float): Float =
+        if (pitch >= 0f) pitch - 90f else pitch + 90f
+
+    /**
+     * Normalized bubble displacement for the two bubble surfaces, following
+     * the physical rule "the indicator moves toward the raised end":
+     * - positive [roll] (left edge lowered / right edge raised) → bubble
+     *   moves RIGHT (+x);
+     * - positive [pitch] (top edge raised) → bubble moves UP (−y);
+     *
+     * [scaleDegrees] is the tilt angle that saturates the bubble at the rim
+     * (45° for the flat two-axis bubble, 30° for the vertical tube). The
+     * result is a pure coordinate mapping in physical screen space — no
+     * layout-direction input, so it renders identically in LTR and RTL.
+     */
+    fun bubbleFactors(pitchDegrees: Float, rollDegrees: Float, scaleDegrees: Float): Pair<Float, Float> = Pair(
+        (rollDegrees / scaleDegrees).coerceIn(-1f, 1f),
+        (-pitchDegrees / scaleDegrees).coerceIn(-1f, 1f),
+    )
 }

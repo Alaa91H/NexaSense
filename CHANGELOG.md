@@ -5,6 +5,43 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ## [Unreleased]
 
+### Testing
+
+- **Instrumented UI test: Qibla marker vs. turn hint** — a new Compose UI
+  test (`CompassDialQiblaMarkerTest`, the module's first androidTest) renders
+  `CompassDial` with a known heading and Qibla bearing and asserts the Kaaba
+  marker's physical pixel position matches the sign of
+  `QiblaCalculator.relativeQibla` (positive = marker on the right, negative =
+  left, |relative| ≤ 2° = centered at the top) — the same value that drives
+  the "turn right/turn left" hint, so the marker and the hint can never
+  disagree. It also asserts the geometry is byte-identical in LTR and RTL (a
+  compass must not mirror). Run with `:presentation:connectedDebugAndroidTest`.
+
+### Changed
+
+- **Uniform, pinned angle readouts** — the compass heading readout (above
+  the dial) and the Qibla card's bearing readout both render at
+  `headlineLarge` (32 sp), the same size as the level screen's angle
+  readouts, so no degree number overshadows the dial or a card. The Qibla
+  bearing now also sits in a fixed-width slot (invisible widest-value
+  placeholder), matching the heading readout — the digits never re-measure
+  and shift when the bearing changes (location update, north-reference
+  switch).
+
+### Fixed
+
+- **Plumb gauge and bubble conventions moved to pure domain functions** —
+  the vertical-deviation rebasing, the bubble displacement factors and the
+  plumb-gauge point geometry now live in `LevelCalculator` / `AngleMath`
+  instead of being re-derived inside the screen. Behavior is unchanged: the
+  flat bubble still follows roll→x / pitch→y, the tube bubble roll-only, and
+  the needle magnitude |pitchDeviation|. What changed is that the
+  conventions are pinned in one place, documented (0° = straight down,
+  positive = toward the right, top-up hemisphere = negative deviation) and
+  covered by regression tests, with the gauge math confirmed to be physical
+  screen coordinates that render identically in LTR and RTL (a level must
+  not mirror).
+
 ### Added
 
 - **About screen (Google Settings style)** — Settings now ends with an
