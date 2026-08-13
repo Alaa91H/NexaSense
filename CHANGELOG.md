@@ -156,6 +156,16 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Fixed
 
+- **Qibla reported "unavailable" while it was still trying** — the Qibla
+  engine's sensor-rate state updates stamped `LOCATION_UNAVAILABLE` over the
+  `CALCULATING` status the moment a location request started, so the card
+  showed "Qibla unavailable — Location required" during the entire request
+  even when a fix was on its way; and a single failed request gave up
+  permanently, so the feature stayed unavailable indoors until a manual
+  refresh. The engine now tracks the in-flight request (state stays
+  `CALCULATING` while requesting) and retries failed requests automatically
+  every 15 s, so Qibla recovers on its own once location becomes available.
+  Covered by new `QiblaEngineImplTest` unit tests.
 - **Invisible black text in dark mode (regression from the night gradient)** —
   making the navigation `Scaffold` transparent for the sky-gradient background
   left its `contentColor` at the default `contentColorFor(containerColor)`,

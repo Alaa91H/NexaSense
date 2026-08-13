@@ -155,6 +155,13 @@ It is **never** recomputed per sensor event or per compass update.
 - **Requested** when Qibla is enabled (or True North selected) and the
   compass screen is in the STARTED state. Last-known fix first, then a fresh
   fix with an 8 s timeout.
+- **Retried automatically** when a request fails: the state reports
+  `LOCATION_UNAVAILABLE`, then after a 15 s pause the engine requests again —
+  so the feature recovers on its own when location becomes available (e.g.
+  the user steps outside or switches location services on). No manual refresh
+  is needed. While a request is in flight the state stays `CALCULATING`; a
+  sensor-rate state update never misreports an in-flight request as
+  unavailable.
 - **Updates** are distance-thresholded (`minDistance = 50 m`,
   `minInterval = 15 s`), so recalculation happens on significant movement —
   not per location callback.
@@ -169,7 +176,7 @@ Every failure mode maps to a clear, separate UI state (see `QiblaStatus`):
 | --- | --- |
 | `QIBLA_DISABLED` | Feature off in Settings |
 | `LOCATION_PERMISSION_REQUIRED` | Permission denied — button to request it |
-| `LOCATION_UNAVAILABLE` | No fix obtainable |
+| `LOCATION_UNAVAILABLE` | No fix obtainable — retries automatically every 15 s |
 | `LOCATION_ACCURACY_LOW` | Fix accuracy ≥ 200 m — shown separately |
 | `COMPASS_UNAVAILABLE` | No heading source on this device |
 | `COMPASS_ACCURACY_LOW` | Magnetometer low/unreliable — separate from location |

@@ -20,7 +20,10 @@ import com.nexasense.domain.port.QiblaEngine
 import com.nexasense.domain.port.SettingsStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -69,6 +72,17 @@ class QiblaEngineImpl(
 
     @Volatile
     private var lastFix: LocationPoint? = null
+
+    /**
+     * True while a location fix is being requested (cleared during the retry
+     * pause — see [requestLocationWithRetry]). Keeps [updateState] from
+     * reporting LOCATION_UNAVAILABLE while a request is still in flight:
+     * without it, the sensor-rate state updates stomp the CALCULATING status
+     * set by [startLocationIfNeeded] and the user sees "Qibla unavailable"
+     * during the whole request instead of "calculating".
+     */
+    @Volatile
+    private var requestingLocation = false
 
     @Volatile
     private var qiblaBearing: QiblaBearing? = null
@@ -142,17 +156,53 @@ class QiblaEngineImpl(
         }
         if (lastFix != null) return
         _state.value = QiblaState(QiblaStatus.CALCULATING)
+        // Set before launching so [updateState] never reports
+        // LOCATION_UNAVAILABLE while the request is in flight.
+        requestingLocation = true
         locationJobs += scope.launch {
-            val fix = locationProvider.lastKnownLocation()
-                ?: locationProvider.requestCurrentLocation(timeoutMillis = 8_000L)
-            if (fix != null) {
-                onFix(fix)
-                locationProvider.locationUpdates(minDistanceMeters = 50f, minIntervalMillis = 15_000L)
-                    .collect { newFix -> onFix(newFix) }
-            } else {
-                _state.value = QiblaState(QiblaStatus.LOCATION_UNAVAILABLE)
+            val requestJob = coroutineContext[Job]
+            try {
+                val fix = locationProvider.lastKnownLocation()
+                    ?: requestLocationWithRetry()
+                if (fix != null) {
+                    onFix(fix)
+                    locationProvider.locationUpdates(minDistanceMeters = 50f, minIntervalMillis = 15_000L)
+                        .collect { newFix -> onFix(newFix) }
+                }
+            } finally {
+                // Only the job that is still driving the request may clear the
+                // flag: a stale finally from a cancelled predecessor (rapid
+                // screen stop/start) must not mark a newer in-flight request
+                // as not-requesting.
+                if (requestJob == null || locationJobs.contains(requestJob)) {
+                    requestingLocation = false
+                }
             }
         }
+    }
+
+    /**
+     * Requests a fresh fix, retrying until one arrives or the job is
+     * cancelled. A single failed attempt is not terminal: GPS often needs
+     * more than one try (indoors, cold start) and location services may be
+     * switched on while the screen is open, so the feature should recover by
+     * itself instead of requiring a manual refresh. Between attempts the
+     * state reports LOCATION_UNAVAILABLE; while a request is in flight it is
+     * CALCULATING.
+     */
+    private suspend fun requestLocationWithRetry(): LocationPoint? {
+        while (currentCoroutineContext().isActive) {
+            val fix = locationProvider.requestCurrentLocation(
+                timeoutMillis = LOCATION_REQUEST_TIMEOUT_MILLIS,
+            )
+            if (fix != null) return fix
+            // Honest feedback during the pause, then try again.
+            requestingLocation = false
+            _state.value = QiblaState(QiblaStatus.LOCATION_UNAVAILABLE)
+            delay(LOCATION_RETRY_DELAY_MILLIS)
+            requestingLocation = true
+        }
+        return null
     }
 
     private fun stopLocation() {
@@ -195,7 +245,12 @@ class QiblaEngineImpl(
             return
         }
         if (fix == null || bearing == null) {
-            _state.value = QiblaState(QiblaStatus.LOCATION_UNAVAILABLE)
+            _state.value = QiblaState(
+                // A request may still be in flight (the first fix is on its
+                // way); only report unavailable once a round has finished
+                // without a fix.
+                if (requestingLocation) QiblaStatus.CALCULATING else QiblaStatus.LOCATION_UNAVAILABLE,
+            )
             return
         }
 
@@ -267,7 +322,13 @@ class QiblaEngineImpl(
         else -> QiblaStatus.READY
     }
 
-    private companion object {
+    companion object {
         const val SUN_RECOMPUTE_INTERVAL_MILLIS = 30_000L
+
+        /** How long a single fresh-fix request may take before it is retried. */
+        const val LOCATION_REQUEST_TIMEOUT_MILLIS = 8_000L
+
+        /** Pause between failed location attempts before retrying. */
+        const val LOCATION_RETRY_DELAY_MILLIS = 15_000L
     }
 }
