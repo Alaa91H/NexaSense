@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">প্রতিবেদনে শুধুমাত্র হার্ডওয়্যার এবং কনফিগারেশন তথ্য থাকে।</string>
     <string name="diagnostics_missing_sensor">এই ডিভাইসটি প্রয়োজনীয় হার্ডওয়্যার সেন্সর সরবরাহ করে না।</string>
     <string name="settings_title">সেটিংস</string>
+    <string name="settings_search_hint">সেটিংস অনুসন্ধান করুন</string>
+    <string name="settings_search_clear">অনুসন্ধান মুছুন</string>
+    <string name="settings_search_empty">কোনো ফলাফল পাওয়া যায়নি</string>
     <string name="settings_section_general">সাধারণ</string>
     <string name="settings_theme">থিম</string>
     <string name="settings_theme_system">সিস্টেম</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">সব মান Android Sensor Framework থেকে আসে। অনুপস্থিত সেন্সর কখনো সিমুলেট করা হয় না।</string>
     <string name="about_version_detail">সংস্করণ %1$s (বিল্ড %2$d)</string>
     <string name="about_build_type">বিল্ড ধরন: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">GitHub-এ দেখুন</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

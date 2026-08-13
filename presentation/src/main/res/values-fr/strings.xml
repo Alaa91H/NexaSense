@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">Le rapport ne contient que des informations sur le matériel et la configuration.</string>
     <string name="diagnostics_missing_sensor">Cet appareil ne dispose pas du capteur matériel requis.</string>
     <string name="settings_title">Paramètres</string>
+    <string name="settings_search_hint">Rechercher dans les paramètres</string>
+    <string name="settings_search_clear">Effacer la recherche</string>
+    <string name="settings_search_empty">Aucun résultat trouvé</string>
     <string name="settings_section_general">Général</string>
     <string name="settings_theme">Thème</string>
     <string name="settings_theme_system">Système</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">Toutes les valeurs proviennent du framework de capteurs Android. Les capteurs manquants ne sont jamais simulés.</string>
     <string name="about_version_detail">Version %1$s (build %2$d)</string>
     <string name="about_build_type">Type de build : %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">Voir sur GitHub</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

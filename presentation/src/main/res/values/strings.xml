@@ -169,6 +169,9 @@
     <string name="diagnostics_missing_sensor">This device does not expose the required hardware sensor.</string>
 
     <string name="settings_title">Settings</string>
+    <string name="settings_search_hint">Search settings</string>
+    <string name="settings_search_clear">Clear search</string>
+    <string name="settings_search_empty">No results found</string>
     <string name="settings_section_general">General</string>
     <string name="settings_theme">Theme</string>
     <string name="settings_theme_system">System</string>
@@ -232,6 +235,7 @@
     <string name="about_sensors_note">All values come from the Android Sensor Framework. Missing sensors are never simulated.</string>
     <string name="about_version_detail">Version %1$s (build %2$d)</string>
     <string name="about_build_type">Build type: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">View on GitHub</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
 

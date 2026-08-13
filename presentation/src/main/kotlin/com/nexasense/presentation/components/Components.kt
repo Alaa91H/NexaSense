@@ -1,5 +1,9 @@
 package com.nexasense.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,13 +18,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -31,14 +37,22 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -46,6 +60,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.nexasense.presentation.R
+import com.nexasense.presentation.theme.Motion
 
 /** Standard screen scaffold with an optional top bar. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,8 +84,8 @@ fun ScreenScaffold(
             navigationIcon = {
                 if (onBack != null) {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_arrow_back),
+                        DirectionalIcon(
+                            iconRes = R.drawable.ic_arrow_back,
                             contentDescription = null,
                         )
                     }
@@ -103,7 +118,7 @@ fun StatusPill(
         MaterialTheme.colorScheme.onErrorContainer
     }
     Surface(
-        shape = RoundedCornerShape(50),
+        shape = CircleShape,
         color = container,
         modifier = modifier,
     ) {
@@ -117,21 +132,148 @@ fun StatusPill(
     }
 }
 
-/** Card container for groups of rows. */
+/**
+ * Card container for groups of rows. Uses the expressive shape scale (large
+ * rounded corners) and a soft tonal surface so groups read as one cohesive
+ * Google-settings surface.
+ */
 @Composable
 fun GroupCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp),
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.6f),
         ),
     ) {
         Column(modifier = Modifier.padding(vertical = 4.dp)) {
             content()
         }
     }
+}
+
+/**
+ * Google-style empty/unavailable state: a large Material Symbol inside a
+ * tonal circle with a headline and supporting message — the pattern Google's
+ * apps use for full-screen "sensor unavailable" messages. Fades in with the
+ * app's M3 motion, matching the dialogs and accordions.
+ */
+@Composable
+fun EmptyState(
+    icon: Painter,
+    title: String,
+    message: String,
+    modifier: Modifier = Modifier,
+) {
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { visible = true }
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(
+            animationSpec = tween(
+                durationMillis = Motion.DurationMedium2,
+                easing = Motion.EmphasizedDecelerate,
+            ),
+        ) + slideInVertically(
+            animationSpec = tween(
+                durationMillis = Motion.DurationMedium2,
+                easing = Motion.EmphasizedDecelerate,
+            ),
+            initialOffsetY = { it / 16 },
+        ),
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier.padding(start = 24.dp, top = 48.dp, end = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(96.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.size(48.dp),
+                )
+            }
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 20.dp),
+            )
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        }
+    }
+}
+
+/**
+ * Subtle divider between rows inside a settings/info group. Shared by
+ * Settings and About so every grouped list separates rows identically.
+ */
+@Composable
+fun SettingsDivider() {
+    HorizontalDivider(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+    )
+}
+
+/**
+ * Google-style informational card: the same tonal surface and expressive
+ * shape as [GroupCard], but without the outer padding — for readouts and
+ * detail panels living inside already-padded screen columns. Replaces the
+ * old outlined `surfaceVariant` panels so every card in the app shares one
+ * flat, borderless tonal treatment.
+ */
+@Composable
+fun DataCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.6f),
+        ),
+    ) {
+        content()
+    }
+}
+
+/**
+ * An icon whose meaning is directional (back, forward chevron, navigation
+ * arrow). In RTL layouts the glyph is mirrored via `scaleX = -1` so it
+ * always points in the reading direction, matching Google's RTL handling.
+ * (Vector `autoMirrored` is not honored by Compose's `painterResource`, so
+ * the mirror is applied explicitly from `LocalLayoutDirection`.)
+ */
+@Composable
+fun DirectionalIcon(
+    iconRes: Int,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    tint: Color = LocalContentColor.current,
+) {
+    val mirrored = LocalLayoutDirection.current == LayoutDirection.Rtl
+    Icon(
+        painter = painterResource(iconRes),
+        contentDescription = contentDescription,
+        tint = tint,
+        modifier = if (mirrored) modifier.graphicsLayer { scaleX = -1f } else modifier,
+    )
 }
 
 /**
@@ -226,8 +368,8 @@ fun SettingsValueRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Icon(
-                    painter = painterResource(R.drawable.ic_chevron_right),
+                DirectionalIcon(
+                    iconRes = R.drawable.ic_chevron_right,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -255,30 +397,32 @@ fun <T> SettingsOptionDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = {
-            LazyColumn {
-                items(options.size) { index ->
-                    val (value, label) = options[index]
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = value == selected,
-                                onClick = {
-                                    onSelect(value)
-                                    onDismiss()
-                                },
-                            )
-                            .padding(horizontal = 8.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = label,
-                            style = MaterialTheme.typography.bodyLarge,
+            DialogContentEntrance {
+                LazyColumn {
+                    items(options.size) { index ->
+                        val (value, label) = options[index]
+                        Row(
                             modifier = Modifier
-                                .weight(1f)
-                                .padding(start = 12.dp),
-                        )
-                        RadioButton(selected = value == selected, onClick = null)
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = value == selected,
+                                    onClick = {
+                                        onSelect(value)
+                                        onDismiss()
+                                    },
+                                )
+                                .padding(horizontal = 8.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = label,
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 12.dp),
+                            )
+                            RadioButton(selected = value == selected, onClick = null)
+                        }
                     }
                 }
             }
@@ -290,6 +434,35 @@ fun <T> SettingsOptionDialog(
             }
         },
     )
+}
+
+/**
+ * Subtle Material-motion entrance for dialog content: fades in and rises
+ * slightly on the emphasized decelerate curve — the same motion family as
+ * the platform dialog window animation — so every picker and confirmation
+ * dialog opens with one smooth, consistent transition.
+ */
+@Composable
+fun DialogContentEntrance(content: @Composable () -> Unit) {
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { visible = true }
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(
+            animationSpec = tween(
+                durationMillis = Motion.DurationMedium2,
+                easing = Motion.EmphasizedDecelerate,
+            ),
+        ) + slideInVertically(
+            animationSpec = tween(
+                durationMillis = Motion.DurationMedium2,
+                easing = Motion.EmphasizedDecelerate,
+            ),
+            initialOffsetY = { it / 24 },
+        ),
+    ) {
+        content()
+    }
 }
 
 /** Shared row layout behind the settings row variants. */
@@ -318,7 +491,9 @@ private fun SettingsRowBase(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
+                // Two lines, Google Settings style: short option names fit on
+                // one line, longer informational rows (About screen) wrap.
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
             if (subtitle != null) {

@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">Звіт містить лише відомості про обладнання та конфігурацію.</string>
     <string name="diagnostics_missing_sensor">На цьому пристрої немає потрібного апаратного датчика.</string>
     <string name="settings_title">Налаштування</string>
+    <string name="settings_search_hint">Пошук у налаштуваннях</string>
+    <string name="settings_search_clear">Очистити пошук</string>
+    <string name="settings_search_empty">Результатів не знайдено</string>
     <string name="settings_section_general">Загальні</string>
     <string name="settings_theme">Тема</string>
     <string name="settings_theme_system">Системна</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">Усі значення беруться з Android Sensor Framework. Відсутні датчики ніколи не імітуються.</string>
     <string name="about_version_detail">Версія %1$s (збірка %2$d)</string>
     <string name="about_build_type">Тип збірки: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">Відкрити на GitHub</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

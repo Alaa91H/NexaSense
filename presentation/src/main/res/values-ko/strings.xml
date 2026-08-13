@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">보고서에는 하드웨어 및 구성 정보만 포함됩니다.</string>
     <string name="diagnostics_missing_sensor">이 기기에는 필요한 하드웨어 센서가 없습니다.</string>
     <string name="settings_title">설정</string>
+    <string name="settings_search_hint">설정 검색</string>
+    <string name="settings_search_clear">검색 지우기</string>
+    <string name="settings_search_empty">결과를 찾을 수 없음</string>
     <string name="settings_section_general">일반</string>
     <string name="settings_theme">테마</string>
     <string name="settings_theme_system">시스템</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">모든 값은 Android 센서 프레임워크에서 가져옵니다. 없는 센서는 절대 시뮬레이션하지 않습니다.</string>
     <string name="about_version_detail">버전 %1$s(빌드 %2$d)</string>
     <string name="about_build_type">빌드 유형: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">GitHub에서 보기</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

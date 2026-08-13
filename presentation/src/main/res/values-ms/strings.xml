@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">Laporan hanya mengandungi maklumat perkakasan dan konfigurasi.</string>
     <string name="diagnostics_missing_sensor">Peranti ini tidak menyediakan penderia perkakasan yang diperlukan.</string>
     <string name="settings_title">Tetapan</string>
+    <string name="settings_search_hint">Cari tetapan</string>
+    <string name="settings_search_clear">Padam carian</string>
+    <string name="settings_search_empty">Tiada hasil ditemui</string>
     <string name="settings_section_general">Umum</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_system">Sistem</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">Semua nilai berasal daripada Android Sensor Framework. Penderia yang tiada tidak pernah disimulasikan.</string>
     <string name="about_version_detail">Versi %1$s (binaan %2$d)</string>
     <string name="about_build_type">Jenis binaan: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">Lihat di GitHub</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

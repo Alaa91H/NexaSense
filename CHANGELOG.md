@@ -7,6 +7,15 @@ All notable changes to NexaSense are documented here. The format is based on
 
 ### Added
 
+- **About screen (Google Settings style)** — Settings now ends with an
+  "About" row that opens a dedicated screen with the app version (read from
+  the installed package at runtime, so it always matches the APK), the
+  open-source and offline-first statements, the sensors note and the bundled
+  Google Sans license. It reuses the same icon-in-tonal-container rows and
+  dividers as Settings, and is findable through the settings search (type
+  "about" or "version"). All strings were already translated in the 24
+  supported languages (the About row itself had been prepared but never
+  built).
 - **Level confirmation sound** — reaching perfect level now plays a short,
   soft two-tone chime (a gentle major-third "ding" generated in-app, no
   external asset), routed through the notification stream. It is a separate
@@ -26,9 +35,62 @@ All notable changes to NexaSense are documented here. The format is based on
   shows the same pulsing centered dot as the plumb mode: at the pivot it
   lights up with a soft breathing glow exactly when the device is level on
   both axes, drawn on top of the bubble and in sync with the haptic pulse.
+- **Settings search (Google Settings style)** — a search field pinned at the
+  top of Settings filters every option in place while typing, matching
+  section names, row titles and current values. Results appear as a flat
+  Google-style list (icon, section subtitle, current value, chevron/switch),
+  so even options hidden inside collapsed accordion sections are reachable
+  with one keystroke; a clear button resets the query and an empty state
+  explains when nothing matches. Translated in all 24 languages.
 
 ### Changed
 
+- **Adaptive navigation (window size classes)** — navigation now follows the
+  available window width, not the device: compact widths keep the bottom
+  `NavigationBar`, medium width and up switch to a start-side
+  `NavigationRail` (canonical M3 wide layout for tablets/foldables/desktop
+  windows). Both containers share one tab definition.
+- **RTL icon mirroring** — back arrow and trailing chevrons mirror in RTL
+  layouts via the new `DirectionalIcon` component (vector `autoMirrored` is
+  not honored by Compose's `painterResource`, so the mirror is explicit),
+  matching Google's RTL handling; leading decorative row icons stay
+  unmirrored.
+- **Google-style empty states** — the "sensor unavailable / sensors blocked"
+  screens on the Compass and Level now use the shared `EmptyState`
+  component: a large Material Symbol inside a tonal circle with a headline
+  and message, fading in on the M3 emphasized-decelerate curve — the
+  pattern Google's apps use for full-screen unavailable messages, instead of
+  bare text.
+- **Official Google Sans typeface** — the app now renders its UI in the
+  real Google Sans variable font (the typeface behind Google's 2026
+  products), bundled under its SIL Open Font License (provenance in
+  `third_party/GoogleSans/`). Display readouts use weight 400 (the font's
+  lightest cut) with the `tnum` tabular-figures feature so digits stay
+  fixed-width like Google's Clock/Calculator; Arabic and other uncovered
+  scripts fall back to the platform font, exactly as Google's own Arabic
+  products behave.
+- **Google-style bottom navigation** — the selected tab now shows the filled
+  Material Symbol and unselected tabs the outlined one (the classic Google
+  2026 pattern), cross-fading between the two on the M3 standard curve
+  instead of swapping abruptly; switching tabs cross-fades the screens
+  themselves (standard accelerate/decelerate) like Google apps.
+- **Unified info cards across every screen** — the readout and detail panels
+  on the Compass (heading readout, accuracy panel, source/declination
+  details) and Level (angle readouts) now use the same borderless tonal
+  `DataCard` component as the settings groups, replacing the old outlined
+  `surfaceVariant` panels; the Level calibration dialog opens with the same
+  expressive entrance motion as every other dialog.
+- **Material 3 motion everywhere** — animations now use the official M3 2026
+  motion curves and durations. Settings accordions expand and fade in on the
+  **emphasized decelerate** curve (clipped while animating, so content never
+  overlaps the rows below) and collapse with **emphasized accelerate**; the
+  section chevron rotates 180° smoothly instead of snapping; rows below an
+  expanding group glide into place via `animateItem`; and every picker and
+  confirmation dialog fades in and rises slightly through the shared
+  `DialogContentEntrance` transition. The curves were verified directly
+  against the material3 1.4.0 artifact and centralized in a `Motion` token
+  object (`theme/Motion.kt`) so every transition in the app shares one
+  source.
 - **Google 2026 design language** — the app now follows Google's current
   design direction: the deprecated Material Icons are replaced by the modern
   **Material Symbols** icon set (Google's official 2026 icons, fetched from

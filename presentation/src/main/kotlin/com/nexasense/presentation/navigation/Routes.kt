@@ -5,4 +5,5 @@ object Routes {
     const val COMPASS = "compass"
     const val LEVEL = "level"
     const val SETTINGS = "settings"
+    const val ABOUT = "about"
 }

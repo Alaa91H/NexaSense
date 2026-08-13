@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">रिपोर्ट में केवल हार्डवेयर और कॉन्फ़िगरेशन जानकारी होती है।</string>
     <string name="diagnostics_missing_sensor">यह डिवाइस आवश्यक हार्डवेयर सेंसर प्रदान नहीं करता।</string>
     <string name="settings_title">सेटिंग्स</string>
+    <string name="settings_search_hint">सेटिंग खोजें</string>
+    <string name="settings_search_clear">खोज साफ़ करें</string>
+    <string name="settings_search_empty">कोई परिणाम नहीं मिला</string>
     <string name="settings_section_general">सामान्य</string>
     <string name="settings_theme">थीम</string>
     <string name="settings_theme_system">सिस्टम</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">सभी मान Android Sensor Framework से आते हैं। गायब सेंसर कभी सिम्युलेट नहीं किए जाते।</string>
     <string name="about_version_detail">संस्करण %1$s (बिल्ड %2$d)</string>
     <string name="about_build_type">बिल्ड प्रकार: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">GitHub पर देखें</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

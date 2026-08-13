@@ -169,6 +169,9 @@
     <string name="diagnostics_missing_sensor">لا يكشف هذا الجهاز عن الحساس المطلوب.</string>
 
     <string name="settings_title">الإعدادات</string>
+    <string name="settings_search_hint">البحث في الإعدادات</string>
+    <string name="settings_search_clear">مسح البحث</string>
+    <string name="settings_search_empty">لا توجد نتائج</string>
     <string name="settings_section_general">عام</string>
     <string name="settings_theme">المظهر</string>
     <string name="settings_theme_system">النظام</string>
@@ -232,6 +235,7 @@
     <string name="about_sensors_note">جميع القيم مأخوذة من إطار الحساسات في أندرويد. لا تُحاكى الحساسات المفقودة أبدًا.</string>
     <string name="about_version_detail">الإصدار %1$s (البناء %2$d)</string>
     <string name="about_build_type">نوع البناء: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">عرض على GitHub</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
 

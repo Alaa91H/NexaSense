@@ -3,7 +3,6 @@ package com.nexasense.presentation.compass
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -55,9 +53,12 @@ import com.nexasense.domain.model.QiblaStatus
 import com.nexasense.domain.model.TrueNorthUnavailableReason
 import com.nexasense.presentation.AppContainer
 import com.nexasense.presentation.R
+import com.nexasense.presentation.components.DataCard
+import com.nexasense.presentation.components.EmptyState
 import com.nexasense.presentation.components.EngineLifecycleEffect
 import com.nexasense.presentation.components.ScreenScaffold
 import com.nexasense.presentation.components.StatusPill
+import androidx.compose.ui.res.painterResource
 import java.util.Locale
 
 @Composable
@@ -124,7 +125,10 @@ fun CompassScreen(
             Spacer(modifier = Modifier.height(4.dp))
 
             if (!heading.isAvailable) {
-                UnavailablePanel(
+                EmptyState(
+                    icon = painterResource(
+                        if (sensorBlocked) R.drawable.ic_sensors else R.drawable.ic_explore,
+                    ),
                     title = stringResource(
                         if (sensorBlocked) R.string.sensors_blocked_title else R.string.compass_unavailable,
                     ),
@@ -208,15 +212,7 @@ fun CompassScreen(
                 // Bottom details in a closed card; the µT value renders in a
                 // fixed-width slot (invisible widest-value placeholder) so its
                 // digits changing never shift the accuracy pill to the right.
-                Surface(
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-                    border = BorderStroke(
-                        1.dp,
-                        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
+                DataCard {
                     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                         // Magnetic field strength.
                         Row(
@@ -296,15 +292,7 @@ fun CompassScreen(
 
             if (settings.showCompassDetails && !hideNumbers) {
                 // Source/declination details in a matching closed card.
-                Surface(
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-                    border = BorderStroke(
-                        1.dp,
-                        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
+                DataCard {
                     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                         Text(
                             text = stringResource(R.string.compass_source, sourceLabel(heading.source)),
@@ -334,15 +322,7 @@ fun CompassScreen(
  */
 @Composable
 private fun HeadingReadout(heading: Heading) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-        border = BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-        ),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+    DataCard {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 10.dp),
@@ -588,24 +568,6 @@ private fun InterferenceBanner(title: String, message: String) {
                 color = MaterialTheme.colorScheme.onErrorContainer,
             )
         }
-    }
-}
-
-@Composable
-private fun UnavailablePanel(title: String, message: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 48.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(title, style = MaterialTheme.typography.headlineMedium)
-        Text(
-            message,
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp),
-        )
     }
 }
 

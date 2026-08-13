@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">Rapor yalnızca donanım ve yapılandırma bilgilerini içerir.</string>
     <string name="diagnostics_missing_sensor">Bu cihaz gerekli donanım sensörünü sunmuyor.</string>
     <string name="settings_title">Ayarlar</string>
+    <string name="settings_search_hint">Ayarlarda ara</string>
+    <string name="settings_search_clear">Aramayı temizle</string>
+    <string name="settings_search_empty">Sonuç bulunamadı</string>
     <string name="settings_section_general">Genel</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_system">Sistem</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">Tüm değerler Android Sensör Çerçevesi\'nden gelir. Eksik sensörler asla simüle edilmez.</string>
     <string name="about_version_detail">Sürüm %1$s (build %2$d)</string>
     <string name="about_build_type">Derleme türü: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">GitHub\'da görüntüle</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

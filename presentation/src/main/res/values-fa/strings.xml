@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">گزارش فقط حاوی اطلاعات سخت‌افزار و پیکربندی است.</string>
     <string name="diagnostics_missing_sensor">این دستگاه سنسور سخت‌افزاری لازم را ارائه نمی‌دهد.</string>
     <string name="settings_title">تنظیمات</string>
+    <string name="settings_search_hint">جستجو در تنظیمات</string>
+    <string name="settings_search_clear">پاک کردن جستجو</string>
+    <string name="settings_search_empty">نتیجهای یافت نشد</string>
     <string name="settings_section_general">عمومی</string>
     <string name="settings_theme">پوسته</string>
     <string name="settings_theme_system">سیستم</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">همه مقادیر از چارچوب سنسور اندروید گرفته می‌شوند. سنسورهای غایب هرگز شبیه‌سازی نمی‌شوند.</string>
     <string name="about_version_detail">نسخه %1$s (ساخت %2$d)</string>
     <string name="about_build_type">نوع ساخت: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">مشاهده در GitHub</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

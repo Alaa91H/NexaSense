@@ -7,7 +7,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,11 +19,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -63,6 +60,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nexasense.presentation.AppContainer
 import com.nexasense.presentation.R
+import androidx.compose.ui.res.painterResource
+import com.nexasense.presentation.components.DataCard
+import com.nexasense.presentation.components.DialogContentEntrance
+import com.nexasense.presentation.components.EmptyState
 import com.nexasense.presentation.components.EngineLifecycleEffect
 import com.nexasense.presentation.components.ScreenScaffold
 import com.nexasense.presentation.components.StatusPill
@@ -158,27 +159,17 @@ fun LevelScreen(
         onBack = onBack,
     ) {
         if (!isAvailable) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    stringResource(
-                        if (sensorBlocked) R.string.sensors_blocked_title else R.string.level_unavailable,
-                    ),
-                    style = MaterialTheme.typography.headlineMedium,
-                )
-                Text(
-                    stringResource(
-                        if (sensorBlocked) R.string.sensors_blocked_message else R.string.level_unavailable_message,
-                    ),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-            }
+            EmptyState(
+                icon = painterResource(
+                    if (sensorBlocked) R.drawable.ic_sensors else R.drawable.ic_straighten,
+                ),
+                title = stringResource(
+                    if (sensorBlocked) R.string.sensors_blocked_title else R.string.level_unavailable,
+                ),
+                message = stringResource(
+                    if (sensorBlocked) R.string.sensors_blocked_message else R.string.level_unavailable_message,
+                ),
+            )
             return@ScreenScaffold
         }
 
@@ -237,15 +228,7 @@ fun LevelScreen(
 
             // Readouts inside a closed card; each value renders in a
             // fixed-width slot, so the numbers never shift as the device tilts.
-            Surface(
-                shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-                border = BorderStroke(
-                    1.dp,
-                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            ) {
+            DataCard {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -660,7 +643,7 @@ private fun LevelCalibrationDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.level_calibrate_title)) },
-        text = { Text(stringResource(R.string.level_calibrate_instructions)) },
+        text = { DialogContentEntrance { Text(stringResource(R.string.level_calibrate_instructions)) } },
         confirmButton = {
             Button(onClick = onSetZero) {
                 Text(stringResource(R.string.level_set_zero))

@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">報告僅包含硬體與設定資訊。</string>
     <string name="diagnostics_missing_sensor">此裝置未提供所需的硬體感測器。</string>
     <string name="settings_title">設定</string>
+    <string name="settings_search_hint">搜尋設定</string>
+    <string name="settings_search_clear">清除搜尋</string>
+    <string name="settings_search_empty">找不到結果</string>
     <string name="settings_section_general">一般</string>
     <string name="settings_theme">主題</string>
     <string name="settings_theme_system">跟隨系統</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">所有數值均來自 Android 感測器框架。缺少的感測器絕不會被模擬。</string>
     <string name="about_version_detail">版本 %1$s（建置 %2$d）</string>
     <string name="about_build_type">建置類型：%1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">在 GitHub 上檢視</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

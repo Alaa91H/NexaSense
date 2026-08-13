@@ -157,6 +157,9 @@
     <string name="diagnostics_no_personal_data">Laporan hanya berisi informasi perangkat keras dan konfigurasi.</string>
     <string name="diagnostics_missing_sensor">Perangkat ini tidak menyediakan sensor perangkat keras yang diperlukan.</string>
     <string name="settings_title">Pengaturan</string>
+    <string name="settings_search_hint">Cari pengaturan</string>
+    <string name="settings_search_clear">Hapus pencarian</string>
+    <string name="settings_search_empty">Tidak ada hasil ditemukan</string>
     <string name="settings_section_general">Umum</string>
     <string name="settings_theme">Tema</string>
     <string name="settings_theme_system">Sistem</string>
@@ -219,6 +222,7 @@
     <string name="about_sensors_note">Semua nilai berasal dari Android Sensor Framework. Sensor yang tidak ada tidak pernah disimulasikan.</string>
     <string name="about_version_detail">Versi %1$s (build %2$d)</string>
     <string name="about_build_type">Jenis build: %1$s</string>
+    <string name="about_font_license">Google Sans · SIL Open Font License 1.1</string>
     <string name="about_github">Lihat di GitHub</string>
     <string name="about_github_url">https://github.com/Alaa91H/NexaSense</string>
     <string name="settings_language_french">Français</string>

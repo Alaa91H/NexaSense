@@ -34,6 +34,31 @@ ICONS = [
     ("explore", "outlined", "ic_explore"),
     ("straighten", "outlined", "ic_straighten"),
     ("settings", "outlined", "ic_settings"),
+    # Filled variants for the bottom navigation (Google pattern: the selected
+    # tab shows the filled symbol, unselected tabs the outlined one).
+    ("explore", "filled", "ic_explore_filled"),
+    ("straighten", "filled", "ic_straighten_filled"),
+    ("settings", "filled", "ic_settings_filled"),
+    # Per-row icons for the inner settings rows (Google Settings style:
+    # every row has its own Material Symbol in a tonal container).
+    ("power_settings_new", "outlined", "ic_power_settings_new"),
+    ("navigation", "outlined", "ic_navigation"),
+    ("view_agenda", "outlined", "ic_view_agenda"),
+    ("route", "outlined", "ic_route"),
+    ("style", "outlined", "ic_style"),
+    ("label", "outlined", "ic_label"),
+    ("linear_scale", "outlined", "ic_linear_scale"),
+    ("pin", "outlined", "ic_pin"),
+    ("info", "outlined", "ic_info"),
+    ("speed", "outlined", "ic_speed"),
+    ("visibility_off", "outlined", "ic_visibility_off"),
+    ("notifications", "outlined", "ic_notifications"),
+    ("search", "outlined", "ic_search"),
+    ("close", "outlined", "ic_close"),
+    # About screen rows (Google Settings "About" style).
+    ("verified", "outlined", "ic_verified"),
+    ("code", "outlined", "ic_code"),
+    ("cloud_off", "outlined", "ic_cloud_off"),
 ]
 
 
@@ -44,7 +69,13 @@ def fetch(url: str) -> str:
 
 
 def style_dir(style: str) -> str:
-    return f"materialsymbols{style}"
+    # Material Symbols ship outlined/rounded/sharp as separate dirs; the
+    # filled variants live in the outlined dir under a `_fill1` filename.
+    return "materialsymbolsoutlined" if style == "filled" else f"materialsymbols{style}"
+
+
+def svg_file(name: str, style: str) -> str:
+    return f"{name}_fill1_24px.svg" if style == "filled" else f"{name}_24px.svg"
 
 
 def build_drawable(paths: list[str]) -> str:
@@ -74,7 +105,7 @@ def main() -> int:
     os.makedirs(OUT, exist_ok=True)
     failures = []
     for name, style, out_name in ICONS:
-        url = f"{BASE}/{name}/{style_dir(style)}/{name}_24px.svg"
+        url = f"{BASE}/{name}/{style_dir(style)}/{svg_file(name, style)}"
         try:
             svg = fetch(url)
         except Exception as exc:  # noqa: BLE001 - report and continue

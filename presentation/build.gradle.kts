@@ -45,5 +45,8 @@ dependencies {
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
+    // Window size classes: adaptive navigation (bottom bar vs. rail) driven
+    // by the available window width, not by device type.
+    implementation(libs.compose.material3.windowsizeclass)
     debugImplementation(libs.compose.ui.tooling)
 }
